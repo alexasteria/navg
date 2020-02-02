@@ -76,6 +76,9 @@ class App extends React.Component {
 
         VKConnect.send('VKWebAppGetUserInfo', {});*/
         connect.send("VKWebAppInit", {});
+        connect.send("VKWebAppAllowNotifications", {});
+        // Subscribes to event, sended by client
+        connect.subscribe(e => console.log(e));
         return (
             <Epic activeStory={this.state.activeStory} tabbar={
                 <Tabbar>
