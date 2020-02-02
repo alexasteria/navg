@@ -1,7 +1,7 @@
 {
-  "name": "automaster",
+  "name": "navg",
   "version": "0.1.0",
-  "homepage": "https://alexasteria.github.io/automastertest/",
+  "homepage": "./index.js",
   "private": true,
   "dependencies": {
     "@vkontakte/icons": "^1.11.3",

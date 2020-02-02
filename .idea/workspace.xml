@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/js/idea/idea.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/masters/masterList.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/registration/registration.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/masters.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/sale/sale.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/sale/sale.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +49,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/js/idea" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -155,7 +147,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Первый коммит с ПС" />
+    <option name="LAST_COMMIT_MESSAGE" value="Первый коммит с ПС" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1579203172728">
