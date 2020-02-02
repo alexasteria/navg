@@ -1,4 +1,6 @@
 import React from 'react';
+/*import VKConnect from '@vkontakte/vkui-connect-mock';*/
+import connect from '@vkontakte/vk-connect';
 import {
     View,
     Panel,
@@ -64,7 +66,16 @@ class App extends React.Component {
         this.setState({ activeStory: e.currentTarget.dataset.story })
     }
     render () {
+        /*VKConnect.subscribe((e) => {
 
+            if (e.detail.type === 'VKWebAppGetUserInfoResult') {
+                console.log(e.detail.data);
+                // do something
+            }
+        });
+
+        VKConnect.send('VKWebAppGetUserInfo', {});*/
+        connect.send("VKWebAppInit", {});
         return (
             <Epic activeStory={this.state.activeStory} tabbar={
                 <Tabbar>
