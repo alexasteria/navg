@@ -1,6 +1,7 @@
 import React from 'react';
 import VKConnect from '@vkontakte/vkui-connect-mock';
-import {Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Panel, Avatar} from "@vkontakte/vkui"
+import {Alert, Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Panel, Avatar} from "@vkontakte/vkui"
+import {BACKEND} from "../func/func";
 //import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 
 class Invite extends React.Component {
@@ -76,30 +77,33 @@ class Invite extends React.Component {
             master: {
                 firstname: '',
                 lastname: '',
-                avatarLink: ''
+                avatarLink: '',
+                vkUid: ''
             },
             type: '',
-            about: ''
+            about: '',
+            newUser: true
 
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    componentDidMount() {
+
+        componentDidMount() {
         VKConnect.subscribe((e) => {
 
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
-                console.log(e.detail.data);
+                console.log('В сессии вк '+e.detail.data);
                 let master = this.state.master;
                 master.firstname = e.detail.data.first_name;
                 master.lastname = e.detail.data.last_name;
                 master.avatarLink = e.detail.data.photo_200;
+                master.vkUid = e.detail.data.id;
                 this.setState({master: master});
             }
         });
         VKConnect.send('VKWebAppGetUserInfo', {});
     }
-
     handleCheck = event => {
         const target = event.target;
         const name = target.name;
@@ -118,12 +122,10 @@ class Invite extends React.Component {
         let count = this.state.count;
         count[name] = countMass.length;
         this.setState({ count: count });
-        console.log(this.state);
     };
    handleChange(event) {
         let {name, value} = event.target;
         this.setState({[name]: value});
-        console.log(this.state);
     }
 
     handleSubmit(event) {
@@ -139,7 +141,8 @@ class Invite extends React.Component {
             hairStatus: this.state.hairStatus,
             cosmeticStatus: this.state.cosmeticStatus,
             avatarLink: this.state.master.avatarLink,
-            type: this.state.type
+            type: this.state.type,
+            vkUid: this.state.master.vkUid
         };
         console.log(master);
         this.postData('http://localhost:3030/masters/', master);
@@ -165,128 +168,216 @@ class Invite extends React.Component {
     }
     render(){
         return (
-            <Panel id="reg">
-                <FormLayout onSubmit={this.handleSubmit}>
-                    <Cell
-                        size="l"
-                        description="Регистрация мастера"
-                        before={<Avatar src={this.state.master.avatarLink} size={80}/>}
-                        bottomContent={'Bottom content'}
-                    >
-                        {this.state.master.firstname+' '+this.state.master.lastname}
-                    </Cell>
-                    <Textarea
-                        name={'about'}
-                        status={this.state.about ? 'valid' : 'error'}
-                        bottom={this.state.about ? '' : 'Пожалуйста, напишите пару слов о себе'}
-                        top="О себе"
-                        value={this.state.about}
-                        onChange={this.handleChange}/>
-                    <FormLayoutGroup top="Сфера деятельности" bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти." id={'category'}>
-                        <Cell expandable name={'manicureVisible'} onClick={() => this.setState({ manicureVisible: !this.state.manicureVisible })} indicator={'Выбрано: '+this.state.count.manicureStatus}>Маникюр</Cell>
-                        {this.state.manicureVisible &&
-                        <Div>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'0'}  onChange={this.handleCheck} checked={this.state.manicureStatus[0].active}/>}>Классический</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'1'} onChange={this.handleCheck} checked={this.state.manicureStatus[1].active}/>}>Аппаратный</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'2'} onChange={this.handleCheck} checked={this.state.manicureStatus[2].active}/>}>Экспресс</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'3'} onChange={this.handleCheck} checked={this.state.manicureStatus[3].active}/>}>Комбинированный</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'4'} onChange={this.handleCheck} checked={this.state.manicureStatus[4].active}/>}>Покрытие</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'5'} onChange={this.handleCheck} checked={this.state.manicureStatus[5].active}/>}>Покрытие</Cell>
-                            {/*{this.state.manicureStatus.map(function(item, i){
+                    <Group>
+                        {
+                            this.state.newUser &&
+                        <FormLayout onSubmit={this.handleSubmit}>
+                            <Cell
+                                size="l"
+                                description="Регистрация мастера"
+                                before={<Avatar src={this.state.master.avatarLink} size={80}/>}
+                                bottomContent={'Bottom content'}
+                            >
+                                {this.state.master.firstname + ' ' + this.state.master.lastname}
+                            </Cell>
+                            <Textarea
+                                name={'about'}
+                                status={this.state.about ? 'valid' : 'error'}
+                                bottom={this.state.about ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                                top="О себе"
+                                value={this.state.about}
+                                onChange={this.handleChange}/>
+                            <FormLayoutGroup top="Сфера деятельности"
+                                             bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."
+                                             id={'category'}>
+                                <Cell expandable name={'manicureVisible'}
+                                      onClick={() => this.setState({manicureVisible: !this.state.manicureVisible})}
+                                      indicator={'Выбрано: ' + this.state.count.manicureStatus}>Маникюр</Cell>
+                                {this.state.manicureVisible &&
+                                <Div>
+                                    <Cell asideContent={<Switch name={'manicureStatus'} id={'0'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.manicureStatus[0].active}/>}>Классический</Cell>
+                                    <Cell asideContent={<Switch name={'manicureStatus'} id={'1'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.manicureStatus[1].active}/>}>Аппаратный</Cell>
+                                    <Cell asideContent={<Switch name={'manicureStatus'} id={'2'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.manicureStatus[2].active}/>}>Экспресс</Cell>
+                                    <Cell asideContent={<Switch name={'manicureStatus'} id={'3'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.manicureStatus[3].active}/>}>Комбинированный</Cell>
+                                    <Cell asideContent={<Switch name={'manicureStatus'} id={'4'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.manicureStatus[4].active}/>}>Покрытие</Cell>
+                                    <Cell asideContent={<Switch name={'manicureStatus'} id={'5'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.manicureStatus[5].active}/>}>Покрытие</Cell>
+                                    {/*{this.state.manicureStatus.map(function(item, i){
                                 return <Cell key={i} onChange={this.handleInputChange}  asideContent={<Switch  name={'manicureStatus'} id={item.id} checked={item.active} />}>{item.label}</Cell>;})}*/}
-                        </Div>
-                        }
-                        <Cell expandable name={'pedicureVisible'} onClick={() => this.setState({ pedicureVisible: !this.state.pedicureVisible })} indicator={'Выбрано: '+this.state.count.pedicureStatus}>Педикюр</Cell>
-                        {this.state.pedicureVisible &&
-                        <Div>
-                            <Cell asideContent={<Switch name={'pedicureStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.pedicureStatus[0].active}/>}>Классический</Cell>
-                            <Cell asideContent={<Switch name={'pedicureStatus'} id={'1'} onChange={this.handleCheck} checked={this.state.pedicureStatus[1].active}/>}>Аппаратный</Cell>
-                            <Cell asideContent={<Switch name={'pedicureStatus'} id={'2'} onChange={this.handleCheck} checked={this.state.pedicureStatus[2].active}/>}>Экспресс</Cell>
-                            <Cell asideContent={<Switch name={'pedicureStatus'} id={'3'} onChange={this.handleCheck} checked={this.state.pedicureStatus[3].active}/>}>Комбинированный</Cell>
-                            <Cell asideContent={<Switch name={'pedicureStatus'} id={'4'} onChange={this.handleCheck} checked={this.state.pedicureStatus[4].active}/>}>Покрытие</Cell>
-                            {/*this.state.pedicureCat.map(function(dopCategory, i){
+                                </Div>
+                                }
+                                <Cell expandable name={'pedicureVisible'}
+                                      onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
+                                      indicator={'Выбрано: ' + this.state.count.pedicureStatus}>Педикюр</Cell>
+                                {this.state.pedicureVisible &&
+                                <Div>
+                                    <Cell asideContent={<Switch name={'pedicureStatus'} id={'0'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.pedicureStatus[0].active}/>}>Классический</Cell>
+                                    <Cell asideContent={<Switch name={'pedicureStatus'} id={'1'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.pedicureStatus[1].active}/>}>Аппаратный</Cell>
+                                    <Cell asideContent={<Switch name={'pedicureStatus'} id={'2'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.pedicureStatus[2].active}/>}>Экспресс</Cell>
+                                    <Cell asideContent={<Switch name={'pedicureStatus'} id={'3'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.pedicureStatus[3].active}/>}>Комбинированный</Cell>
+                                    <Cell asideContent={<Switch name={'pedicureStatus'} id={'4'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.pedicureStatus[4].active}/>}>Покрытие</Cell>
+                                    {/*this.state.pedicureCat.map(function(dopCategory, i){
                                 return <Cell name={dopCategory} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
-                        </Div>
-                        }
-                        <Cell expandable name={'eyelashesVisible'} onClick={() => this.setState({ eyelashesVisible: !this.state.eyelashesVisible })} indicator={'Выбрано: '+this.state.count.eyelashesStatus}>Ресницы</Cell>
-                        {this.state.eyelashesVisible &&
-                        <Div>
-                            <Cell asideContent={<Switch name={'eyelashesStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.eyelashesStatus[0].active}/>}>Наращивание</Cell>
-                            <Cell asideContent={<Switch name={'eyelashesStatus'} id={'1'} onChange={this.handleCheck} checked={this.state.eyelashesStatus[1].active}/>}>Ламинирование</Cell>
-                            <Cell asideContent={<Switch name={'eyelashesStatus'} id={'2'} onChange={this.handleCheck} checked={this.state.eyelashesStatus[2].active}/>}>Кератиновая завивка</Cell>
-                            <Cell asideContent={<Switch name={'eyelashesStatus'} id={'3'} onChange={this.handleCheck} checked={this.state.eyelashesStatus[3].active}/>}>Окрашивание</Cell>
-                            <Cell asideContent={<Switch name={'eyelashesStatus'} id={'4'} onChange={this.handleCheck} checked={this.state.eyelashesStatus[4].active}/>}>Биозавивка</Cell>
-                            {/*this.state.eyelashesCat.map(function(dopCategory, i){
+                                </Div>
+                                }
+                                <Cell expandable name={'eyelashesVisible'}
+                                      onClick={() => this.setState({eyelashesVisible: !this.state.eyelashesVisible})}
+                                      indicator={'Выбрано: ' + this.state.count.eyelashesStatus}>Ресницы</Cell>
+                                {this.state.eyelashesVisible &&
+                                <Div>
+                                    <Cell asideContent={<Switch name={'eyelashesStatus'} id={'0'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyelashesStatus[0].active}/>}>Наращивание</Cell>
+                                    <Cell asideContent={<Switch name={'eyelashesStatus'} id={'1'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyelashesStatus[1].active}/>}>Ламинирование</Cell>
+                                    <Cell asideContent={<Switch name={'eyelashesStatus'} id={'2'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyelashesStatus[2].active}/>}>Кератиновая
+                                        завивка</Cell>
+                                    <Cell asideContent={<Switch name={'eyelashesStatus'} id={'3'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyelashesStatus[3].active}/>}>Окрашивание</Cell>
+                                    <Cell asideContent={<Switch name={'eyelashesStatus'} id={'4'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyelashesStatus[4].active}/>}>Биозавивка</Cell>
+                                    {/*this.state.eyelashesCat.map(function(dopCategory, i){
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
-                        </Div>
-                        }
-                        <Cell expandable name={'eyebrowsVisible'} onClick={() => this.setState({ eyebrowsVisible: !this.state.eyebrowsVisible })} indicator={'Выбрано: '+this.state.count.eyebrowsStatus}>Брови</Cell>
-                        {this.state.eyebrowsVisible &&
-                        <Div>
-                            <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.eyebrowsStatus[0].active}/>}>Перманентный макияж</Cell>
-                            <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'1'} onChange={this.handleCheck} checked={this.state.eyebrowsStatus[1].active}/>}>Микроблейдинг</Cell>
-                            <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'2'} onChange={this.handleCheck} checked={this.state.eyebrowsStatus[2].active}/>}>Нанонапыление</Cell>
-                            <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'3'} onChange={this.handleCheck} checked={this.state.eyebrowsStatus[3].active}/>}>Долговременная укладка</Cell>
-                            <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'4'} onChange={this.handleCheck} checked={this.state.eyebrowsStatus[4].active}/>}>Окрашивание</Cell>
-                            {/*this.state.eyebrowsCat.map(function(dopCategory, i){
+                                </Div>
+                                }
+                                <Cell expandable name={'eyebrowsVisible'}
+                                      onClick={() => this.setState({eyebrowsVisible: !this.state.eyebrowsVisible})}
+                                      indicator={'Выбрано: ' + this.state.count.eyebrowsStatus}>Брови</Cell>
+                                {this.state.eyebrowsVisible &&
+                                <Div>
+                                    <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'0'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyebrowsStatus[0].active}/>}>Перманентный
+                                        макияж</Cell>
+                                    <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'1'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyebrowsStatus[1].active}/>}>Микроблейдинг</Cell>
+                                    <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'2'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyebrowsStatus[2].active}/>}>Нанонапыление</Cell>
+                                    <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'3'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyebrowsStatus[3].active}/>}>Долговременная
+                                        укладка</Cell>
+                                    <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'4'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.eyebrowsStatus[4].active}/>}>Окрашивание</Cell>
+                                    {/*this.state.eyebrowsCat.map(function(dopCategory, i){
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
-                        </Div>
-                        }
-                        <Cell expandable name={'shugaringVisible'} onClick={() => this.setState({ shugaringVisible: !this.state.shugaringVisible })} indicator={'Выбрано: '+this.state.count.shugaringStatus}>Шугаринг</Cell>
-                        {this.state.shugaringVisible &&
-                        <Div>
-                            <Cell asideContent={<Switch name={'shugaringStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.shugaringStatus[0].active}/>}>Подпышечные впадины</Cell>
-                            <Cell asideContent={<Switch name={'shugaringStatus'} id={'1'} onChange={this.handleCheck} checked={this.state.shugaringStatus[1].active}/>}>Бикини</Cell>
-                            <Cell asideContent={<Switch name={'shugaringStatus'} id={'2'} onChange={this.handleCheck} checked={this.state.shugaringStatus[2].active}/>}>Руки</Cell>
-                            <Cell asideContent={<Switch name={'shugaringStatus'} id={'3'} onChange={this.handleCheck} checked={this.state.shugaringStatus[3].active}/>}>Ноги</Cell>
-                            <Cell asideContent={<Switch name={'shugaringStatus'} id={'4'} onChange={this.handleCheck} checked={this.state.shugaringStatus[4].active}/>}>Живот</Cell>
-                            {/*this.state.shugaringCat.map(function(dopCategory, i){
+                                </Div>
+                                }
+                                <Cell expandable name={'shugaringVisible'}
+                                      onClick={() => this.setState({shugaringVisible: !this.state.shugaringVisible})}
+                                      indicator={'Выбрано: ' + this.state.count.shugaringStatus}>Шугаринг</Cell>
+                                {this.state.shugaringVisible &&
+                                <Div>
+                                    <Cell asideContent={<Switch name={'shugaringStatus'} id={'0'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.shugaringStatus[0].active}/>}>Подпышечные
+                                        впадины</Cell>
+                                    <Cell asideContent={<Switch name={'shugaringStatus'} id={'1'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.shugaringStatus[1].active}/>}>Бикини</Cell>
+                                    <Cell asideContent={<Switch name={'shugaringStatus'} id={'2'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.shugaringStatus[2].active}/>}>Руки</Cell>
+                                    <Cell asideContent={<Switch name={'shugaringStatus'} id={'3'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.shugaringStatus[3].active}/>}>Ноги</Cell>
+                                    <Cell asideContent={<Switch name={'shugaringStatus'} id={'4'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.shugaringStatus[4].active}/>}>Живот</Cell>
+                                    {/*this.state.shugaringCat.map(function(dopCategory, i){
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
-                        </Div>
-                        }
-                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ hairVisible: !this.state.hairVisible })} indicator={'Выбрано: '+this.state.count.hairStatus}>Уход за волосами</Cell>
-                        {this.state.hairVisible &&
-                        <Div>
-                            <Cell asideContent={<Switch name={'hairStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.hairStatus[0].active}/>}>Ламинирование</Cell>
-                            <Cell asideContent={<Switch name={'hairStatus'} id={'1'} onChange={this.handleCheck} checked={this.state.hairStatus[1].active}/>}>Окрашивание</Cell>
-                            <Cell asideContent={<Switch name={'hairStatus'} id={'2'} onChange={this.handleCheck} checked={this.state.hairStatus[2].active}/>}>Мелирование</Cell>
-                            <Cell asideContent={<Switch name={'hairStatus'} id={'3'} onChange={this.handleCheck} checked={this.state.hairStatus[3].active}/>}>Ботокс волос</Cell>
-                            <Cell asideContent={<Switch name={'hairStatus'} id={'4'} onChange={this.handleCheck} checked={this.state.hairStatus[4].active}/>}>Стрижка</Cell>
-                            {/*this.state.hairCat.map(function(dopCategory, i){
+                                </Div>
+                                }
+                                <Cell expandable name={'hairVisible'}
+                                      onClick={() => this.setState({hairVisible: !this.state.hairVisible})}
+                                      indicator={'Выбрано: ' + this.state.count.hairStatus}>Уход за волосами</Cell>
+                                {this.state.hairVisible &&
+                                <Div>
+                                    <Cell asideContent={<Switch name={'hairStatus'} id={'0'} onChange={this.handleCheck}
+                                                                checked={this.state.hairStatus[0].active}/>}>Ламинирование</Cell>
+                                    <Cell asideContent={<Switch name={'hairStatus'} id={'1'} onChange={this.handleCheck}
+                                                                checked={this.state.hairStatus[1].active}/>}>Окрашивание</Cell>
+                                    <Cell asideContent={<Switch name={'hairStatus'} id={'2'} onChange={this.handleCheck}
+                                                                checked={this.state.hairStatus[2].active}/>}>Мелирование</Cell>
+                                    <Cell asideContent={<Switch name={'hairStatus'} id={'3'} onChange={this.handleCheck}
+                                                                checked={this.state.hairStatus[3].active}/>}>Ботокс
+                                        волос</Cell>
+                                    <Cell asideContent={<Switch name={'hairStatus'} id={'4'} onChange={this.handleCheck}
+                                                                checked={this.state.hairStatus[4].active}/>}>Стрижка</Cell>
+                                    {/*this.state.hairCat.map(function(dopCategory, i){
                             return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
-                        </Div>
-                        }
-                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ cosmeticVisible: !this.state.cosmeticVisible })} indicator={'Выбрано: '+this.state.count.cosmeticStatus}>Косметология</Cell>
-                        {this.state.cosmeticVisible &&
-                        <Div>
-                            <Cell asideContent={<Switch name={'cosmeticStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[0].active}/>}>Макияж</Cell>
-                            <Cell asideContent={<Switch name={'cosmeticStatus'} id={'1'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[1].active}/>}>Пилинг</Cell>
-                            <Cell asideContent={<Switch name={'cosmeticStatus'} id={'2'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[2].active}/>}>Чистка</Cell>
-                            <Cell asideContent={<Switch name={'cosmeticStatus'} id={'3'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[3].active}/>}>Массаж лица</Cell>
-                            {/*this.state.hairCat.map(function(dopCategory, i){
+                                </Div>
+                                }
+                                <Cell expandable name={'hairVisible'}
+                                      onClick={() => this.setState({cosmeticVisible: !this.state.cosmeticVisible})}
+                                      indicator={'Выбрано: ' + this.state.count.cosmeticStatus}>Косметология</Cell>
+                                {this.state.cosmeticVisible &&
+                                <Div>
+                                    <Cell asideContent={<Switch name={'cosmeticStatus'} id={'0'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.cosmeticStatus[0].active}/>}>Макияж</Cell>
+                                    <Cell asideContent={<Switch name={'cosmeticStatus'} id={'1'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.cosmeticStatus[1].active}/>}>Пилинг</Cell>
+                                    <Cell asideContent={<Switch name={'cosmeticStatus'} id={'2'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.cosmeticStatus[2].active}/>}>Чистка</Cell>
+                                    <Cell asideContent={<Switch name={'cosmeticStatus'} id={'3'}
+                                                                onChange={this.handleCheck}
+                                                                checked={this.state.cosmeticStatus[3].active}/>}>Массаж
+                                        лица</Cell>
+                                    {/*this.state.hairCat.map(function(dopCategory, i){
                             return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
-                        </Div>
+                                </Div>
+                                }
+                            </FormLayoutGroup>
+                            <Select
+                                name={'type'}
+                                value={this.state.type}
+                                status={this.state.type ? 'valid' : 'error'}
+                                bottom={this.state.type ? '' : 'Пожалуйста, укажите тип оказания услуг'}
+                                onChange={this.handleChange}
+                                placeholder="Выберите тип оказания услуг">
+                                <option value="Организация">Организация</option>
+                                <option value="Частный мастер">Частный мастер</option>
+                            </Select>
+                            <Checkbox onChange={() => this.setState({checkLicense: !this.state.checkLicense})}>Согласен
+                                c <Link>условиями использования приложения</Link></Checkbox>
+                            {this.state.checkLicense && this.state.about && this.state.type &&
+                            <Button size="xl" onClick={this.props.closePopup}>Зарегистрироваться как мастер</Button>
+                            }
+                        </FormLayout>
                         }
-                    </FormLayoutGroup>
-                    <Select
-                        name={'type'}
-                        value={this.state.type}
-                        status={this.state.type ? 'valid' : 'error'}
-                        bottom={this.state.type ? '' : 'Пожалуйста, укажите тип оказания услуг'}
-                        onChange={this.handleChange}
-                        placeholder="Выберите тип оказания услуг">
-                        <option value="Организация">Организация</option>
-                        <option value="Частный мастер">Частный мастер</option>
-                    </Select>
-                    {/*<File top="Загрузите портфолио Ваших работ" before={<Icon24Camera />} size="l">
-                        Загрузить
-                    </File>*/}
-                    <Checkbox onChange={() => this.setState({ checkLicense: !this.state.checkLicense })}>Согласен c <Link>условиями использования приложения</Link></Checkbox>
-                    {this.state.checkLicense &&
-                    <Button size="xl" onClick={this.handleSubmit}>Зарегистрироваться как мастер</Button>
-                    }
-                </FormLayout>
-            </Panel>
+                    </Group>
         );
     }
 }

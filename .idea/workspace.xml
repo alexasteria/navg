@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="ЛК пользователя, открытие попап окна регистрации мастера">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Счетчик выбранных типов услуг при регистрации">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +188,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580764328551</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Счетчик выбранных типов услуг при регистрации">
+      <created>1580766787817</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1580766787817</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,17 +224,18 @@
     <MESSAGE value="Чекбоксы без мапинга" />
     <MESSAGE value="Запись пользователя в БД при первом входе" />
     <MESSAGE value="ЛК пользователя, открытие попап окна регистрации мастера" />
-    <option name="LAST_COMMIT_MESSAGE" value="ЛК пользователя, открытие попап окна регистрации мастера" />
+    <MESSAGE value="Счетчик выбранных типов услуг при регистрации" />
+    <option name="LAST_COMMIT_MESSAGE" value="Счетчик выбранных типов услуг при регистрации" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1579203172728">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1579203172728" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580764328245">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580766787514">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580764328245" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580766787514" />
     <state x="794" y="232" key="RollbackChangesDialog" timestamp="1580689712951">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

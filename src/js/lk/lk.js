@@ -1,7 +1,6 @@
 import React from 'react';
 import VKConnect from '@vkontakte/vkui-connect-mock';
-import {Avatar, Button, Cell, List, Panel, Group, View, Root, PanelHeader} from "@vkontakte/vkui"
-import Icon24MoreHorizontal from '@vkontakte/icons/dist/24/more_horizontal';
+import {Separator, CellButton, Avatar, Button, Cell, List, Group} from "@vkontakte/vkui"
 import {BACKEND} from '../func/func';
 
 class Lk extends React.Component {
@@ -16,6 +15,8 @@ class Lk extends React.Component {
                 status: ''
             },
             tmpUser: {},
+            notMaster: false,
+            isMaster: false
         };
     }
     componentDidMount() {
@@ -28,28 +29,53 @@ class Lk extends React.Component {
                 user.lastname = e.detail.data.last_name;
                 user.avatarLink = e.detail.data.photo_200;
                 this.setState({user: user});
-                fetch(BACKEND.users+'/'+user.vkUid)
-                    .then(res => res.json())
-                    .then(user => this.setState({tmpUser: user}, () =>
-                        this.registerUser(user)
-                    ))
-                    .catch(error => {
-                       console.log(error); // Error: Not Found
-                    });
+                this.verifiedUser(this.state.user.vkUid);
             }
         });
         VKConnect.send('VKWebAppGetUserInfo', {});
     }
-    registerUser(user) {
-        if (user.length === 0) {
+    verifiedUser(vkUid) {
+        fetch(BACKEND.users+'/vkuid/'+vkUid)
+            .then(res => res.json())
+            .then(user => this.setState({tmpUser: user}, () =>
+                this.registerUser()
+            ))
+            .catch(error => {
+                console.log(error); // Error: Not Found
+            });
+
+        fetch(BACKEND.masters+'/vkuid/'+vkUid)
+            .then(res => res.json())
+            .then(user => this.setState({tmpUser: user}, () =>
+                this.authMaster()
+            ))
+            .catch(error => {
+                console.log(error); // Error: Not Found
+            });
+        //console.log(this.state.tmpUser[0]);
+
+    };
+    authMaster(){
+        if(this.state.tmpUser.length === 1 ){
+            this.setState({notMaster: false});
+            this.setState({isMaster: true});
+            console.log('Авторизован, найден - мастер ');
+        } else {
+            this.setState({notMaster: true});
+            this.setState({isMaster: false});
+            console.log('Не найден - не мастер'  +this.state.newUser);
+        }
+    }
+    registerUser() {
+        if (this.state.tmpUser.length === 0) {
             console.log('Пользователь не найден');
-            console.log(this.state.user);
+            //console.log(this.state.user);
             this.postData(BACKEND.users, this.state.user).then(r => console.log(r)); //регитрируем
         }
         let copyUser = this.state.user;
-        copyUser.status = user[0].status;
+        copyUser.status = this.state.tmpUser[0].status;
         this.setState({user: copyUser});
-        console.log(this.state.user);
+        //console.log(this.state.user);
 
     }
     postData(url = '', data = {}) {
@@ -77,16 +103,30 @@ class Lk extends React.Component {
                     size="l"
                     description={this.state.user.status}
                     before={<Avatar src={this.state.user.avatarLink} size={80}/>}
-                    bottomContent={<Button onClick={() => this.setState({ activeViewMasters: 'masterCat' })}>Регистрация мастера</Button>}
                 >
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
+                    {this.state.notMaster &&
+                    <CellButton onClick={this.props.openReg}>Зарегистрироваться как мастер</CellButton>
+                    }
                 <Group title="Основное">
+                    <Separator style={{ margin: '12px 0' }} />
                     <List>
                         <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Избранное</Cell>
                         <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Мои записи</Cell>
                     </List>
                 </Group>
+                {this.state.isMaster &&
+                <Group title="Меню мастера">
+                    <Separator style={{ margin: '12px 0' }} />
+                    <List>
+                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Мои заявки</Cell>
+                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>График</Cell>
+                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Портфолио</Cell>
+                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Настройки</Cell>
+                    </List>
+                </Group>
+                }
             </Group>
         );
     }
