@@ -13,6 +13,7 @@ class Invite extends React.Component {
             eyelashesVisible: false,
             eyebrowsVisible: false,
             shugaringVisible: false,
+            cosmeticVisible: false,
             manicureStatus: [
                 {active: false, id:"5e3756b37612461064809b28", label: "Наращивание"},
                 {active: false, id:"5e3757907612461064809b29", label: "Покрытие гелем"},
@@ -56,12 +57,19 @@ class Invite extends React.Component {
                 {active: false, id:"5e3757e17612461064809b31", label: "Ботокс волос"},
                 {active: false, id:"5e3757e97612461064809b32", label: "Стрижка"}
             ],
-            user: {
+            cosmeticStatus: [
+                {active: false, id:"5e3758767612461064809b47", label: "Макияж"},
+                {active: false, id:"5e37587a7612461064809b48", label: "Пилинг"},
+                {active: false, id:"5e37587d7612461064809b49", label: "Чистка"},
+                {active: false, id:"5e3758827612461064809b4a", label: "Массаж лица"},
+            ],
+            master: {
                 firstname: '',
                 lastname: '',
-                avatarLink: '',
-                about: ''
-            }
+                avatarLink: ''
+            },
+            type: '',
+            about: ''
 
         };
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -73,11 +81,11 @@ class Invite extends React.Component {
 
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
                 console.log(e.detail.data);
-                let user = this.state.user;
-                user.firstname = e.detail.data.first_name;
-                user.lastname = e.detail.data.last_name;
-                user.avatarLink = e.detail.data.photo_200;
-                this.setState({user: user});
+                let master = this.state.master;
+                master.firstname = e.detail.data.first_name;
+                master.lastname = e.detail.data.last_name;
+                master.avatarLink = e.detail.data.photo_200;
+                this.setState({master: master});
             }
         });
         VKConnect.send('VKWebAppGetUserInfo', {});
@@ -111,17 +119,18 @@ class Invite extends React.Component {
 
     handleSubmit(event) {
         const master = {
-            firstname: this.state.firstname,
-            lastname: this.state.lastname,
+            firstname: this.state.master.firstname,
+            lastname: this.state.master.lastname,
             description: this.state.about,
-            type: this.state.type,
             manicureStatus: this.state.manicureStatus,
             pedicureStatus: this.state.pedicureStatus,
             eyelashesStatus: this.state.eyelashesStatus,
             eyebrowsStatus: this.state.eyebrowsStatus,
             shugaringStatus: this.state.shugaringStatus,
             hairStatus: this.state.hairStatus,
-            avatarLink: this.state.avatarLink
+            cosmeticStatus: this.state.cosmeticStatus,
+            avatarLink: this.state.master.avatarLink,
+            type: this.state.type
         };
         console.log(master);
         this.postData('http://localhost:3030/masters/', master);
@@ -142,7 +151,8 @@ class Invite extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
-            .then(response => response.json()); // парсит JSON ответ в Javascript объект
+            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+
     }
     render(){
         return (
@@ -151,10 +161,10 @@ class Invite extends React.Component {
                     <Cell
                         size="l"
                         description="Регистрация мастера"
-                        before={<Avatar src={this.state.user.avatarLink} size={80}/>}
+                        before={<Avatar src={this.state.master.avatarLink} size={80}/>}
                         bottomContent={<Button>Отменить</Button>}
                     >
-                        {this.state.user.firstname+' '+this.state.user.lastname}
+                        {this.state.master.firstname+' '+this.state.master.lastname}
                     </Cell>
                     <Textarea name={'about'} top="О себе" value={this.state.about} onChange={this.handleChange}/>
                     <FormLayoutGroup top="Сфера деятельности" bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти." id={'category'}>
@@ -195,7 +205,7 @@ class Invite extends React.Component {
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
-                        <Cell expandable name={'eyebrowsVisible'} onClick={() => this.setState({ eyebrowsVisible: !this.state.eyebrowsVisible })} indicator={'Выбрано: '}>Брови</Cell>
+                        <Cell expandable name={'eyebrowsVisible'} onClick={() => this.setState({ eyebrowsVisible: !this.state.eyebrowsVisible })} indicator={'Индикатор'}>Брови</Cell>
                         {this.state.eyebrowsVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.eyebrowsStatus[0].active}/>}>Перманентный макияж</Cell>
@@ -207,7 +217,7 @@ class Invite extends React.Component {
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
-                        <Cell expandable name={'shugaringVisible'} onClick={() => this.setState({ shugaringVisible: !this.state.shugaringVisible })} indicator={'Выбрано: '}>Шугаринг</Cell>
+                        <Cell expandable name={'shugaringVisible'} onClick={() => this.setState({ shugaringVisible: !this.state.shugaringVisible })} indicator={'Индикатор'}>Шугаринг</Cell>
                         {this.state.shugaringVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'shugaringStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.shugaringStatus[0].active}/>}>Подпышечные впадины</Cell>
@@ -219,7 +229,7 @@ class Invite extends React.Component {
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
-                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ hairVisible: !this.state.hairVisible })} indicator={'Выбрано: '}>Уход за волосами</Cell>
+                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ hairVisible: !this.state.hairVisible })} indicator={'Индикатор'}>Уход за волосами</Cell>
                         {this.state.hairVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'hairStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.hairStatus[0].active}/>}>Ламинирование</Cell>
@@ -231,14 +241,25 @@ class Invite extends React.Component {
                             return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
+                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ cosmeticVisible: !this.state.cosmeticVisible })} indicator={'Индикатор'}>Косметология</Cell>
+                        {this.state.cosmeticVisible &&
+                        <Div>
+                            <Cell asideContent={<Switch name={'cosmeticStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[0].active}/>}>Макияж</Cell>
+                            <Cell asideContent={<Switch name={'cosmeticStatus'} id={'1'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[1].active}/>}>Пилинг</Cell>
+                            <Cell asideContent={<Switch name={'cosmeticStatus'} id={'2'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[2].active}/>}>Чистка</Cell>
+                            <Cell asideContent={<Switch name={'cosmeticStatus'} id={'3'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[3].active}/>}>Массаж лица</Cell>
+                            {/*this.state.hairCat.map(function(dopCategory, i){
+                            return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
+                        </Div>
+                        }
                     </FormLayoutGroup>
                     <Select id={'type'} value={this.state.type} onChange={this.handleChange} placeholder="Выберите тип оказания услуг">
                         <option value="organization">Организация</option>
                         <option value="solo">Частный мастер</option>
                     </Select>
-                    <File top="Загрузите портфолио Ваших работ" before={<Icon24Camera />} size="l">
+                    {/*<File top="Загрузите портфолио Ваших работ" before={<Icon24Camera />} size="l">
                         Загрузить
-                    </File>
+                    </File>*/}
                     <Checkbox required>Согласен c <Link>условиями использования приложения</Link></Checkbox>
                     <Button size="xl" onClick={this.handleSubmit}>Зарегистрироваться как мастер</Button>
                 </FormLayout>

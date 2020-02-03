@@ -203,7 +203,7 @@ class App extends React.Component {
                     <View id="lk" activePanel="lk">
                         <Panel id="lk">
                             <PanelHeader>Личный кабинет</PanelHeader>
-                            <Invite />
+                            <Lk />
                         </Panel>
                     </View>
                 </Root>

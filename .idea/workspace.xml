@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Чекбоксы маникюра через перебор массива">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Чекбоксы без мапинга">
+      <change afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +69,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
       <recent name="D:\automaster\src\js\sale" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
@@ -164,7 +167,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580730458405</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Чекбоксы без мапинга">
+      <created>1580741625180</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1580741625180</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -190,17 +200,18 @@
     <MESSAGE value="Настройки  GH Pages" />
     <MESSAGE value="Импортирована библиотека ВК коннект" />
     <MESSAGE value="Чекбоксы маникюра через перебор массива" />
-    <option name="LAST_COMMIT_MESSAGE" value="Чекбоксы маникюра через перебор массива" />
+    <MESSAGE value="Чекбоксы без мапинга" />
+    <option name="LAST_COMMIT_MESSAGE" value="Чекбоксы без мапинга" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1579203172728">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1579203172728" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580730458085">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580743482374">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580730458085" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580743482374" />
     <state x="794" y="232" key="RollbackChangesDialog" timestamp="1580689712951">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
