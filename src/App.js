@@ -66,15 +66,6 @@ class App extends React.Component {
         this.setState({ activeStory: e.currentTarget.dataset.story })
     }
     render () {
-        /*VKConnect.subscribe((e) => {
-
-            if (e.detail.type === 'VKWebAppGetUserInfoResult') {
-                console.log(e.detail.data);
-                // do something
-            }
-        });
-
-        VKConnect.send('VKWebAppGetUserInfo', {});*/
         connect.send("VKWebAppInit", {});
         connect.send("VKWebAppAllowNotifications", {});
         // Subscribes to event, sended by client
