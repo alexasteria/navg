@@ -53,7 +53,8 @@ class MasterList extends React.Component {
     }
     render() {
         if(this.state.mastersList.length !== undefined) {
-            this.state.title = 'Мастеров найдено: '+this.state.mastersList.length;
+            this.setState({title: 'Мастеров найдено: '+this.state.mastersList.length})
+            //this.state.title = 'Мастеров найдено: '+this.state.mastersList.length;
         }
         return (
             <Group title={this.state.title}>

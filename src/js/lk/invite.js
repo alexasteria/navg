@@ -1,7 +1,7 @@
 import React from 'react';
 import VKConnect from '@vkontakte/vkui-connect-mock';
-import {Select, Cell, Switch, FormLayoutGroup, File, Link, Button, Checkbox, Textarea, FormLayout, Input, Div, Panel, Avatar} from "@vkontakte/vkui"
-import Icon24Camera from '@vkontakte/icons/dist/24/camera';
+import {Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Panel, Avatar} from "@vkontakte/vkui"
+//import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 
 class Invite extends React.Component {
     constructor(props) {
@@ -94,7 +94,7 @@ class Invite extends React.Component {
     handleCheck = event => {
         const target = event.target;
         const name = target.name;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        //const value = target.type === 'checkbox' ? target.checked : target.value;
         let mass = this.state[name];
         const index = target.id;
         mass[index].active = !mass[index].active;
@@ -103,7 +103,7 @@ class Invite extends React.Component {
     };
     handleInputChange(event) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        //const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         const id = target.id;
         this.setState({ [name]: !this.state[name][id] });
@@ -162,7 +162,7 @@ class Invite extends React.Component {
                         size="l"
                         description="Регистрация мастера"
                         before={<Avatar src={this.state.master.avatarLink} size={80}/>}
-                        bottomContent={<Button>Отменить</Button>}
+                        bottomContent={'Bottom content'}
                     >
                         {this.state.master.firstname+' '+this.state.master.lastname}
                     </Cell>

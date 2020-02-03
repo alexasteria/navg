@@ -1,6 +1,6 @@
 import React from 'react';
 import VKConnect from '@vkontakte/vkui-connect-mock';
-import {Avatar, Button, Cell, List, Panel, Group} from "@vkontakte/vkui"
+import {Avatar, Button, Cell, List, Panel, Group, View, Root, PanelHeader} from "@vkontakte/vkui"
 import Icon24MoreHorizontal from '@vkontakte/icons/dist/24/more_horizontal';
 import {BACKEND} from '../func/func';
 
@@ -12,7 +12,8 @@ class Lk extends React.Component {
                 firstname: '',
                 lastname: '',
                 avatarLink: '',
-                vkUid: ''
+                vkUid: '',
+                status: ''
             },
             tmpUser: {},
         };
@@ -40,12 +41,15 @@ class Lk extends React.Component {
         VKConnect.send('VKWebAppGetUserInfo', {});
     }
     registerUser(user) {
-        console.log(user);
         if (user.length === 0) {
             console.log('Пользователь не найден');
             console.log(this.state.user);
             this.postData(BACKEND.users, this.state.user).then(r => console.log(r)); //регитрируем
         }
+        let copyUser = this.state.user;
+        copyUser.status = user[0].status;
+        this.setState({user: copyUser});
+        console.log(this.state.user);
 
     }
     postData(url = '', data = {}) {
@@ -68,43 +72,22 @@ class Lk extends React.Component {
     }
     render(){
         return (
-            <Panel id="lk">
+            <Group>
+                <Cell
+                    size="l"
+                    description={this.state.user.status}
+                    before={<Avatar src={this.state.user.avatarLink} size={80}/>}
+                    bottomContent={<Button onClick={() => this.setState({ activeViewMasters: 'masterCat' })}>Регистрация мастера</Button>}
+                >
+                    {this.state.user.firstname+' '+this.state.user.lastname}
+                </Cell>
                 <Group title="Основное">
                     <List>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Личная карточка</Cell>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Портфолио</Cell>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>График</Cell>
+                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Избранное</Cell>
+                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Мои записи</Cell>
                     </List>
                 </Group>
-                <Group title="Ближайшие записи">
-                    <List>
-                        <Cell
-                            before={<Avatar size={72} />}
-                            size="l"
-                            description="Сегодня 13:00"
-                            asideContent={<Icon24MoreHorizontal />}
-                            bottomContent={
-                                <div style={{ display: 'flex' }}>
-                                    <Button size="m">Написать</Button>
-                                </div>
-                            }
-                        >
-                            Анна Сергеевна</Cell>
-                        <Cell
-                            before={<Avatar size={72} />}
-                            size="l"
-                            description="Завтра 10:00"
-                            asideContent={<Icon24MoreHorizontal />}
-                            bottomContent={
-                                <div style={{ display: 'flex' }}>
-                                    <Button size="m">Написать</Button>
-                                </div>
-                            }
-                        >
-                            Алена Ковалева</Cell>
-                    </List>
-                </Group>
-            </Panel>
+            </Group>
         );
     }
 }
