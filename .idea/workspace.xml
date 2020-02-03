@@ -4,6 +4,7 @@
     <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Импортирована библиотека ВК коннект">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +149,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580673881848</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Импортирована библиотека ВК коннект">
+      <created>1580674449075</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1580674449075</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,10 +188,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1579203172728" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580673881519">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580674448772">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580673881519" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580674448772" />
+    <state x="794" y="232" key="RollbackChangesDialog" timestamp="1580689712951">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="794" y="232" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580689712951" />
     <state x="552" y="254" key="Vcs.Push.Dialog.v2" timestamp="1580672808758">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -192,9 +204,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="661" y="345" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1579388412752" />
-    <state x="769" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1580672743466">
+    <state x="769" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1580689662596">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="769" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1580672743466" />
+    <state x="769" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1580689662596" />
   </component>
 </project>

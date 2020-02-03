@@ -1,5 +1,5 @@
 import React from 'react';
-import {Select, Cell, Switch, FormLayoutGroup, File, Link, Button, Checkbox, Textarea, FormLayout, Input, Div, Panel, Group, PanelHeader, View} from "@vkontakte/vkui"
+import {Select, Cell, Switch, FormLayoutGroup, File, Link, Button, Checkbox, Textarea, FormLayout, Input, Div, Panel} from "@vkontakte/vkui"
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 
 class Invite extends React.Component {
@@ -21,7 +21,14 @@ class Invite extends React.Component {
             "Биозавивка"],
             eyebrowsCat: ["Перманентный макияж", "Микроблейдинг", "Нанонапыление", "Долговременная укладка", "Окрашивание"],
             shugaringCat: ["Подпышечные впадины", "Бикини", "Руки", "Ноги", "Белая линия живота"],
-            manicureStatus: {},
+            manicureStatus: [
+                {activate: true, id:"5e3756b37612461064809b28", label: "Наращивание"},
+                {activate: true, id:"5e3757907612461064809b29", label: "Покрытие гелем"},
+                {activate: true, id:"5e3757977612461064809b2a", label: "Маникюр комбинированый"},
+                {activate: true, id:"5e3757a37612461064809b2b", label: "Маникюр обрезной"},
+                {activate: true, id:"5e3757a97612461064809b2c", label: "Аппаратный маникюр"},
+                {activate: true, id:"5e3757b17612461064809b2d", label: "Укрепление ногтей"}
+            ],
             pedicureStatus: {},
             eyelashesStatus: {},
             eyebrowsStatus: {},
@@ -43,7 +50,8 @@ class Invite extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         const id = target.id;
-        this.state[name][id] = value;
+        this.setState({ [name]: !this.state[name][id] });
+        //this.state[name][id] = value;
         console.log(this.state);
 
     }
@@ -90,7 +98,7 @@ class Invite extends React.Component {
     }
     render(){
         return (
-            <Panel>
+            <Panel id="reg">
                 <FormLayout onSubmit={this.handleSubmit}>
                     <Input name={'avatarLink'} top="AvatarLink" value={this.state.avatarLink} onChange={this.handleChange}/>
                     <Input name={'firstname'}  top="Имя" value={this.state.firstname} onChange={this.handleChange}/>
@@ -100,14 +108,8 @@ class Invite extends React.Component {
                         <Cell expandable name={'manicureVisible'} onClick={() => this.setState({ manicureVisible: !this.state.manicureVisible })} indicator={'Выбрано: '+Object.keys(this.state.manicureStatus).length}>Маникюр</Cell>
                         {this.state.manicureVisible &&
                         <Div>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'Наращивание'} onChange={this.handleInputChange} checked={this.state.manicureStatus['Наращивание']}/>}>Наращивание</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'Покрытие гелем'} onChange={this.handleInputChange} checked={this.state.manicureStatus['Покрытие гелем']} />}>Покрытие гелем</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'Маникюр комбинированый'} onChange={this.handleInputChange} checked={this.state.manicureStatus['Маникюр комбинированый']}/>}>Маникюр комбинированый</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'Маникюр обрезной'} onChange={this.handleInputChange} checked={this.state.manicureStatus['Маникюр обрезной']}/>}>Маникюр обрезной</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'Аппаратный маникюр'} onChange={this.handleInputChange} checked={this.state.manicureStatus['Аппаратный маникюр']}/>}>Аппаратный маникюр</Cell>
-                            <Cell asideContent={<Switch name={'manicureStatus'} id={'Укрепление ногтей'} onChange={this.handleInputChange} checked={this.state.manicureStatus['Укрепление ногтей']}/>}>Укрепление ногтей</Cell>
-                            {/*this.state.manicureCat.map(function(dopCategory, i){
-                                return <Cell  id={i} asideContent={<Switch defaultChecked />}>{dopCategory}</Cell>;})*/}
+                            {this.state.manicureStatus.map(function(item, i){
+                                return <Cell key={i} asideContent={<Switch name={'manicureStatus'} id={item.id} checked={item.active}/>}>{item.label}</Cell>;})}
                         </Div>
                         }
                         <Cell expandable name={'pedicureVisible'} onClick={() => this.setState({ pedicureVisible: !this.state.pedicureVisible })} indicator={'Выбрано: '+Object.keys(this.state.pedicureStatus).length}>Педикюр</Cell>
