@@ -7,6 +7,7 @@ class Invite extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            checkLicense: false,
             hairVisible: false,
             manicureVisible: false,
             pedicureVisible: false,
@@ -14,6 +15,15 @@ class Invite extends React.Component {
             eyebrowsVisible: false,
             shugaringVisible: false,
             cosmeticVisible: false,
+            count: {
+                manicureStatus: 0,
+                pedicureStatus: 0,
+                eyelashesStatus: 0,
+                eyebrowsStatus: 0,
+                shugaringStatus: 0,
+                hairStatus: 0,
+                cosmeticStatus: 0
+            },
             manicureStatus: [
                 {active: false, id:"5e3756b37612461064809b28", label: "Наращивание"},
                 {active: false, id:"5e3757907612461064809b29", label: "Покрытие гелем"},
@@ -72,7 +82,6 @@ class Invite extends React.Component {
             about: ''
 
         };
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -99,18 +108,18 @@ class Invite extends React.Component {
         const index = target.id;
         mass[index].active = !mass[index].active;
         this.setState({ [name]: mass });
+        let countMass = this.state[name].filter(
+            function(item){
+                console.log(item);
+                if (item.active === true){
+                    return item.active;
+                }
+            });;
+        let count = this.state.count;
+        count[name] = countMass.length;
+        this.setState({ count: count });
         console.log(this.state);
     };
-    handleInputChange(event) {
-        const target = event.target;
-        //const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-        const id = target.id;
-        this.setState({ [name]: !this.state[name][id] });
-        //this.state[name][id] = value;
-        console.log(this.state);
-
-    }
    handleChange(event) {
         let {name, value} = event.target;
         this.setState({[name]: value});
@@ -166,9 +175,15 @@ class Invite extends React.Component {
                     >
                         {this.state.master.firstname+' '+this.state.master.lastname}
                     </Cell>
-                    <Textarea name={'about'} top="О себе" value={this.state.about} onChange={this.handleChange}/>
+                    <Textarea
+                        name={'about'}
+                        status={this.state.about ? 'valid' : 'error'}
+                        bottom={this.state.about ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                        top="О себе"
+                        value={this.state.about}
+                        onChange={this.handleChange}/>
                     <FormLayoutGroup top="Сфера деятельности" bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти." id={'category'}>
-                        <Cell expandable name={'manicureVisible'} onClick={() => this.setState({ manicureVisible: !this.state.manicureVisible })} indicator={'Индикатор'}>Маникюр</Cell>
+                        <Cell expandable name={'manicureVisible'} onClick={() => this.setState({ manicureVisible: !this.state.manicureVisible })} indicator={'Выбрано: '+this.state.count.manicureStatus}>Маникюр</Cell>
                         {this.state.manicureVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'manicureStatus'} id={'0'}  onChange={this.handleCheck} checked={this.state.manicureStatus[0].active}/>}>Классический</Cell>
@@ -181,7 +196,7 @@ class Invite extends React.Component {
                                 return <Cell key={i} onChange={this.handleInputChange}  asideContent={<Switch  name={'manicureStatus'} id={item.id} checked={item.active} />}>{item.label}</Cell>;})}*/}
                         </Div>
                         }
-                        <Cell expandable name={'pedicureVisible'} onClick={() => this.setState({ pedicureVisible: !this.state.pedicureVisible })} indicator={'Индикатор'}>Педикюр</Cell>
+                        <Cell expandable name={'pedicureVisible'} onClick={() => this.setState({ pedicureVisible: !this.state.pedicureVisible })} indicator={'Выбрано: '+this.state.count.pedicureStatus}>Педикюр</Cell>
                         {this.state.pedicureVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'pedicureStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.pedicureStatus[0].active}/>}>Классический</Cell>
@@ -193,7 +208,7 @@ class Invite extends React.Component {
                                 return <Cell name={dopCategory} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
-                        <Cell expandable name={'eyelashesVisible'} onClick={() => this.setState({ eyelashesVisible: !this.state.eyelashesVisible })} indicator={'Индикатор'}>Ресницы</Cell>
+                        <Cell expandable name={'eyelashesVisible'} onClick={() => this.setState({ eyelashesVisible: !this.state.eyelashesVisible })} indicator={'Выбрано: '+this.state.count.eyelashesStatus}>Ресницы</Cell>
                         {this.state.eyelashesVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'eyelashesStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.eyelashesStatus[0].active}/>}>Наращивание</Cell>
@@ -205,7 +220,7 @@ class Invite extends React.Component {
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
-                        <Cell expandable name={'eyebrowsVisible'} onClick={() => this.setState({ eyebrowsVisible: !this.state.eyebrowsVisible })} indicator={'Индикатор'}>Брови</Cell>
+                        <Cell expandable name={'eyebrowsVisible'} onClick={() => this.setState({ eyebrowsVisible: !this.state.eyebrowsVisible })} indicator={'Выбрано: '+this.state.count.eyebrowsStatus}>Брови</Cell>
                         {this.state.eyebrowsVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'eyebrowsStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.eyebrowsStatus[0].active}/>}>Перманентный макияж</Cell>
@@ -217,7 +232,7 @@ class Invite extends React.Component {
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
-                        <Cell expandable name={'shugaringVisible'} onClick={() => this.setState({ shugaringVisible: !this.state.shugaringVisible })} indicator={'Индикатор'}>Шугаринг</Cell>
+                        <Cell expandable name={'shugaringVisible'} onClick={() => this.setState({ shugaringVisible: !this.state.shugaringVisible })} indicator={'Выбрано: '+this.state.count.shugaringStatus}>Шугаринг</Cell>
                         {this.state.shugaringVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'shugaringStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.shugaringStatus[0].active}/>}>Подпышечные впадины</Cell>
@@ -229,7 +244,7 @@ class Invite extends React.Component {
                                 return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
-                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ hairVisible: !this.state.hairVisible })} indicator={'Индикатор'}>Уход за волосами</Cell>
+                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ hairVisible: !this.state.hairVisible })} indicator={'Выбрано: '+this.state.count.hairStatus}>Уход за волосами</Cell>
                         {this.state.hairVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'hairStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.hairStatus[0].active}/>}>Ламинирование</Cell>
@@ -241,7 +256,7 @@ class Invite extends React.Component {
                             return <Cell id={i} asideContent={<Switch />}>{dopCategory}</Cell>;})*/}
                         </Div>
                         }
-                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ cosmeticVisible: !this.state.cosmeticVisible })} indicator={'Индикатор'}>Косметология</Cell>
+                        <Cell expandable name={'hairVisible'} onClick={() => this.setState({ cosmeticVisible: !this.state.cosmeticVisible })} indicator={'Выбрано: '+this.state.count.cosmeticStatus}>Косметология</Cell>
                         {this.state.cosmeticVisible &&
                         <Div>
                             <Cell asideContent={<Switch name={'cosmeticStatus'} id={'0'} onChange={this.handleCheck} checked={this.state.cosmeticStatus[0].active}/>}>Макияж</Cell>
@@ -253,15 +268,23 @@ class Invite extends React.Component {
                         </Div>
                         }
                     </FormLayoutGroup>
-                    <Select id={'type'} value={this.state.type} onChange={this.handleChange} placeholder="Выберите тип оказания услуг">
-                        <option value="organization">Организация</option>
-                        <option value="solo">Частный мастер</option>
+                    <Select
+                        name={'type'}
+                        value={this.state.type}
+                        status={this.state.type ? 'valid' : 'error'}
+                        bottom={this.state.type ? '' : 'Пожалуйста, укажите тип оказания услуг'}
+                        onChange={this.handleChange}
+                        placeholder="Выберите тип оказания услуг">
+                        <option value="Организация">Организация</option>
+                        <option value="Частный мастер">Частный мастер</option>
                     </Select>
                     {/*<File top="Загрузите портфолио Ваших работ" before={<Icon24Camera />} size="l">
                         Загрузить
                     </File>*/}
-                    <Checkbox required>Согласен c <Link>условиями использования приложения</Link></Checkbox>
+                    <Checkbox onChange={() => this.setState({ checkLicense: !this.state.checkLicense })}>Согласен c <Link>условиями использования приложения</Link></Checkbox>
+                    {this.state.checkLicense &&
                     <Button size="xl" onClick={this.handleSubmit}>Зарегистрироваться как мастер</Button>
+                    }
                 </FormLayout>
             </Panel>
         );
