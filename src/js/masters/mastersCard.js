@@ -7,12 +7,13 @@ class MastersCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            activeMasterId: this.props.activeMasterId,
             activeMaster: {}
         };
     }
     componentDidMount() {
         console.log(this.props);
-        fetch('http://localhost:3030/masters/'+this.props.activeMasterId)
+        fetch('http://localhost:3030/masters/'+this.state.activeMasterId)
             .then(res => res.json())
             .then(activeMaster => this.setState({activeMaster: activeMaster}, () =>
                 console.log(activeMaster)

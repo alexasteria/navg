@@ -144,13 +144,13 @@ class Invite extends React.Component {
             type: this.state.type,
             vkUid: this.state.master.vkUid,
             category: [
-                {active: this.state.count.manicureStatus > 0, label:'Маникюр'},
-                {active: this.state.count.pedicureStatus > 0, label: 'Педикюр'},
-                {active: this.state.count.eyelashesStatus > 0, label: 'Ресницы'},
-                {active: this.state.count.eyebrowsStatus > 0, label: 'Брови'},
-                {active: this.state.count.shugaringStatus > 0, label: 'Шугаринг'},
-                {active: this.state.count.hairStatus > 0, label: 'Уход за волосами'},
-                {active: this.state.count.cosmeticStatus > 0, label: 'Косметология'}
+                {id: '5e37537a58b85c13bcffb8b4', active: this.state.count.manicureStatus > 0, label:'Маникюр'},
+                {id: '5e3753be58b85c13bcffb8b5', active: this.state.count.pedicureStatus > 0, label: 'Педикюр'},
+                {id: '5e3753c458b85c13bcffb8b6', active: this.state.count.eyelashesStatus > 0, label: 'Ресницы'},
+                {id: '5e3753c858b85c13bcffb8b7', active: this.state.count.eyebrowsStatus > 0, label: 'Брови'},
+                {id: '5e3753cd58b85c13bcffb8b8', active: this.state.count.shugaringStatus > 0, label: 'Шугаринг'},
+                {id: '5e3753d558b85c13bcffb8b9', active: this.state.count.hairStatus > 0, label: 'Уход за волосами'},
+                {id: '5e3753dc58b85c13bcffb8ba', active: this.state.count.cosmeticStatus > 0, label: 'Косметология'}
             ]
         };
         console.log('hair - '+this.state.hairStatus.length);

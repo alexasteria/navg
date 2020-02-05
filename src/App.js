@@ -39,7 +39,7 @@ class App extends React.Component {
             activeMasterId: '',
             activeViewMasters: 'cellMasters',
             activeViewLk: 'lk',
-            categoryMasters: '',
+            targetCategory: '',
             catRu: {
                 Manicure: 'Маникюр',
                 Pedicure: 'Педикюр',
@@ -56,6 +56,15 @@ class App extends React.Component {
                 vkUid: '',
                 status: ''
             },
+            categories: [
+                {id: '5e37537a58b85c13bcffb8b4', label: 'Маникюр'},
+                {id: '5e3753be58b85c13bcffb8b5', label: 'Педикюр'},
+                {id: '5e3753c458b85c13bcffb8b6', label: 'Ресницы'},
+                {id: '5e3753c858b85c13bcffb8b7', label: 'Брови'},
+                {id: '5e3753cd58b85c13bcffb8b8', label: 'Шугаринг'},
+                {id: '5e3753d558b85c13bcffb8b9', label: 'Уход за волосами'},
+                {id: '5e3753dc58b85c13bcffb8ba', label: 'Косметология'},
+            ]
         };
         this.onStoryChange = this.onStoryChange.bind(this);
 
@@ -94,8 +103,8 @@ class App extends React.Component {
         this.setState({ activeStory: e.currentTarget.dataset.story })
     }
     render () {
-        connect.send("VKWebAppInit", {});
-        connect.send("VKWebAppAllowNotifications", {});
+        connect.send("VKWebAppInit", {}).then(err => console.log(err));
+        connect.send("VKWebAppAllowNotifications", {}).then(err => console.log(err));
         // Subscribes to event, sended by client
         //connect.subscribe(e => console.log(e));
 
@@ -149,10 +158,10 @@ class App extends React.Component {
                                     top="Выберите категорию"
                                     placeholder="Не выбрана"
                                     onClick={() => this.setState({ activeViewMasters: 'masterCat' })}
-                                >{this.state.categoryMasters}</SelectMimicry>
+                                >{this.state.targetCategory.label}</SelectMimicry>
                             </FormLayout>
                             <PanelHeader>Мастера</PanelHeader>
-                            <MasterList category={this.state.categoryMasters} openPanelMaster={this.openPanelMaster}/>
+                            <MasterList category={this.state.targetCategory} openPanelMaster={this.openPanelMaster}/>
                         </Panel>
                         <Panel id="masterInfo">
                             <PanelHeader
@@ -177,42 +186,20 @@ class App extends React.Component {
                             <PanelHeader>Выбор категории</PanelHeader>
                             <Group>
                                 <List>
-                                    <Cell
-                                        onClick={() => this.setState({ categoryMasters: 'Manicure', activeViewMasters: 'cellMasters' })}
-                                        asideContent={this.state.categoryMasters === 'Manicure' ? <Icon24Done fill="var(--accent)" /> : null}
-                                    >
-                                        Маникюр
-                                    </Cell>
-                                    <Cell
-                                        onClick={() => this.setState({ categoryMasters: 'Pedicure', activeViewMasters: 'cellMasters' })}
-                                        asideContent={this.state.categoryMasters === 'Pedicure' ? <Icon24Done fill="var(--accent)" /> : null}
-                                    >
-                                        Педикюр
-                                    </Cell>
-                                    <Cell
-                                        onClick={() => this.setState({ categoryMasters: 'Eyelaches', activeViewMasters: 'cellMasters' })}
-                                        asideContent={this.state.categoryMasters === 'Eyelaches' ? <Icon24Done fill="var(--accent)" /> : null}
-                                    >
-                                        Ресницы
-                                    </Cell>
-                                    <Cell
-                                        onClick={() => this.setState({ categoryMasters: 'Eyebrows', activeViewMasters: 'cellMasters' })}
-                                        asideContent={this.state.categoryMasters === 'Eyebrows' ? <Icon24Done fill="var(--accent)" /> : null}
-                                    >
-                                        Брови
-                                    </Cell>
-                                    <Cell
-                                        onClick={() => this.setState({ categoryMasters: 'Shugaring', activeViewMasters: 'cellMasters' })}
-                                        asideContent={this.state.categoryMasters === 'Shugaring' ? <Icon24Done fill="var(--accent)" /> : null}
-                                    >
-                                        Шугаринг
-                                    </Cell>
-                                    <Cell
-                                        onClick={() => this.setState({ categoryMasters: 'Hairstyles', activeViewMasters: 'cellMasters' })}
-                                        asideContent={this.state.categoryMasters === 'Hairstyles' ? <Icon24Done fill="var(--accent)" /> : null}
-                                    >
-                                        Волосы
-                                    </Cell>
+                                    {
+                                        this.state.categories.map(category => {
+                                            //console.log(category);
+                                            return (
+                                                <Cell
+                                                    key={category.id}
+                                                    onClick={() => this.setState({ targetCategory: category, activeViewMasters: 'cellMasters' })}
+                                                    asideContent={this.state.targetCategory === category ? <Icon24Done fill="var(--accent)" /> : null}
+                                                >
+                                                    {category.label}
+                                                </Cell>
+                                            )
+                                        })
+                                    }
                                 </List>
                             </Group>
                         </Panel>
