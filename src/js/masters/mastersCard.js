@@ -7,16 +7,25 @@ class MastersCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeMaster: props.activeMaster
+            activeMaster: {}
         };
     }
+    componentDidMount() {
+        console.log(this.props);
+        fetch('http://localhost:3030/masters/'+this.props.activeMasterId)
+            .then(res => res.json())
+            .then(activeMaster => this.setState({activeMaster: activeMaster}, () =>
+                console.log(activeMaster)
+            ));
+    }
+
     render(){
         return (
             <Div>
             <Group title="">
                 <Cell
                     photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                    description={this.state.activeMaster.category}
+                    description={'omg'}
                     bottomContent={<Button>В избранное</Button>}
                     before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
                     size="l"

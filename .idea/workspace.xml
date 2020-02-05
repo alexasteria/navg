@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Счетчик выбранных типов услуг при регистрации">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Меню мастера, ЛК">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/masterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masterList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,6 +133,7 @@
       <workItem from="1579388410664" duration="103000" />
       <workItem from="1579465202418" duration="429000" />
       <workItem from="1579981029245" duration="1670000" />
+      <workItem from="1580912644198" duration="7589000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -195,7 +198,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580766787817</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Меню мастера, ЛК">
+      <created>1580774196529</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1580774196529</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -225,17 +235,18 @@
     <MESSAGE value="Запись пользователя в БД при первом входе" />
     <MESSAGE value="ЛК пользователя, открытие попап окна регистрации мастера" />
     <MESSAGE value="Счетчик выбранных типов услуг при регистрации" />
-    <option name="LAST_COMMIT_MESSAGE" value="Счетчик выбранных типов услуг при регистрации" />
+    <MESSAGE value="Меню мастера, ЛК" />
+    <option name="LAST_COMMIT_MESSAGE" value="Меню мастера, ЛК" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1579203172728">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1579203172728" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580766787514">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580774196215">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580766787514" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580774196215" />
     <state x="794" y="232" key="RollbackChangesDialog" timestamp="1580689712951">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

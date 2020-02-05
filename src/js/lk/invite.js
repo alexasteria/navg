@@ -142,8 +142,18 @@ class Invite extends React.Component {
             cosmeticStatus: this.state.cosmeticStatus,
             avatarLink: this.state.master.avatarLink,
             type: this.state.type,
-            vkUid: this.state.master.vkUid
+            vkUid: this.state.master.vkUid,
+            category: [
+                {active: this.state.count.manicureStatus > 0, label:'Маникюр'},
+                {active: this.state.count.pedicureStatus > 0, label: 'Педикюр'},
+                {active: this.state.count.eyelashesStatus > 0, label: 'Ресницы'},
+                {active: this.state.count.eyebrowsStatus > 0, label: 'Брови'},
+                {active: this.state.count.shugaringStatus > 0, label: 'Шугаринг'},
+                {active: this.state.count.hairStatus > 0, label: 'Уход за волосами'},
+                {active: this.state.count.cosmeticStatus > 0, label: 'Косметология'}
+            ]
         };
+        console.log('hair - '+this.state.hairStatus.length);
         console.log(master);
         this.postData('http://localhost:3030/masters/', master);
         event.preventDefault();

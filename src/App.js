@@ -36,10 +36,10 @@ class App extends React.Component {
         this.state = {
             activeStory: 'sale',
             activePanelMasters: 'cellMasters',
-            activeMaster: {},
+            activeMasterId: '',
             activeViewMasters: 'cellMasters',
             activeViewLk: 'lk',
-            categoryMasters: "",
+            categoryMasters: '',
             catRu: {
                 Manicure: 'Маникюр',
                 Pedicure: 'Педикюр',
@@ -80,11 +80,11 @@ class App extends React.Component {
     closePopout () {
         this.setState({ popout: null });
     }
-    openPanelMaster = (name, master) => {
-        this.setState({ activePanelMasters: name });
-        this.setState({ activeMaster: master });
+    openPanelMaster = (panelName, masterId) => {
+        this.setState({ activePanelMasters: panelName });
+        this.setState({ activeMasterId: masterId });
         //this.state.activeMaster = master;
-        console.log(this.state.activeMaster);
+        //console.log(this.state.activeMaster);
     };
     openMasterPhoto = (name) => {
         this.setState({ activePanelMasters: name });
@@ -161,7 +161,7 @@ class App extends React.Component {
                                 addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'cellMasters' })}>Назад</HeaderButton>}
                             >
                             </PanelHeader>
-                            <MasterCard activeMaster={this.state.activeMaster} openMasterPhoto={this.openMasterPhoto}/>
+                            <MasterCard activeMasterId={this.state.activeMasterId} openMasterPhoto={this.openMasterPhoto}/>
                         </Panel>
                         <Panel id="masterPhoto">
                             <PanelHeader

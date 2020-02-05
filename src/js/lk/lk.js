@@ -1,6 +1,6 @@
 import React from 'react';
 import VKConnect from '@vkontakte/vkui-connect-mock';
-import {Separator, CellButton, Avatar, Button, Cell, List, Group} from "@vkontakte/vkui"
+import {Div, Separator, CellButton, Avatar, Button, Cell, List, Group} from "@vkontakte/vkui"
 import {BACKEND} from '../func/func';
 
 class Lk extends React.Component {
@@ -12,11 +12,11 @@ class Lk extends React.Component {
                 lastname: '',
                 avatarLink: '',
                 vkUid: '',
-                status: ''
+                isMaster: false
             },
-            tmpUser: {},
-            notMaster: false,
-            isMaster: false
+            tmpUser: [],
+            isMaster: false,
+            isUser: false
         };
     }
     componentDidMount() {
@@ -34,6 +34,10 @@ class Lk extends React.Component {
         });
         VKConnect.send('VKWebAppGetUserInfo', {});
     }
+    componentDidUpdate() {
+
+    }
+
     verifiedUser(vkUid) {
         fetch(BACKEND.users+'/vkuid/'+vkUid)
             .then(res => res.json())
@@ -43,40 +47,33 @@ class Lk extends React.Component {
             .catch(error => {
                 console.log(error); // Error: Not Found
             });
-
-        fetch(BACKEND.masters+'/vkuid/'+vkUid)
-            .then(res => res.json())
-            .then(user => this.setState({tmpUser: user}, () =>
-                this.authMaster()
-            ))
-            .catch(error => {
-                console.log(error); // Error: Not Found
-            });
-        //console.log(this.state.tmpUser[0]);
+        // fetch(BACKEND.masters+'/vkuid/'+vkUid)
+        //     .then(res => res.json())
+        //     .then(user => this.setState({tmpUser: user}, () =>
+        //         this.authMaster()
+        //     ))
+        //     .catch(error => {
+        //         console.log(error); // Error: Not Found
+        //     });
+        // //console.log(this.state.tmpUser[0]);
 
     };
-    authMaster(){
-        if(this.state.tmpUser.length === 1 ){
-            this.setState({notMaster: false});
-            this.setState({isMaster: true});
-            console.log('Авторизован, найден - мастер ');
-        } else {
-            this.setState({notMaster: true});
-            this.setState({isMaster: false});
-            console.log('Не найден - не мастер'  +this.state.newUser);
-        }
-    }
     registerUser() {
         if (this.state.tmpUser.length === 0) {
             console.log('Пользователь не найден');
             //console.log(this.state.user);
             this.postData(BACKEND.users, this.state.user).then(r => console.log(r)); //регитрируем
+            this.state.tmpUser[0] = this.state.user;
         }
-        let copyUser = this.state.user;
-        copyUser.status = this.state.tmpUser[0].status;
-        this.setState({user: copyUser});
-        //console.log(this.state.user);
-
+        this.auth();
+    }
+    auth(){
+        console.log('Мастер? -'+this.state.tmpUser[0].isMaster);
+        if(this.state.tmpUser[0].isMaster === true) {
+            let user = this.state.user;
+            user.isMaster = true;
+            this.setState({user: user});
+        }
     }
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
@@ -98,7 +95,7 @@ class Lk extends React.Component {
     }
     render(){
         return (
-            <Group>
+            <Div>
                 <Cell
                     size="l"
                     description={this.state.user.status}
@@ -106,7 +103,7 @@ class Lk extends React.Component {
                 >
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
-                    {this.state.notMaster &&
+                    {this.state.user.isMaster === false &&
                     <CellButton onClick={this.props.openReg}>Зарегистрироваться как мастер</CellButton>
                     }
                 <Group title="Основное">
@@ -116,7 +113,7 @@ class Lk extends React.Component {
                         <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Мои записи</Cell>
                     </List>
                 </Group>
-                {this.state.isMaster &&
+                {this.state.user.isMaster &&
                 <Group title="Меню мастера">
                     <Separator style={{ margin: '12px 0' }} />
                     <List>
@@ -127,7 +124,7 @@ class Lk extends React.Component {
                     </List>
                 </Group>
                 }
-            </Group>
+            </Div>
         );
     }
 }
