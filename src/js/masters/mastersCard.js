@@ -2,6 +2,7 @@ import React from 'react';
 import {Group, List, Cell, InfoRow, Div, Avatar, Button, Gallery} from "@vkontakte/vkui"
 import Icon28Favorite from '@vkontakte/icons/dist/28/favorite';
 import Icon28FavoriteOutline from '@vkontakte/icons/dist/28/favorite_outline';
+import {BACKEND} from '../func/func';
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -12,8 +13,8 @@ class MastersCard extends React.Component {
         };
     }
     componentDidMount() {
-        console.log(this.props);
-        fetch('http://localhost:3030/masters/'+this.state.activeMasterId)
+        //console.log(this.props);
+        fetch(BACKEND.masters.all+this.state.activeMasterId)
             .then(res => res.json())
             .then(activeMaster => this.setState({activeMaster: activeMaster}, () =>
                 console.log(activeMaster)

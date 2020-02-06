@@ -1,6 +1,6 @@
 import React from 'react';
 import VKConnect from '@vkontakte/vkui-connect-mock';
-import {Div, Separator, CellButton, Avatar, Button, Cell, List, Group} from "@vkontakte/vkui"
+import {Div, Separator, CellButton, Avatar, Cell, List, Group} from "@vkontakte/vkui"
 import {BACKEND} from '../func/func';
 
 class Lk extends React.Component {
@@ -47,16 +47,6 @@ class Lk extends React.Component {
             .catch(error => {
                 console.log(error); // Error: Not Found
             });
-        // fetch(BACKEND.masters+'/vkuid/'+vkUid)
-        //     .then(res => res.json())
-        //     .then(user => this.setState({tmpUser: user}, () =>
-        //         this.authMaster()
-        //     ))
-        //     .catch(error => {
-        //         console.log(error); // Error: Not Found
-        //     });
-        // //console.log(this.state.tmpUser[0]);
-
     };
     registerUser() {
         if (this.state.tmpUser.length === 0) {
@@ -120,7 +110,7 @@ class Lk extends React.Component {
                         <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Мои заявки</Cell>
                         <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>График</Cell>
                         <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Портфолио</Cell>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Настройки</Cell>
+                        <Cell expandable onClick={this.props.openSetting}>Настройки</Cell>
                     </List>
                 </Group>
                 }

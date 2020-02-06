@@ -1,8 +1,7 @@
 import React from 'react';
 import VKConnect from '@vkontakte/vkui-connect-mock';
-import {Alert, Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Panel, Avatar} from "@vkontakte/vkui"
+import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
-//import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 
 class Invite extends React.Component {
     constructor(props) {
@@ -117,8 +116,10 @@ class Invite extends React.Component {
                 console.log(item);
                 if (item.active === true){
                     return item.active;
+                } else {
+                    return null
                 }
-            });;
+            });
         let count = this.state.count;
         count[name] = countMass.length;
         this.setState({ count: count });
@@ -155,7 +156,7 @@ class Invite extends React.Component {
         };
         console.log('hair - '+this.state.hairStatus.length);
         console.log(master);
-        this.postData('http://localhost:3030/masters/', master);
+        this.postData(BACKEND.masters.all, master).then(err => console.log(err));
         event.preventDefault();
     }
     postData(url = '', data = {}) {

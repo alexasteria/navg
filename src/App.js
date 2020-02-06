@@ -25,6 +25,7 @@ import MasterCard from './js/masters/mastersCard.js';
 import Idea from './js/idea/idea.js';
 import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
+import Setting from './js/lk/setting.js';
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 const osname = platform();
 
@@ -39,6 +40,7 @@ class App extends React.Component {
             activeMasterId: '',
             activeViewMasters: 'cellMasters',
             activeViewLk: 'lk',
+            activePanelLk: 'lk',
             targetCategory: '',
             catRu: {
                 Manicure: 'Маникюр',
@@ -216,10 +218,18 @@ class App extends React.Component {
                     </Panel>
                 </View>
                 <Root id="lk" activeView={this.state.activeViewLk}>
-                    <View id="lk" activePanel="lk">
+                    <View id="lk" activePanel={this.state.activePanelLk}>
                         <Panel id="lk">
                             <PanelHeader>Личный кабинет</PanelHeader>
-                            <Lk openReg={() => this.setState({ activeViewLk: 'masterReg' })}/>
+                            <Lk openReg={() => this.setState({ activeViewLk: 'masterReg' })} openSetting={() => this.setState({ activePanelLk: 'setting' })}/>
+                        </Panel>
+                        <Panel id='setting'>
+                            <PanelHeader
+                                theme="light"
+                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
+                            >Настройки</PanelHeader>
+                            <Setting></Setting>
                         </Panel>
                     </View>
                     <View activePanel="masterReg" id="masterReg">
