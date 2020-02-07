@@ -1,7 +1,7 @@
 import React from 'react';
 import {Separator, Avatar, Button, Cell, Div, Group, List} from "@vkontakte/vkui";
-import Icon28Favorite from '@vkontakte/icons/dist/28/favorite';
-import Icon28FavoriteOutline from '@vkontakte/icons/dist/28/favorite_outline';
+import Icon16Like from '@vkontakte/icons/dist/16/like';
+import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from "../func/func";
 
 class MasterList extends React.Component {
@@ -52,28 +52,12 @@ class MasterList extends React.Component {
                             <Separator style={{ margin: '12px 0' }} />
                             <Cell expandable
                                   photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                                  description={
-                                      <Cell multiline>{
-                                          master.category.map(category  => {
-                                              if (category.active === true) {
-                                                  return category.label+' '
-                                              } else {
-                                                  return null
-                                              }
-                                          })
-                                      }</Cell>
+                                  description={<Div style={{display: '-webkit-inline-box'}}>
+                                      <Icon16Like/><Icon16Like/><Icon16Like/><Icon16Like/><Icon16LikeOutline/>
+                                  </Div>
                                   }
                                   key={master.vkUid}
-                                  bottomContent={
-                                      <Div style={{display: '-webkit-inline-box'}}>
-                                          <Icon28Favorite />
-                                          <Icon28Favorite />
-                                          <Icon28Favorite />
-                                          <Icon28Favorite />
-                                          <Icon28FavoriteOutline />
-                                      </Div>
-                                  }
-                                  before={<Avatar src={master.avatarLink} size={80}/>}
+                                  before={<Avatar src={master.avatarLink} size={50}/>}
                                   size="l"
                                   onClick={() => this.props.openPanelMaster('masterInfo', master._id)}
                             >{master.firstname} {master.lastname}
@@ -93,9 +77,10 @@ class MasterList extends React.Component {
     }
     render() {
         return (
-            <Group title={this.state.title}>
+            <Div>
+                <Cell>{this.state.title}</Cell>
                 {this.renderMaster()}
-            </Group>
+            </Div>
         )
     }
 }

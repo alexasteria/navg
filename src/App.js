@@ -1,5 +1,4 @@
 import React from 'react';
-import connect from '@vkontakte/vk-connect';
 import {
     View,
     Panel,
@@ -35,6 +34,7 @@ class App extends React.Component {
         super(props);
 
         this.state = {
+            popout: null,
             activeStory: 'sale',
             activePanelMasters: 'cellMasters',
             activeMasterId: '',
@@ -88,7 +88,23 @@ class App extends React.Component {
         });
     }
 
-    closePopout () {
+    openAlert = () => {
+        this.setState({ popout:
+                <Alert
+                    actionsLayout="vertical"
+                    actions={[{
+                        title: 'Закрыть',
+                        autoclose: true,
+                        mode: 'cancel'
+                    }]}
+                    onClose={this.closeAlert}
+                >
+                    <h2>Изменения сохранены</h2>
+                    <p>Внесенные изменение отобразятся в поиске в течении 2-х минут.</p>
+                </Alert>
+        });
+    }
+    closeAlert = () => {
         this.setState({ popout: null });
     }
     openPanelMaster = (panelName, masterId) => {
@@ -105,8 +121,7 @@ class App extends React.Component {
         this.setState({ activeStory: e.currentTarget.dataset.story })
     }
     render () {
-        connect.send("VKWebAppInit", {}).then(err => console.log(err));
-        connect.send("VKWebAppAllowNotifications", {}).then(err => console.log(err));
+        //connect.send("VKWebAppAllowNotifications", {}).then(err => console.log(err));
         // Subscribes to event, sended by client
         //connect.subscribe(e => console.log(e));
 
@@ -156,6 +171,7 @@ class App extends React.Component {
                     <View id="cellMasters" activePanel={this.state.activePanelMasters}>
                         <Panel id="cellMasters">
                             <FormLayout>
+                                <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator="Дзержинск">Выбранный город</Cell>
                                 <SelectMimicry
                                     top="Выберите категорию"
                                     placeholder="Не выбрана"
@@ -218,7 +234,7 @@ class App extends React.Component {
                     </Panel>
                 </View>
                 <Root id="lk" activeView={this.state.activeViewLk}>
-                    <View id="lk" activePanel={this.state.activePanelLk}>
+                    <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout}>
                         <Panel id="lk">
                             <PanelHeader>Личный кабинет</PanelHeader>
                             <Lk openReg={() => this.setState({ activeViewLk: 'masterReg' })} openSetting={() => this.setState({ activePanelLk: 'setting' })}/>
@@ -229,7 +245,7 @@ class App extends React.Component {
                                 left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
                                 addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
                             >Настройки</PanelHeader>
-                            <Setting></Setting>
+                            <Setting popout={this.openAlert}/>
                         </Panel>
                     </View>
                     <View activePanel="masterReg" id="masterReg">

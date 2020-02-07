@@ -1,12 +1,20 @@
 import React from 'react';
+import connect from '@vkontakte/vk-connect';
 import VKConnect from '@vkontakte/vkui-connect-mock';
 import {Div, Separator, CellButton, Avatar, Cell, List, Group} from "@vkontakte/vkui"
 import {BACKEND} from '../func/func';
+import Icon24Settings from '@vkontakte/icons/dist/24/settings';
+import Icon24Story from '@vkontakte/icons/dist/24/story';
+import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
+import Icon24Users from '@vkontakte/icons/dist/24/users';
+import Icon24Like from '@vkontakte/icons/dist/24/like';
+import Icon24Recent from '@vkontakte/icons/dist/24/recent';
 
 class Lk extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            connection: false,
             user: {
                 firstname: '',
                 lastname: '',
@@ -19,52 +27,39 @@ class Lk extends React.Component {
             isUser: false
         };
     }
-    componentDidMount() {
+    componentWillMount() {
         VKConnect.subscribe((e) => {
-
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
                 let user = this.state.user;
                 user.vkUid = e.detail.data.id;
                 user.firstname = e.detail.data.first_name;
                 user.lastname = e.detail.data.last_name;
                 user.avatarLink = e.detail.data.photo_200;
-                this.setState({user: user});
-                this.verifiedUser(this.state.user.vkUid);
+                user.sex = e.detail.data.sex;
+                user.city = {id: e.detail.data.city.id, title: e.detail.data.city.title};
+                user.country = {id: e.detail.data.country.id, title: e.detail.data.country.title};
+                this.verifiedUser(user);
             }
         });
-        VKConnect.send('VKWebAppGetUserInfo', {});
+        VKConnect
+            .send('VKWebAppGetUserInfo', {});
     }
-    componentDidUpdate() {
-
-    }
-
-    verifiedUser(vkUid) {
-        fetch(BACKEND.users+'/vkuid/'+vkUid)
+    verifiedUser = (user) => {
+        fetch(BACKEND.users+'/vkuid/'+user.vkUid)
             .then(res => res.json())
-            .then(user => this.setState({tmpUser: user}, () =>
-                this.registerUser()
-            ))
+            .then(usersArr => {
+                if (usersArr.length === 0){
+                    console.log('Пользователь ', user, ' не найден');
+                    this.postData(BACKEND.users, user); //регитрируем
+                } else {
+                    console.log('Пришло при авторизации', usersArr[0]);
+                    this.setState({user: usersArr[0]});
+                }
+            })
             .catch(error => {
                 console.log(error); // Error: Not Found
             });
     };
-    registerUser() {
-        if (this.state.tmpUser.length === 0) {
-            console.log('Пользователь не найден');
-            //console.log(this.state.user);
-            this.postData(BACKEND.users, this.state.user).then(r => console.log(r)); //регитрируем
-            this.state.tmpUser[0] = this.state.user;
-        }
-        this.auth();
-    }
-    auth(){
-        console.log('Мастер? -'+this.state.tmpUser[0].isMaster);
-        if(this.state.tmpUser[0].isMaster === true) {
-            let user = this.state.user;
-            user.isMaster = true;
-            this.setState({user: user});
-        }
-    }
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -93,26 +88,26 @@ class Lk extends React.Component {
                 >
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
-                    {this.state.user.isMaster === false &&
+                {this.state.user.isMaster === false &&
                     <CellButton onClick={this.props.openReg}>Зарегистрироваться как мастер</CellButton>
-                    }
-                <Group title="Основное">
+                }
+                    <Group title="Основное">
                     <Separator style={{ margin: '12px 0' }} />
                     <List>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Избранное</Cell>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Мои записи</Cell>
+                    <Cell expandable before={<Icon24Like />} onClick={() => this.setState({ activePanel: 'nothing' })}>Избранное</Cell>
+                    <Cell expandable before={<Icon24Recent />} onClick={() => this.setState({ activePanel: 'nothing' })}>Мои записи</Cell>
                     </List>
-                </Group>
+                    </Group>
                 {this.state.user.isMaster &&
-                <Group title="Меню мастера">
+                    <Group title="Меню мастера">
                     <Separator style={{ margin: '12px 0' }} />
                     <List>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Мои заявки</Cell>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>График</Cell>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })}>Портфолио</Cell>
-                        <Cell expandable onClick={this.props.openSetting}>Настройки</Cell>
+                    <Cell expandable before={<Icon24Users />} onClick={() => this.setState({ activePanel: 'nothing' })}>Мои заявки</Cell>
+                    <Cell expandable before={<Icon24UserOutgoing />} onClick={() => this.setState({ activePanel: 'nothing' })}>График</Cell>
+                    <Cell expandable before={<Icon24Story />} onClick={() => this.setState({ activePanel: 'nothing' })}>Портфолио</Cell>
+                    <Cell expandable onClick={this.props.openSetting} before={<Icon24Settings />}>Настройки</Cell>
                     </List>
-                </Group>
+                    </Group>
                 }
             </Div>
         );

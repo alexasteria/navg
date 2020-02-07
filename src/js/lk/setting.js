@@ -9,8 +9,7 @@ import {
     Textarea,
     Switch,
     FormLayoutGroup,
-    CellButton,
-    Select, Checkbox, Link, Button
+    Alert, Button
 } from "@vkontakte/vkui"
 import {BACKEND} from '../func/func';
 
@@ -18,6 +17,7 @@ class Lk extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            popout: null,
             vkuid: '',
             activeMaster: {
                 description: '',
@@ -57,6 +57,28 @@ class Lk extends React.Component {
     componentDidUpdate() {
 
     }
+
+    patchData(url = '', data = {}) {
+        console.log('пошло');
+        // Значения по умолчанию обозначены знаком *
+        return fetch(url, {
+            method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+        })
+            .then(response => {
+                console.log(response.json());
+                this.props.popout();
+            }); // парсит JSON ответ в Javascript объект
+    }
     loadCount() {
         const arrCategory = ['manicureStatus', 'pedicureStatus', 'eyelashesStatus',
         'eyebrowsStatus', 'shugaringStatus', 'hairStatus'];
@@ -90,6 +112,7 @@ class Lk extends React.Component {
         let count = this.state.count;
         count[name] = countMass.length;
         this.setState({ count: count });
+        console.log(this.state.activeMaster);
     };
 
     render(){
@@ -271,7 +294,7 @@ class Lk extends React.Component {
                         </Div>
                         }
                     </FormLayoutGroup>
-                    <Button size="xl" onClick={this.props.closePopup}>Сохранить изменения</Button>
+                    <Button size="xl" onClick={() => this.patchData(BACKEND.masters.all+this.state.activeMaster._id, this.state.activeMaster)}>Сохранить изменения</Button>
                 </Group>
             </Div>
         );

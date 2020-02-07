@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Работает поиск по категориям">
-      <change afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Cписок категорий в ЛК ренеринтся через .map">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/masterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masterList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,6 +58,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="js.linters.configure.manually.selectedeslint" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/js/lk" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
@@ -133,7 +136,8 @@
       <workItem from="1579388410664" duration="103000" />
       <workItem from="1579465202418" duration="429000" />
       <workItem from="1579981029245" duration="1670000" />
-      <workItem from="1580912644198" duration="20351000" />
+      <workItem from="1580912644198" duration="35495000" />
+      <workItem from="1581082260751" duration="3393000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -219,7 +223,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580945764596</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Cписок категорий в ЛК ренеринтся через .map">
+      <created>1580994544244</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1580994544244</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,21 +263,22 @@
     <MESSAGE value="Меню мастера, ЛК" />
     <MESSAGE value="Починили мастер лист" />
     <MESSAGE value="Работает поиск по категориям" />
-    <option name="LAST_COMMIT_MESSAGE" value="Работает поиск по категориям" />
+    <MESSAGE value="Cписок категорий в ЛК ренеринтся через .map" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cписок категорий в ЛК ренеринтся через .map" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="207" key="#ESLint" timestamp="1579203172728">
+    <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1579203172728" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580945764300">
+    <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1580994543929">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580945764300" />
-    <state x="794" y="232" key="RollbackChangesDialog" timestamp="1580689712951">
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1580994543929" />
+    <state x="794" y="232" key="RollbackChangesDialog" timestamp="1581015768039">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="794" y="232" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580689712951" />
+    <state x="794" y="232" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1581015768039" />
     <state x="552" y="254" key="Vcs.Push.Dialog.v2" timestamp="1580672808758">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -279,5 +291,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1580689662596" />
+    <state x="993" y="244" key="run.anything.popup" timestamp="1581019694400">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="993" y="244" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1581019694400" />
   </component>
 </project>
