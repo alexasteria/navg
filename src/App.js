@@ -21,6 +21,8 @@ import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Sale from './js/sale/sale.js';
 import MasterList from './js/masters/masterList.js';
 import MasterCard from './js/masters/mastersCard.js';
+import MasterPhoto from './js/masters/mastersPhoto.js';
+import MasterComments from './js/masters/mastersComments.js';
 import Idea from './js/idea/idea.js';
 import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
@@ -113,7 +115,7 @@ class App extends React.Component {
         //this.state.activeMaster = master;
         //console.log(this.state.activeMaster);
     };
-    openMasterPhoto = (name) => {
+    activePanelMasters = (name) => {
         this.setState({ activePanelMasters: name });
         console.log(this.state.activePanelMasters);
     };
@@ -187,8 +189,9 @@ class App extends React.Component {
                                 left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'cellMasters' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
                                 addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'cellMasters' })}>Назад</HeaderButton>}
                             >
+                                О мастере
                             </PanelHeader>
-                            <MasterCard activeMasterId={this.state.activeMasterId} openMasterPhoto={this.openMasterPhoto}/>
+                            <MasterCard activeMasterId={this.state.activeMasterId} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
                         </Panel>
                         <Panel id="masterPhoto">
                             <PanelHeader
@@ -196,7 +199,19 @@ class App extends React.Component {
                                 left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
                                 addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</HeaderButton>}
                             >
+                                Портфолио
                             </PanelHeader>
+                            <MasterPhoto activeMasterId={this.state.activeMasterId} />
+                        </Panel>
+                        <Panel id="masterComments">
+                            <PanelHeader
+                                theme="light"
+                                left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                                addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</HeaderButton>}
+                            >
+                                Отзывы
+                            </PanelHeader>
+                            <MasterComments activeMasterId={this.state.activeMasterId} />
                         </Panel>
                     </View>
                     <View activePanel="masterCat" id="masterCat">

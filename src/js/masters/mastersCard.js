@@ -39,7 +39,7 @@ class MastersCard extends React.Component {
             </Group>
             <Group title="">
                 <List>
-                    <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator={'32'}>Отзывы</Cell>
+                    <Cell expandable onClick={() => this.props.activePanelMasters('masterComments')} indicator={'32'}>Отзывы</Cell>
                     <Cell
                         before={<Avatar style={{ background: 'var(--destructive)' }} size={28}><Icon16Like fill="var(--white)" /></Avatar>}
                         description="для получения быстрого доступа к мастеру"
@@ -70,7 +70,7 @@ class MastersCard extends React.Component {
                         <div style={{ backgroundImage: 'url(https://avatars.mds.yandex.net/get-zen_doc/1554513/pub_5d77a5dd74f1bc00ad79c9f1_5d77a5f198930900ae483c74/scale_1200)', backgroundSize: 'cover' }} />
                         <div style={{ backgroundImage: 'url(https://womans.ws/wp-content/uploads/2019/10/1523527373_44-1068x1068.jpg)', backgroundSize: 'cover' }} />
                     </Gallery>
-                    <Cell expandable onClick={() => this.props.openMasterPhoto('masterPhoto')}>Посмотреть все работы</Cell>
+                    <Cell expandable onClick={() => this.props.activePanelMasters('masterPhoto')}>Посмотреть все работы</Cell>
                 </Group>
                 {/*<Group title="Сертификаты">
                     <Gallery
