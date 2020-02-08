@@ -50,7 +50,7 @@ class MastersCard extends React.Component {
                     };
                 });
             });
-}
+    }
     changeVisible = (index) => {
         this.setState({[index]: !this.state[index]})
     }

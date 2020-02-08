@@ -7,6 +7,7 @@ import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import Icon24Users from '@vkontakte/icons/dist/24/users';
 import Icon24Like from '@vkontakte/icons/dist/24/like';
 import Icon24Recent from '@vkontakte/icons/dist/24/recent';
+import {BACKEND} from "../func/func";
 
 class Lk extends React.Component {
     constructor(props) {
@@ -16,14 +17,15 @@ class Lk extends React.Component {
             user: this.props.user,
             tmpUser: [],
             isMaster: false,
-            isUser: false
+            isUser: false,
+            favsArr: [],
+            mastersArr: [],
+            countFavs: 0
         };
     }
     componentDidMount() {
         this.setState({user: this.props.user});
-        //console.log(this.state.user);
     }
-
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -53,24 +55,55 @@ class Lk extends React.Component {
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
                 {this.state.user.isMaster === false &&
-                    <CellButton onClick={this.props.openReg}>Зарегистрироваться как мастер</CellButton>
+                    <CellButton
+                        onClick={this.props.openReg}
+                    >Зарегистрироваться как мастер</CellButton>
                 }
                     <Group title="Основное">
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator={this.state.user.city.title}>Выбранный город</Cell>
+                        <Cell
+                            expandable
+                            onClick={() => this.setState({ activePanel: 'nothing' })}
+                            user={this.state.user}
+                            indicator={this.state.user.city.title}
+                        >Выбранный город</Cell>
                         <Separator style={{ margin: '12px 0' }} />
                         <List>
-                            <Cell expandable before={<Icon24Like />} onClick={this.props.openFavourite}>Избранное</Cell>
-                            <Cell expandable before={<Icon24Recent />} onClick={() => this.setState({ activePanel: 'nothing' })}>Мои записи</Cell>
+                            <Cell
+                                expandable
+                                before={<Icon24Like />}
+                                onClick={this.props.openFavourite}
+                            >Избранное</Cell>
+                            <Cell
+                                expandable
+                                before={<Icon24Recent />}
+                                onClick={() => this.setState({ activePanel: 'nothing' })}
+                            >Мои записи</Cell>
                         </List>
                     </Group>
                 {this.state.user.isMaster &&
                     <Group title="Меню мастера">
                     <Separator style={{ margin: '12px 0' }} />
                     <List>
-                    <Cell expandable before={<Icon24Users />} onClick={() => this.setState({ activePanel: 'nothing' })}>Мои заявки</Cell>
-                    <Cell expandable before={<Icon24UserOutgoing />} onClick={() => this.setState({ activePanel: 'nothing' })}>График</Cell>
-                    <Cell expandable before={<Icon24Story />} onClick={() => this.setState({ activePanel: 'nothing' })}>Портфолио</Cell>
-                    <Cell expandable onClick={this.props.openSetting} before={<Icon24Settings />}>Настройки</Cell>
+                    <Cell
+                        expandable
+                        before={<Icon24Users />}
+                        onClick={() => this.setState({ activePanel: 'nothing' })}
+                    >Мои заявки</Cell>
+                    <Cell
+                        expandable
+                        before={<Icon24UserOutgoing />}
+                        onClick={() => this.setState({ activePanel: 'nothing' })}
+                    >График</Cell>
+                    <Cell
+                        expandable
+                        before={<Icon24Story />}
+                        onClick={() => this.setState({ activePanel: 'nothing' })}
+                    >Портфолио</Cell>
+                    <Cell
+                        expandable
+                        onClick={this.props.openSetting}
+                        before={<Icon24Settings />}
+                    >Настройки</Cell>
                     </List>
                     </Group>
                 }

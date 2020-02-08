@@ -169,6 +169,12 @@ class App extends React.Component {
         this.setState({ activePanelMasters: panelName });
         this.setState({ activeMasterId: masterId });
     };
+    openMaster = (masterId) => {
+        this.setState({ activeViewMasters: 'cellMasters' });
+        this.setState({ activeStory: 'masters' });
+        this.setState({ activePanelMasters: 'masterInfo' });
+        this.setState({ activeMasterId: masterId });
+    }
     activePanelMasters = (name) => {
         this.setState({ activePanelMasters: name });
         console.log(this.state.activePanelMasters);
@@ -323,7 +329,7 @@ class App extends React.Component {
                                 left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
                                 addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
                             >Избранное</PanelHeader>
-                            <Favourite user={this.state.user} popout={this.openAlert}/>
+                            <Favourite user={this.state.user} openMaster={this.openMaster}/>
                         </Panel>
                         <Panel id='setting'>
                             <PanelHeader
