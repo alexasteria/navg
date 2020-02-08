@@ -13,13 +13,13 @@ import {
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
 import '@vkontakte/vkui/dist/vkui.css';
-import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
+//import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
 import Icon28ServicesOutline from '@vkontakte/icons/dist/28/services_outline';
 import Icon28HelpOutline from '@vkontakte/icons/dist/28/help_outline';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
-import Sale from './js/sale/sale.js';
-import MasterList from './js/masters/masterList.js';
+//import Sale from './js/sale/sale.js';
+import PanelMasterList from './js/masters/panelMasterList.js';
 import MasterCard from './js/masters/mastersCard.js';
 import MasterPhoto from './js/masters/mastersPhoto.js';
 import MasterComments from './js/masters/mastersComments.js';
@@ -27,7 +27,10 @@ import Idea from './js/idea/idea.js';
 import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
 import Setting from './js/lk/setting.js';
+import Favourite from './js/lk/favourite.js';
 import Icon24Done from '@vkontakte/icons/dist/24/done';
+import VKConnect from "@vkontakte/vkui-connect-mock";
+import {BACKEND} from "./js/func/func";
 const osname = platform();
 
 
@@ -37,7 +40,7 @@ class App extends React.Component {
 
         this.state = {
             popout: null,
-            activeStory: 'sale',
+            activeStory: 'masters',
             activePanelMasters: 'cellMasters',
             activeMasterId: '',
             activeViewMasters: 'cellMasters',
@@ -73,6 +76,59 @@ class App extends React.Component {
         this.onStoryChange = this.onStoryChange.bind(this);
 
     }
+    componentWillMount() {
+        VKConnect.subscribe((e) => {
+            if (e.detail.type === 'VKWebAppGetUserInfoResult') {
+                let user = this.state.user;
+                user.vkUid = e.detail.data.id;
+                user.firstname = e.detail.data.first_name;
+                user.lastname = e.detail.data.last_name;
+                user.avatarLink = e.detail.data.photo_200;
+                user.sex = e.detail.data.sex;
+                user.city = {id: e.detail.data.city.id, title: e.detail.data.city.title};
+                user.country = {id: e.detail.data.country.id, title: e.detail.data.country.title};
+                user.isMaster = false;
+                this.verifiedUser(user);
+            }
+        });
+        VKConnect
+            .send('VKWebAppGetUserInfo', {});
+    }
+    verifiedUser = (user) => {
+        console.log(BACKEND.users+'/vkuid/'+user.vkUid);
+        fetch(BACKEND.users+'/vkuid/'+user.vkUid)
+            .then(res => res.json())
+            .then(usersArr => {
+                if (usersArr.length === 0){
+                    console.log('Пользователь ', user, ' не найден');
+                    this.postData(BACKEND.users, user); //регитрируем
+                } else {
+                    console.log('Пришло при авторизации', usersArr[0]);
+                    this.setState({user: usersArr[0]});
+                }
+            })
+            .catch(error => {
+                console.log(error); // Error: Not Found
+            });
+    };
+    postData(url = '', data = {}) {
+        // Значения по умолчанию обозначены знаком *
+        return fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+        })
+            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+
+    }
     openReg () {
         this.setState({ popout:
                 <Alert
@@ -105,15 +161,13 @@ class App extends React.Component {
                     <p>Внесенные изменение отобразятся в поиске в течении 2-х минут.</p>
                 </Alert>
         });
-    }
+    };
     closeAlert = () => {
         this.setState({ popout: null });
-    }
+    };
     openPanelMaster = (panelName, masterId) => {
         this.setState({ activePanelMasters: panelName });
         this.setState({ activeMasterId: masterId });
-        //this.state.activeMaster = master;
-        //console.log(this.state.activeMaster);
     };
     activePanelMasters = (name) => {
         this.setState({ activePanelMasters: name });
@@ -123,19 +177,17 @@ class App extends React.Component {
         this.setState({ activeStory: e.currentTarget.dataset.story })
     }
     render () {
-        //connect.send("VKWebAppAllowNotifications", {}).then(err => console.log(err));
-        // Subscribes to event, sended by client
-        //connect.subscribe(e => console.log(e));
-
         return (
             <Epic activeStory={this.state.activeStory} tabbar={
                 <Tabbar>
-                    <TabbarItem
-                        onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'sale'}
-                        data-story="sale"
-                        text="Акции"
-                    ><Icon28FireOutline /></TabbarItem>
+                    {
+                        /*<TabbarItem
+                            onClick={this.onStoryChange}
+                            selected={this.state.activeStory === 'sale'}
+                            data-story="sale"
+                            text="Акции"
+                        ><Icon28FireOutline /></TabbarItem>*/
+                    }
                     <TabbarItem
                         onClick={this.onStoryChange}
                         selected={this.state.activeStory === 'masters'}
@@ -163,17 +215,23 @@ class App extends React.Component {
                     ><Icon28More /></TabbarItem>
                 </Tabbar>
             }>
-                <View id="sale" activePanel="sale">
+                {
+                    /*<View id="sale" activePanel="sale">
                     <Panel id="sale">
                         <PanelHeader>Акции</PanelHeader>
+                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator={this.state.user.city.title}>Выбранный город</Cell>
                         <Sale />
                     </Panel>
-                </View>
+                </View>*/
+                }
                 <Root id="masters" activeView={this.state.activeViewMasters}>
                     <View id="cellMasters" activePanel={this.state.activePanelMasters}>
                         <Panel id="cellMasters">
                             <FormLayout>
-                                <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator="Дзержинск">Выбранный город</Cell>
+                                <Cell
+                                    expandable
+                                    onClick={() => this.setState({ activePanel: 'nothing' })}
+                                    indicator={this.state.user.city.title}>Выбранный город</Cell>
                                 <SelectMimicry
                                     top="Выберите категорию"
                                     placeholder="Не выбрана"
@@ -181,7 +239,7 @@ class App extends React.Component {
                                 >{this.state.targetCategory.label}</SelectMimicry>
                             </FormLayout>
                             <PanelHeader>Мастера</PanelHeader>
-                            <MasterList category={this.state.targetCategory} openPanelMaster={this.openPanelMaster}/>
+                            <PanelMasterList city={this.state.user.city} category={this.state.targetCategory} openPanelMaster={this.openPanelMaster}/>
                         </Panel>
                         <Panel id="masterInfo">
                             <PanelHeader
@@ -191,7 +249,7 @@ class App extends React.Component {
                             >
                                 О мастере
                             </PanelHeader>
-                            <MasterCard activeMasterId={this.state.activeMasterId} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
+                            <MasterCard user={this.state.user} activeMasterId={this.state.activeMasterId} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
                         </Panel>
                         <Panel id="masterPhoto">
                             <PanelHeader
@@ -252,7 +310,20 @@ class App extends React.Component {
                     <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout}>
                         <Panel id="lk">
                             <PanelHeader>Личный кабинет</PanelHeader>
-                            <Lk openReg={() => this.setState({ activeViewLk: 'masterReg' })} openSetting={() => this.setState({ activePanelLk: 'setting' })}/>
+                            <Lk
+                                user={this.state.user}
+                                openReg={() => this.setState({ activeViewLk: 'masterReg' })}
+                                openSetting={() => this.setState({ activePanelLk: 'setting' })}
+                                openFavourite={() => this.setState({ activePanelLk: 'favourite' })}
+                            />
+                        </Panel>
+                        <Panel id='favourite'>
+                            <PanelHeader
+                                theme="light"
+                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
+                            >Избранное</PanelHeader>
+                            <Favourite user={this.state.user} popout={this.openAlert}/>
                         </Panel>
                         <Panel id='setting'>
                             <PanelHeader
@@ -260,7 +331,7 @@ class App extends React.Component {
                                 left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
                                 addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
                             >Настройки</PanelHeader>
-                            <Setting popout={this.openAlert}/>
+                            <Setting user={this.state.user} popout={this.openAlert}/>
                         </Panel>
                     </View>
                     <View activePanel="masterReg" id="masterReg">

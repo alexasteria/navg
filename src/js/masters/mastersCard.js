@@ -1,5 +1,5 @@
 import React from 'react';
-import {UsersStack, Group, List, Cell, InfoRow, Div, Avatar, Button, Gallery} from "@vkontakte/vkui"
+import {Group, List, Cell, Separator, Div, Avatar, Counter, Gallery} from "@vkontakte/vkui"
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from '../func/func';
@@ -9,18 +9,87 @@ class MastersCard extends React.Component {
         super(props);
         this.state = {
             activeMasterId: this.props.activeMasterId,
-            activeMaster: {}
+            activeMaster: {
+                priceList: []
+            },
+            favsArr: [
+                {vkUid:12523452}
+            ],
+            isFavourite: {
+                status: false
+            }
         };
     }
-    componentDidMount() {
+    componentWillMount() {
         //console.log(this.props);
         fetch(BACKEND.masters.all+this.state.activeMasterId)
             .then(res => res.json())
-            .then(activeMaster => this.setState({activeMaster: activeMaster}, () =>
-                console.log(activeMaster)
-            ));
+            .then(activeMaster => this.setState({activeMaster: activeMaster}));
+        this.loadFavs();
     }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.isFavourite.status !== this.state.isFavourite.status) {
+            this.loadFavs();
+        }
+    }
+    loadFavs = () => {
+        fetch(BACKEND.favs.master+this.state.activeMasterId)
+            .then(res => res.json())
+            .then(favsArr => {
+                this.setState({favsArr: favsArr});
+                this.state.favsArr.map(fav => {
+                    if (fav.userId === this.props.user._id) {
+                        this.setState({isFavourite: {status: true, id: fav._id}});
+                    } else {
+                        this.setState({isFavourite: {status: false}})
+                    }
+                    if (favsArr.length === null){
+                        this.setState({countFavs: 0});
+                    }else{
+                        this.setState({countFavs: favsArr.length});
+                    };
+                });
+            });
+}
+    changeVisible = (index) => {
+        this.setState({[index]: !this.state[index]})
+    }
+    checkFavs = () => {
+        if (this.state.isFavourite.status === false) {
+            let fav = {
+                userId: this.props.user._id,
+                userVkUid: this.props.user.vkUid,
+                masterId: this.state.activeMasterId
+            };
+            this.postData(BACKEND.favs.new, fav, 'POST');
+            this.setState({isFavourite: {status: true}});
+        } else {
+            this.setState({isFavourite: {status: false}});
+            let fav = {
+                id: this.state.isFavourite.id
+            };
+            this.postData(BACKEND.favs.new, fav,'DELETE');
+            this.setState({countFavs: this.state.countFavs -1});
+        }
 
+    };
+    postData(url = '', data = {}, method) {
+        // Значения по умолчанию обозначены знаком *
+        return fetch(url, {
+            method: method, // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+        })
+            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+    }
     render(){
         return (
             <Div>
@@ -40,25 +109,67 @@ class MastersCard extends React.Component {
             <Group title="">
                 <List>
                     <Cell expandable onClick={() => this.props.activePanelMasters('masterComments')} indicator={'32'}>Отзывы</Cell>
-                    <Cell
-                        before={<Avatar style={{ background: 'var(--destructive)' }} size={28}><Icon16Like fill="var(--white)" /></Avatar>}
-                        description="для получения быстрого доступа к мастеру"
-                    >
-                        Добавить в избранное
-                    </Cell>
-                        <UsersStack
+                    {
+                        this.state.isFavourite.status === false &&
+                        <Cell
+                            onClick={this.checkFavs}
+                            before={<Icon16LikeOutline fill="red" />}
+                            description="для получения быстрого доступа к мастеру"
+                        >
+                            Добавить в избранное
+                            {
+                                this.state.favsArr.map(fav => {
+                                    return console.log(fav.userVkUid)
+                                })
+                            }
+                        </Cell>
+
+                    }
+                    {
+                        this.state.isFavourite.status &&
+                            <Cell
+                                onClick={this.checkFavs}
+                                description="нажмите, если хотите удалить из списка"
+                                before={<Icon16Like fill="var(--blue)"/>}
+                            >Мастер в списке избранных</Cell>
+
+                    }
+                    {/*<UsersStack
                             photos={[
                                 'https://sun9-1.userapi.com/c850624/v850624456/9f63e/c2_IbBit7I8.jpg?ava=1',
                                 'https://sun9-6.userapi.com/c851528/v851528416/e0360/1UfQ8aSIGVA.jpg?ava=1'
                             ]}
                             size="s"
-                        >Настя и Jean подписаны на мастера</UsersStack>
+                        >Настя и Jean подписаны на мастера</UsersStack>*/}
+                        <Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>
                 </List>
             </Group>
                 <Group>
                     <Cell multiline title="Информация">
                         {this.state.activeMaster.description}
                     </Cell>
+                </Group>
+                <Group>
+                        {
+                            this.state.activeMaster.priceList.map((item, index) => (
+                                    <Cell
+                                        key={index}
+                                        multiline
+                                        onClick={() => this.changeVisible(index)}
+                                    >
+                                        <Cell
+                                            description="Название процедуры"
+                                            expandable
+                                            indicator={'От '+item.price}>{this.state.activeMaster.priceList[index].title}
+                                        </Cell>
+                                        {
+                                            this.state[index] &&
+                                            <Cell description="Краткое описание процедуры" multiline>{this.state.activeMaster.priceList[index].body}</Cell>
+                                        }
+                                        <Separator></Separator>
+                                    </Cell>
+                                )
+                            )}
                 </Group>
                 <Group title="Портфолио">
                     <Gallery

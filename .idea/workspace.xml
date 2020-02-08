@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Апдейт данных в лк">
-      <change afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Добавлены страницы портфолио и комментариев">
+      <change afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/masterList.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/sale/sale.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/sale/sale.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +80,7 @@
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\masters" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js\func" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\lk" />
       <recent name="C:\Users\repla\Desktop\navg\src\js\idea" />
       <recent name="C:\Users\repla\Desktop\navg\src\js\masters" />
@@ -134,7 +140,7 @@
       <workItem from="1579465202418" duration="429000" />
       <workItem from="1579981029245" duration="1670000" />
       <workItem from="1580912644198" duration="35495000" />
-      <workItem from="1581082260751" duration="5675000" />
+      <workItem from="1581082260751" duration="35149000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -234,7 +240,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581085874332</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Добавлены страницы портфолио и комментариев">
+      <created>1581087955504</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1581087955504</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,17 +282,18 @@
     <MESSAGE value="Работает поиск по категориям" />
     <MESSAGE value="Cписок категорий в ЛК ренеринтся через .map" />
     <MESSAGE value="Апдейт данных в лк" />
-    <option name="LAST_COMMIT_MESSAGE" value="Апдейт данных в лк" />
+    <MESSAGE value="Добавлены страницы портфолио и комментариев" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлены страницы портфолио и комментариев" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1581085873911">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1581087955207">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1581085873911" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1581087955207" />
     <state x="794" y="232" key="RollbackChangesDialog" timestamp="1581015768039">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -9,20 +9,21 @@ import {
     Textarea,
     Switch,
     FormLayoutGroup,
-    Alert, Button
-} from "@vkontakte/vkui"
+    List, Button, CellButton, Input
+} from "@vkontakte/vkui";
+import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from '../func/func';
+import Icon24Add from '@vkontakte/icons/dist/24/add';
 
 class Lk extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            tooltip: true,
             popout: null,
             vkuid: '',
             activeMaster: {
-                description: '',
-                firstname: '',
-                lastname: ''
+                priceList: []
             },
             count: {
                 manicureStatus: 0,
@@ -43,6 +44,7 @@ class Lk extends React.Component {
         };
     }
     componentDidMount() {
+            console.log(this.props.user);
         VKConnect.subscribe((e) => {
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
                 fetch(BACKEND.masters.vkuid+e.detail.data.id)
@@ -53,11 +55,14 @@ class Lk extends React.Component {
             }
         });
         VKConnect.send('VKWebAppGetUserInfo', {});
+        console.log(this.state.activeMaster);
     }
-    componentDidUpdate() {
-
+    handleChange = (event) => {
+        this.setState({[event.target.name]: event.target.value});
+    };
+    onChange(event) {
+        console.log(event.target.value)
     }
-
     patchData(url = '', data = {}) {
         console.log('пошло');
         // Значения по умолчанию обозначены знаком *
@@ -79,6 +84,31 @@ class Lk extends React.Component {
                 this.props.popout();
             }); // парсит JSON ответ в Javascript объект
     }
+    showProfile = event => {
+        const target = event.target;
+        const name = target.name;
+        let activeMaster = this.state.activeMaster;
+        console.log('Изменено с ',activeMaster[name], ' на ',  !activeMaster[name]);
+        activeMaster[name] = !activeMaster[name];
+        this.setState({ activeMaster: activeMaster});
+    }
+    onRemove = (index) => {
+        let activeMaster = this.state.activeMaster;
+        activeMaster.priceList = [...this.state.activeMaster.priceList.slice(0, index), ...this.state.activeMaster.priceList.slice(index + 1)];
+        this.setState({activeMaster: activeMaster});
+    }
+    addProd = (status) => {
+        this.setState({add: status})
+    };
+    saveProd = (title, body, price) => {
+        console.log(title, body, price);
+        let activeMaster = this.state.activeMaster;
+        activeMaster.priceList.push({title: this.state.newProdTitle, body: this.state.newProdBody, price: this.state.newProdPrice});
+        this.setState({activeMaster: activeMaster});
+        this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
+        console.log(this.state.activeMaster);
+        this.patchData(BACKEND.masters.all+this.state.activeMaster._id, this.state.activeMaster)
+    }
     loadCount() {
         const arrCategory = ['manicureStatus', 'pedicureStatus', 'eyelashesStatus',
         'eyebrowsStatus', 'shugaringStatus', 'hairStatus'];
@@ -89,6 +119,7 @@ class Lk extends React.Component {
             let count = this.state.count;
             count[category] = countMass.length;
             this.setState({ count: count });
+            return console.log('ok');
         });
     }
     handleCheck = event => {
@@ -126,6 +157,54 @@ class Lk extends React.Component {
                 >
                     {this.state.activeMaster.firstname+' '+this.state.activeMaster.lastname}
                 </Cell>
+                <Group>
+                    <Cell
+                        asideContent={<Switch
+                            name={'showProfile'}
+                            onChange={this.showProfile}
+                            checked={this.state.activeMaster.showProfile}/>}>
+                        Показывать мой профиль в поиске
+                    </Cell>
+                </Group>
+                    <Group>
+                        <Cell>Прайс-лист</Cell>
+                    </Group>
+                    {this.state.activeMaster.priceList.length === 0 &&
+                        <Cell multiline>Вы еще не указали ни одной процедуры</Cell>
+                    }
+                        {this.state.activeMaster.priceList.map((item, index) => (
+                            <List>
+                                <Cell
+                                    key={item}
+                                    multiline
+                                    //onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
+                                    removable
+                                    onRemove={() => {this.onRemove(index)}}>
+                                    <Cell description="Название процедуры">{this.state.activeMaster.priceList[index].title}</Cell>
+                                    <Cell description="Краткое описание процедуры" multiline>{this.state.activeMaster.priceList[index].body}</Cell>
+                                    <Cell description="Минимальная цена за работу">{this.state.activeMaster.priceList[index].price}</Cell>
+                                </Cell>
+                            </List>
+                        ))}
+                    {this.state.add &&
+                            <Div>
+                                <Cell description="Добавления нового элемента" multiline>
+                                    <Input name="newProdTitle" type="text" value={this.state.newProdTitle} placeholder={'Введите название'} onChange={this.handleChange}/>
+                                    <Textarea name="newProdBody" value={this.state.newProdBody} placeholder={'Укажите описание'} onChange={this.handleChange}/>
+                                    <Input name="newProdPrice" type="text" value={this.state.newProdPrice} placeholder={'Укажите цену'} onChange={this.handleChange}/>
+                                </Cell>
+                                <Div style={{display: 'flex'}}>
+                                    <Button size="l" stretched style={{ marginRight: 8 }} onClick={() => this.saveProd()}>Сохранить</Button>
+                                    <Button size="l" stretched mode="destructive" onClick={() => this.addProd(false)}>Отменить</Button>
+                                </Div>
+                            </Div>
+                    }
+                    <Group>
+                        <CellButton
+                            onClick={() => this.addProd(true)}
+                            before={<Icon24Add />}
+                        >Добавить процедуру</CellButton>
+                    </Group>
                 <Group>
                     <FormLayout onSubmit={this.handleSubmit}>
                         <Textarea

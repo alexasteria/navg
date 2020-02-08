@@ -1,5 +1,5 @@
 import React from 'react';
-import connect from "@vkontakte/vk-connect";
+//import connect from "@vkontakte/vk-connect";
 import VKConnect from '@vkontakte/vkui-connect-mock';
 import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
@@ -163,7 +163,7 @@ class Invite extends React.Component {
             ]
         };
         console.log(activeMaster);
-        this.postData(BACKEND.masters.all, activeMaster).then(err => console.log(err));
+        this.postData(BACKEND.masters.all, activeMaster).then(res => console.log(res));
         event.preventDefault();
     }
     postData(url = '', data = {}) {

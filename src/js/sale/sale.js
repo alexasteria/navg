@@ -6,7 +6,6 @@ class Sale extends React.Component {
     render(){
         return (
             <Div>
-                <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator="Дзержинск">Выбранный город</Cell>
                 <Group>
                     <Div style={{ backgroundImage: 'url(https://static.chance.ru/sites/default/files/styles/photo_galleryformatter_slide/public/images/4F305684-6F6D-4FD5-BB3B-E33918F0567B.jpeg?itok=pUhn9TyQ)', backgroundSize: 'cover', height: 200 }} />
                 </Group>

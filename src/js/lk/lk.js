@@ -1,8 +1,6 @@
 import React from 'react';
-import connect from '@vkontakte/vk-connect';
-import VKConnect from '@vkontakte/vkui-connect-mock';
 import {Div, Separator, CellButton, Avatar, Cell, List, Group} from "@vkontakte/vkui"
-import {BACKEND} from '../func/func';
+//import {BACKEND} from '../func/func';
 import Icon24Settings from '@vkontakte/icons/dist/24/settings';
 import Icon24Story from '@vkontakte/icons/dist/24/story';
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
@@ -15,51 +13,17 @@ class Lk extends React.Component {
         super(props);
         this.state = {
             connection: false,
-            user: {
-                firstname: '',
-                lastname: '',
-                avatarLink: '',
-                vkUid: '',
-                isMaster: false
-            },
+            user: this.props.user,
             tmpUser: [],
             isMaster: false,
             isUser: false
         };
     }
-    componentWillMount() {
-        VKConnect.subscribe((e) => {
-            if (e.detail.type === 'VKWebAppGetUserInfoResult') {
-                let user = this.state.user;
-                user.vkUid = e.detail.data.id;
-                user.firstname = e.detail.data.first_name;
-                user.lastname = e.detail.data.last_name;
-                user.avatarLink = e.detail.data.photo_200;
-                user.sex = e.detail.data.sex;
-                user.city = {id: e.detail.data.city.id, title: e.detail.data.city.title};
-                user.country = {id: e.detail.data.country.id, title: e.detail.data.country.title};
-                this.verifiedUser(user);
-            }
-        });
-        VKConnect
-            .send('VKWebAppGetUserInfo', {});
+    componentDidMount() {
+        this.setState({user: this.props.user});
+        //console.log(this.state.user);
     }
-    verifiedUser = (user) => {
-        fetch(BACKEND.users+'/vkuid/'+user.vkUid)
-            .then(res => res.json())
-            .then(usersArr => {
-                if (usersArr.length === 0){
-                    console.log('Пользователь ', user, ' не найден');
-                    this.postData(BACKEND.users, user); //регитрируем
-                } else {
-                    console.log('Пришло при авторизации', usersArr[0]);
-                    this.setState({user: usersArr[0]});
-                }
-            })
-            .catch(error => {
-                console.log(error); // Error: Not Found
-            });
-    };
+
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -92,11 +56,12 @@ class Lk extends React.Component {
                     <CellButton onClick={this.props.openReg}>Зарегистрироваться как мастер</CellButton>
                 }
                     <Group title="Основное">
-                    <Separator style={{ margin: '12px 0' }} />
-                    <List>
-                    <Cell expandable before={<Icon24Like />} onClick={() => this.setState({ activePanel: 'nothing' })}>Избранное</Cell>
-                    <Cell expandable before={<Icon24Recent />} onClick={() => this.setState({ activePanel: 'nothing' })}>Мои записи</Cell>
-                    </List>
+                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator={this.state.user.city.title}>Выбранный город</Cell>
+                        <Separator style={{ margin: '12px 0' }} />
+                        <List>
+                            <Cell expandable before={<Icon24Like />} onClick={this.props.openFavourite}>Избранное</Cell>
+                            <Cell expandable before={<Icon24Recent />} onClick={() => this.setState({ activePanel: 'nothing' })}>Мои записи</Cell>
+                        </List>
                     </Group>
                 {this.state.user.isMaster &&
                     <Group title="Меню мастера">
