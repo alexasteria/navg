@@ -1,8 +1,8 @@
 import React from 'react';
 //import connect from "@vkontakte/vk-connect";
-import VKConnect from '@vkontakte/vkui-connect-mock';
+//import VKConnect from '@vkontakte/vkui-connect-mock';
 import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar} from "@vkontakte/vkui"
-import {BACKEND} from "../func/func";
+//import {BACKEND} from "../func/func";
 
 class Invite extends React.Component {
     constructor(props) {
@@ -24,6 +24,9 @@ class Invite extends React.Component {
                 shugaringStatus: 0,
                 hairStatus: 0,
                 cosmeticStatus: 0
+            },
+            activeMaster: {
+
             },
             manicureStatus: [
                     {active: false, id:"5e3756b37612461064809b28", label: "Наращивание"},
@@ -97,19 +100,24 @@ class Invite extends React.Component {
     }
 
     componentWillMount() {
-        let user = this.props.user;
-        user.manicureStatus = this.state.manicureStatus;
-        user.pedicureStatus = this.state.pedicureStatus;
-        user.eyelashesStatus = this.state.eyelashesStatus;
-        user.eyebrowsStatus = this.state.eyebrowsStatus;
-        user.shugaringStatus = this.state.shugaringStatus;
-        user.hairStatus = this.state.hairStatus;
-        user.cosmeticStatus = this.state.cosmeticStatus;
-        user.description = '';
-        user.type = '';
-        user.category = [];
-        console.log('user пришел из props', user);
-        this.setState({activeMaster: user});
+        let master = this.state.activeMaster;
+        console.log('user пришел из props', this.props.user);
+        master.firstname = this.props.user.firstname;
+        master.lastname =this.props.user.lastname;
+        master.vkUid =this.props.user.vkUid;
+        master.avatarLink =this.props.user.avatarLink;
+        master.sex =this.props.user.sex;
+        master.city =this.props.user.city;
+        master.country =this.props.user.country;
+        master.manicureStatus = this.state.manicureStatus;
+        master.pedicureStatus = this.state.pedicureStatus;
+        master.eyelashesStatus = this.state.eyelashesStatus;
+        master.eyebrowsStatus = this.state.eyebrowsStatus;
+        master.shugaringStatus = this.state.shugaringStatus;
+        master.hairStatus = this.state.hairStatus;
+        master.cosmeticStatus = this.state.cosmeticStatus;
+        console.log('после обработки', master);
+        this.setState({activeMaster: master});
 
     }
     handleCheck = event => {
@@ -137,56 +145,6 @@ class Invite extends React.Component {
         this.setState({[name]: value});
     }
 
-    /*handleSubmit(event) {
-        const activeMaster = {
-            firstname: this.state.activeMaster.firstname,
-            lastname: this.state.activeMaster.lastname,
-            description: this.state.about,
-            manicureStatus: this.state.activeMaster.manicureStatus,
-            pedicureStatus: this.state.activeMaster.pedicureStatus,
-            eyelashesStatus: this.state.activeMaster.eyelashesStatus,
-            eyebrowsStatus: this.state.activeMaster.eyebrowsStatus,
-            shugaringStatus: this.state.activeMaster.shugaringStatus,
-            hairStatus: this.state.activeMaster.hairStatus,
-            cosmeticStatus: this.state.activeMaster.cosmeticStatus,
-            avatarLink: this.state.activeMaster.avatarLink,
-            type: this.state.type,
-            vkUid: this.state.activeMaster.vkUid,
-            sex: this.state.activeMaster.sex,
-            city: this.state.activeMaster.city,
-            country: this.state.activeMaster.country,
-            category: [
-                {id: '5e37537a58b85c13bcffb8b4', active: this.state.count.manicureStatus > 0, label:'Маникюр'},
-                {id: '5e3753be58b85c13bcffb8b5', active: this.state.count.pedicureStatus > 0, label: 'Педикюр'},
-                {id: '5e3753c458b85c13bcffb8b6', active: this.state.count.eyelashesStatus > 0, label: 'Ресницы'},
-                {id: '5e3753c858b85c13bcffb8b7', active: this.state.count.eyebrowsStatus > 0, label: 'Брови'},
-                {id: '5e3753cd58b85c13bcffb8b8', active: this.state.count.shugaringStatus > 0, label: 'Шугаринг'},
-                {id: '5e3753d558b85c13bcffb8b9', active: this.state.count.hairStatus > 0, label: 'Уход за волосами'},
-                {id: '5e3753dc58b85c13bcffb8ba', active: this.state.count.cosmeticStatus > 0, label: 'Косметология'}
-            ]
-        };
-        console.log(activeMaster);
-        this.postData(BACKEND.masters.all, activeMaster);
-        event.preventDefault();
-    }*/
-    postData(url = '', data = {}) {
-        // Значения по умолчанию обозначены знаком *
-        fetch(url, {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, cors, *same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrer: 'no-referrer', // no-referrer, *client
-            body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
-        })
-            .then(response => this.props.closePopup); // парсит JSON ответ в Javascript объект
-
-    }
     render(){
         return (
                     <Group>
@@ -377,7 +335,7 @@ class Invite extends React.Component {
                             <Checkbox onChange={() => this.setState({checkLicense: !this.state.checkLicense})}>Согласен
                                 c <Link>условиями использования приложения</Link></Checkbox>
                             {this.state.checkLicense && this.state.about && this.state.type &&
-                            <Button size="xl" onClick={() => console.log(this.state.activeMaster)}>Зарегистрироваться как мастер</Button>
+                            <Button size="xl" onClick={() => this.props.closeReg(this.state.activeMaster)}>Зарегистрироваться как мастер</Button>
                             }
                         </FormLayout>
                     </Group>

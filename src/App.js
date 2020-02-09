@@ -95,7 +95,8 @@ class App extends React.Component {
             .send('VKWebAppGetUserInfo', {});
     }
     verifiedUser = (user) => {
-        console.log(BACKEND.users+'/vkuid/'+user.vkUid);
+        console.log('auth');
+        //console.log(BACKEND.users+'/vkuid/'+user.vkUid);
         fetch(BACKEND.users+'/vkuid/'+user.vkUid)
             .then(res => res.json())
             .then(usersArr => {
@@ -113,7 +114,7 @@ class App extends React.Component {
     };
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
-        return fetch(url, {
+        fetch(url, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, cors, *same-origin
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -126,26 +127,10 @@ class App extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
+            .then(data)
             .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
 
     }
-    openReg () {
-        this.setState({ popout:
-                <Alert
-                    actionsLayout="vertical"
-                    actions={[{
-                        title: 'Понятненько',
-                        autoclose: true,
-                        mode: 'cancel'
-                    }]}
-                    onClose={this.closePopout}
-                >
-                    <h2>Успешная регистрация</h2>
-                    <p>Вы успшно зарегистрированы, как мастер. Теперь вам доступна регистрация портфолио, а так же прием и обработка заказов.</p>
-                </Alert>
-        });
-    }
-
     openAlert = () => {
         this.setState({ popout:
                 <Alert
@@ -165,8 +150,13 @@ class App extends React.Component {
     closeAlert = () => {
         this.setState({ popout: null });
     };
-    closeReg = () => {
-        console.log('close');
+    closeReg = (master) => {
+        console.log('master - ', master);
+        this.postData(BACKEND.masters.all, master);
+        let user = this.state.user;
+        user.isMaster = true;
+        this.setState({ user: user });
+        //this.verifiedUser(master); //проходит до запроса в БД пофиксить
         this.setState({ activeViewLk: 'lk' });
     };
     openPanelMaster = (panelName, masterId) => {
@@ -178,7 +168,7 @@ class App extends React.Component {
         this.setState({ activeStory: 'masters' });
         this.setState({ activePanelMasters: 'masterInfo' });
         this.setState({ activeMasterId: masterId });
-    }
+    };
     activePanelMasters = (name) => {
         this.setState({ activePanelMasters: name });
         console.log(this.state.activePanelMasters);
@@ -352,7 +342,7 @@ class App extends React.Component {
                                 addon={<HeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>Назад</HeaderButton>}
                             >Регистрация мастера
                             </PanelHeader>
-                            <Invite user={this.state.user} closePopup={this.closeReg}/>
+                            <Invite user={this.state.user} closeReg={this.closeReg}/>
                         </Panel>
                     </View>
                 </Root>
