@@ -48,7 +48,7 @@ class Favourite extends React.Component {
                           }
                           before={<Avatar src={master.avatarLink} size={50}/>}
                           size="l"
-                          onClick={() => this.props.openMaster(master._id)}
+                          onClick={() => this.props.openMaster(master)}
                     >{master.firstname} {master.lastname}
                     </Cell>
                 </Group>
