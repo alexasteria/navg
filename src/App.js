@@ -165,6 +165,10 @@ class App extends React.Component {
     closeAlert = () => {
         this.setState({ popout: null });
     };
+    closeReg = () => {
+        console.log('close');
+        this.setState({ activeViewLk: 'lk' });
+    };
     openPanelMaster = (panelName, masterId) => {
         this.setState({ activePanelMasters: panelName });
         this.setState({ activeMasterId: masterId });
@@ -348,7 +352,7 @@ class App extends React.Component {
                                 addon={<HeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>Назад</HeaderButton>}
                             >Регистрация мастера
                             </PanelHeader>
-                            <Invite closePopup={() => this.setState({ activeViewLk: 'lk' })}/>
+                            <Invite user={this.state.user} closePopup={this.closeReg}/>
                         </Panel>
                     </View>
                 </Root>

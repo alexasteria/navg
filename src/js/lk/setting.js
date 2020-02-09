@@ -1,4 +1,5 @@
 import React from 'react';
+//import connect from '@vkontakte/vk-connect';
 import VKConnect from '@vkontakte/vkui-connect-mock';
 import {
     Group,
@@ -44,7 +45,7 @@ class Lk extends React.Component {
         };
     }
     componentDidMount() {
-            console.log(this.props.user);
+            //console.log(this.props.user);
         VKConnect.subscribe((e) => {
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
                 fetch(BACKEND.masters.vkuid+e.detail.data.id)
