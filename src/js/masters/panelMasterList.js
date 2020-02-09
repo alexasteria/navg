@@ -53,7 +53,7 @@ class MasterList extends React.Component {
                                   }
                                   before={<Avatar src={master.avatarLink} size={50}/>}
                                   size="l"
-                                  onClick={() => this.props.openPanelMaster('masterInfo', master._id)}
+                                  onClick={() => this.props.openPanelMaster('masterInfo', master)}
                             >{master.firstname} {master.lastname}
                             </Cell>
                         </Group>

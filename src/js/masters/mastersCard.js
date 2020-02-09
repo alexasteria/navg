@@ -21,33 +21,27 @@ class MastersCard extends React.Component {
         };
     }
     componentWillMount() {
-        //console.log(this.props);
-        fetch(BACKEND.masters.all+this.state.activeMasterId)
-            .then(res => res.json())
-            .then(activeMaster => this.setState({activeMaster: activeMaster}));
+        console.log(this.props);
+        this.setState({activeMaster: this.props.activeMaster});
         this.loadFavs();
     }
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevState.isFavourite.status !== this.state.isFavourite.status) {
-            this.loadFavs();
-        }
-    }
+
     loadFavs = () => {
-        fetch(BACKEND.favs.master+this.state.activeMasterId)
+        console.log(BACKEND.favs.master+this.props.activeMaster._id);
+        fetch(BACKEND.favs.master+this.props.activeMaster._id)
             .then(res => res.json())
             .then(favsArr => {
                 this.setState({favsArr: favsArr});
+                let count = favsArr.length;
+                this.setState({countFavs: count});
                 this.state.favsArr.map(fav => {
                     if (fav.userId === this.props.user._id) {
                         this.setState({isFavourite: {status: true, id: fav._id}});
+                        console.log('У тебя в избранном');
                     } else {
                         this.setState({isFavourite: {status: false}})
+                        console.log('Нет в избранном');
                     }
-                    if (favsArr.length === null){
-                        this.setState({countFavs: 0});
-                    }else{
-                        this.setState({countFavs: favsArr.length});
-                    };
                 });
             });
     }
@@ -55,21 +49,18 @@ class MastersCard extends React.Component {
         this.setState({[index]: !this.state[index]})
     }
     checkFavs = () => {
+        console.log('click');
         if (this.state.isFavourite.status === false) {
+            console.log('post');
             let fav = {
                 userId: this.props.user._id,
                 userVkUid: this.props.user.vkUid,
-                masterId: this.state.activeMasterId
+                masterId: this.state.activeMaster._id,
+                masterVkUid: this.state.activeMaster.vkUid
             };
             this.postData(BACKEND.favs.new, fav, 'POST');
             this.setState({isFavourite: {status: true}});
-        } else {
-            this.setState({isFavourite: {status: false}});
-            let fav = {
-                id: this.state.isFavourite.id
-            };
-            this.postData(BACKEND.favs.new, fav,'DELETE');
-            this.setState({countFavs: this.state.countFavs -1});
+            this.setState({countFavs: this.state.countFavs+1});
         }
 
     };
@@ -93,7 +84,7 @@ class MastersCard extends React.Component {
     render(){
         return (
             <Div>
-            <Group title="">
+                <Group title="">
                 <Cell
                     photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
                     description={this.state.activeMaster.type}
@@ -116,7 +107,7 @@ class MastersCard extends React.Component {
                             before={<Icon16LikeOutline fill="red" />}
                             description="для получения быстрого доступа к мастеру"
                         >
-                            Добавить в избранное
+                            Подписаться
                             {
                                 this.state.favsArr.map(fav => {
                                     return console.log(fav.userVkUid)
@@ -128,10 +119,9 @@ class MastersCard extends React.Component {
                     {
                         this.state.isFavourite.status &&
                             <Cell
-                                onClick={this.checkFavs}
-                                description="нажмите, если хотите удалить из списка"
+                                description="отменить подписку можно в ЛК"
                                 before={<Icon16Like fill="var(--blue)"/>}
-                            >Мастер в списке избранных</Cell>
+                            >Вы подписаны на мастера</Cell>
 
                     }
                     {/*<UsersStack

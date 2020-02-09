@@ -159,15 +159,15 @@ class App extends React.Component {
         //this.verifiedUser(master); //проходит до запроса в БД пофиксить
         this.setState({ activeViewLk: 'lk' });
     };
-    openPanelMaster = (panelName, masterId) => {
+    openPanelMaster = (panelName, master) => {
         this.setState({ activePanelMasters: panelName });
-        this.setState({ activeMasterId: masterId });
+        this.setState({ activeMaster: master });
     };
-    openMaster = (masterId) => {
+    openMaster = (master) => {
         this.setState({ activeViewMasters: 'cellMasters' });
         this.setState({ activeStory: 'masters' });
         this.setState({ activePanelMasters: 'masterInfo' });
-        this.setState({ activeMasterId: masterId });
+        this.setState({ activeMaster: master });
     };
     activePanelMasters = (name) => {
         this.setState({ activePanelMasters: name });
@@ -249,7 +249,7 @@ class App extends React.Component {
                             >
                                 О мастере
                             </PanelHeader>
-                            <MasterCard user={this.state.user} activeMasterId={this.state.activeMasterId} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
+                            <MasterCard user={this.state.user} activeMaster={this.state.activeMaster} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
                         </Panel>
                         <Panel id="masterPhoto">
                             <PanelHeader
