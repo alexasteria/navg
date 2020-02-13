@@ -13,7 +13,7 @@ import {
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
 import '@vkontakte/vkui/dist/vkui.css';
-//import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
+import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
 import Icon28ServicesOutline from '@vkontakte/icons/dist/28/services_outline';
 import Icon28HelpOutline from '@vkontakte/icons/dist/28/help_outline';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
@@ -24,13 +24,15 @@ import MasterCard from './js/masters/mastersCard.js';
 import MasterPhoto from './js/masters/mastersPhoto.js';
 import MasterComments from './js/masters/mastersComments.js';
 import Idea from './js/idea/idea.js';
+import News from './js/news/news.js';
 import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
 import Setting from './js/lk/setting.js';
 import Favourite from './js/lk/favourite.js';
 import Icon24Done from '@vkontakte/icons/dist/24/done';
-import VKConnect from "@vkontakte/vkui-connect-mock";
 import {BACKEND} from "./js/func/func";
+import VKConnect from "@vkontakte/vkui-connect-mock";
+//import connect from '@vkontakte/vk-connect';
 const osname = platform();
 
 
@@ -40,7 +42,7 @@ class App extends React.Component {
 
         this.state = {
             popout: null,
-            activeStory: 'masters',
+            activeStory: 'news',
             activePanelMasters: 'cellMasters',
             activeMasterId: '',
             activeViewMasters: 'cellMasters',
@@ -61,7 +63,8 @@ class App extends React.Component {
                 lastname: '',
                 avatarLink: '',
                 vkUid: '',
-                status: ''
+                status: '',
+                city: {id:1, title: 'СПБ'}
             },
             categories: [
                 {id: '5e37537a58b85c13bcffb8b4', label: 'Маникюр'},
@@ -79,20 +82,22 @@ class App extends React.Component {
     componentWillMount() {
         VKConnect.subscribe((e) => {
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
-                let user = this.state.user;
-                user.vkUid = e.detail.data.id;
-                user.firstname = e.detail.data.first_name;
-                user.lastname = e.detail.data.last_name;
-                user.avatarLink = e.detail.data.photo_200;
-                user.sex = e.detail.data.sex;
-                user.city = {id: e.detail.data.city.id, title: e.detail.data.city.title};
-                user.country = {id: e.detail.data.country.id, title: e.detail.data.country.title};
-                user.isMaster = false;
+                const user = {
+                    vkUid: e.detail.data.id,
+                    firstname: e.detail.data.first_name,
+                    lastname: e.detail.data.last_name,
+                    avatarLink: e.detail.data.photo_200,
+                    sex: e.detail.data.sex,
+                    city: {id: e.detail.data.city.id, title: e.detail.data.city.title},
+                    country: {id: e.detail.data.country.id, title: e.detail.data.country.title},
+                    isMaster: false
+                };
+                this.setState({user: user});
+                //console.log(this.state.user);
                 this.verifiedUser(user);
             }
         });
-        VKConnect
-            .send('VKWebAppGetUserInfo', {});
+        VKConnect.send('VKWebAppGetUserInfo', {});
     }
     verifiedUser = (user) => {
         console.log('auth');
@@ -173,6 +178,9 @@ class App extends React.Component {
         this.setState({ activePanelMasters: name });
         console.log(this.state.activePanelMasters);
     };
+    openStory = (storyName) => {
+        this.setState({ activeStory: storyName })
+    }
     onStoryChange (e) {
         this.setState({ activeStory: e.currentTarget.dataset.story })
     }
@@ -188,6 +196,12 @@ class App extends React.Component {
                             text="Акции"
                         ><Icon28FireOutline /></TabbarItem>*/
                     }
+                    <TabbarItem
+                        onClick={this.onStoryChange}
+                        selected={this.state.activeStory === 'news'}
+                        data-story="news"
+                        text="News"
+                    ><Icon28FireOutline /></TabbarItem>
                     <TabbarItem
                         onClick={this.onStoryChange}
                         selected={this.state.activeStory === 'masters'}
@@ -224,6 +238,12 @@ class App extends React.Component {
                     </Panel>
                 </View>*/
                 }
+                <View id="news" activePanel="news">
+                    <Panel id="news">
+                        <PanelHeader>Горячие новости</PanelHeader>
+                        <News user={this.state.user} openStory={this.openStory}/>
+                    </Panel>
+                </View>
                 <Root id="masters" activeView={this.state.activeViewMasters}>
                     <View id="cellMasters" activePanel={this.state.activePanelMasters}>
                         <Panel id="cellMasters">
@@ -304,6 +324,13 @@ class App extends React.Component {
                 <View id="notifications" activePanel="notifications">
                     <Panel id="notifications">
                         <PanelHeader>Уведомления</PanelHeader>
+                        <Group>
+                            <Cell
+                                expandable
+                                onClick={() => this.setState({ activePanel: 'nothing' })}
+                                indicator={'В разработке'}
+                            >Этот раздел</Cell>
+                        </Group>
                     </Panel>
                 </View>
                 <Root id="lk" activeView={this.state.activeViewLk}>

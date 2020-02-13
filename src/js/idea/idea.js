@@ -1,5 +1,5 @@
 import React from 'react';
-import {HorizontalScroll, FixedLayout, TabsItem, Tabs, Panel, PanelHeader} from "@vkontakte/vkui"
+import {Group, HorizontalScroll, FixedLayout, TabsItem, Tabs, Panel, PanelHeader, Cell} from "@vkontakte/vkui"
 
 
 class Idea extends React.Component {
@@ -27,17 +27,18 @@ class Idea extends React.Component {
                                 onClick={() => this.setState({ activeTab: 'users' })}
                                 selected={this.state.activeTab === 'users'}
                             >
-                                Локти
-                            </TabsItem>
-                            <TabsItem
-                                onClick={() => this.setState({ activeTab: 'groups' })}
-                                selected={this.state.activeTab === 'groups'}
-                            >
-                                Ни ногти ни локти(
+                                Информация о разделе
                             </TabsItem>
                         </HorizontalScroll>
                     </Tabs>
                 </FixedLayout>
+                <Group>
+                    <Cell
+                        expandable
+                        onClick={() => this.setState({ activePanel: 'nothing' })}
+                        indicator={'В разработке'}
+                    >Этот раздел</Cell>
+                </Group>
             </Panel>
         );
     }

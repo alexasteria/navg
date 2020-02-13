@@ -6,7 +6,6 @@ import * as serviceWorker from './serviceWorker';
 //import connect from '@vkontakte/vk-connect';
 import VKConnect from '@vkontakte/vkui-connect-mock';
 
-//connect.send("VKWebAppInit", {});
 VKConnect.send("VKWebAppInit", {});
 
 ReactDOM.render(<App />, document.getElementById('root'));

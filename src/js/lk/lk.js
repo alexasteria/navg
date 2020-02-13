@@ -96,6 +96,7 @@ class Lk extends React.Component {
                                 expandable
                                 before={<Icon24Recent />}
                                 onClick={() => this.setState({ activePanel: 'nothing' })}
+                                indicator={'В разработке'}
                             >Мои записи</Cell>
                         </List>
                     </Group>
@@ -107,16 +108,19 @@ class Lk extends React.Component {
                         expandable
                         before={<Icon24Users />}
                         onClick={() => this.setState({ activePanel: 'nothing' })}
+                        indicator={'В разработке'}
                     >Мои заявки</Cell>
                     <Cell
                         expandable
                         before={<Icon24UserOutgoing />}
                         onClick={() => this.setState({ activePanel: 'nothing' })}
+                        indicator={'В разработке'}
                     >График</Cell>
                     <Cell
                         expandable
                         before={<Icon24Story />}
                         onClick={() => this.setState({ activePanel: 'nothing' })}
+                        indicator={'В разработке'}
                     >Портфолио</Cell>
                     <Cell
                         expandable

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Separator, Avatar, Button, Cell, Div, Group, List} from "@vkontakte/vkui";
+import {Spinner, Separator, Avatar, Button, Cell, Div, Group, List} from "@vkontakte/vkui";
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from "../func/func";
@@ -38,8 +38,11 @@ class MasterList extends React.Component {
     renderMaster() {
         if(Array.isArray(this.state.mastersList)) {
             if(this.state.mastersList.length === 0) {
-                return (<Cell multiline>Увы, сейчас у нас нет данных о специалистах данного профиля в вашем городе.
-                Помогите нам их найти :) Поделитесь ссылкой на наше приложение нажав <Button level="commerce">Поделиться</Button></Cell>)
+                return (
+                    <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <Spinner size="large" style={{ marginTop: 20 }} />
+                    </div>
+                )
             } else {
                 return this.state.mastersList.map(master => {
                     return (
