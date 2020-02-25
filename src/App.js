@@ -33,8 +33,8 @@ import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-//import VKConnect from "@vkontakte/vkui-connect-mock";
-import connect from '@vkontakte/vk-connect';
+import VKConnect from "@vkontakte/vkui-connect-mock";
+//import connect from '@vkontakte/vk-connect';
 const osname = platform();
 
 
@@ -45,6 +45,7 @@ class App extends React.Component {
         this.state = {
             popout: null,
             activeStory: 'news',
+            activePanelFindModels: 'findmodel',
             activePanelMasters: 'cellMasters',
             activeMasterId: '',
             activeViewMasters: 'cellMasters',
@@ -82,7 +83,7 @@ class App extends React.Component {
 
     }
     componentWillMount() {
-        connect.subscribe((e) => {
+        VKConnect.subscribe((e) => {
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
                 const user = {
                     vkUid: e.detail.data.id,
@@ -99,7 +100,14 @@ class App extends React.Component {
                 this.verifiedUser(user);
             }
         });
-        connect.send('VKWebAppGetUserInfo', {});
+        VKConnect.send('VKWebAppGetUserInfo', {});
+        this.loadMasterList();
+    }
+    loadMasterList = () => {
+        console.log('load all masters');
+        fetch(BACKEND.masters.all)
+            .then(res => res.json())
+            .then(mastersList => this.setState({mastersList: mastersList}));
     }
     verifiedUser = (user) => {
         console.log('auth');
@@ -181,9 +189,9 @@ class App extends React.Component {
             .then(res => res.json())
             .then(master => {
                 this.setState({ activeMaster: master });
-                this.setState({ activeViewMasters: 'cellMasters' });
-                this.setState({ activeStory: 'masters' });
-                this.setState({ activePanelMasters: 'masterInfo' });
+                //this.setState({ activeViewMasters: 'cellMasters' });
+                //this.setState({ activeStory: 'masters' });
+                this.setState({ activePanelFindModels: 'masterInfo' });
             });
     };
     activePanelMasters = (name) => {
@@ -281,7 +289,7 @@ class App extends React.Component {
                                 >{this.state.targetCategory.label}</SelectMimicry>
                             </FormLayout>
                             <PanelHeader>Мастера</PanelHeader>
-                            <PanelMasterList city={this.state.user.city} category={this.state.targetCategory} openPanelMaster={this.openPanelMaster}/>
+                            <PanelMasterList category={this.state.targetCategory} city={this.state.user.city} mastersList={this.state.mastersList} openPanelMaster={this.openPanelMaster}/>
                         </Panel>
                         <Panel id="masterInfo">
                             <PanelHeader
@@ -343,10 +351,20 @@ class App extends React.Component {
                         <Idea />
                     </Panel>
                 </View>
-                <View id="findmodel" activePanel="findmodel">
+                <View id="findmodel" activePanel={this.state.activePanelFindModels}>
                     <Panel id="findmodel">
                         <PanelHeader>Мастер ищет модель</PanelHeader>
                         <FindModel openMasterOnId={this.openMasterOnId} user={this.state.user}/>
+                    </Panel>
+                    <Panel id="masterInfo">
+                        <PanelHeader
+                            theme="light"
+                            left={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                            addon={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>Назад</HeaderButton>}
+                        >
+                            О мастере
+                        </PanelHeader>
+                        <MasterCard user={this.state.user} activeMaster={this.state.activeMaster} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
                     </Panel>
                 </View>
                 <View id="notifications" activePanel="notifications">

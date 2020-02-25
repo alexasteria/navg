@@ -1,5 +1,16 @@
 import React from 'react';
-import {FormLayout, Button, Cell, Div, Group, FormLayoutGroup, Textarea, Separator, Avatar} from "@vkontakte/vkui";
+import {
+    FormLayout,
+    Button,
+    Cell,
+    Div,
+    Group,
+    FormLayoutGroup,
+    Textarea,
+    Separator,
+    Avatar,
+    Spinner
+} from "@vkontakte/vkui";
 import {BACKEND} from "../func/func";
 
 
@@ -9,7 +20,8 @@ class FindModelMaster extends React.Component {
         this.state = {
             master: '',
             body: '',
-            loadFind: ''
+            loadFind: '',
+            isLoaded: false
         };
     }
     componentDidMount() {
@@ -24,6 +36,7 @@ class FindModelMaster extends React.Component {
                         console.log(find);
                         this.setState({findArr: find});
                         console.log(find.length);
+                        this.setState({isLoaded: true});
                         if (find.length > 0) {
                             this.setState({body: find[0].body});
                             this.setState({loadFind: find[0]});
@@ -128,22 +141,26 @@ class FindModelMaster extends React.Component {
 
     }
     render(){
-        return (
-            <FormLayout>
-                <FormLayoutGroup>
-                    <Cell>Добавить / изменить</Cell>
-                    <Textarea
-                        name={'body'}
-                        bottom={this.state.body ? '' : 'Пожалуйста, напишите пару слов о себе'}
-                        top="О себе"
-                        value={this.state.body}
-                        onChange={this.handleChange}/>
-                </FormLayoutGroup>
-                <Button size="xl" onClick={this.save}>Сохранить</Button>
-                {this.state.activeFind}
-            </FormLayout>
+        if (this.state.isLoaded === false){
+            return (<Spinner size="large" style={{ marginTop: 20 }} />)
+        } else {
+            return (
+                <FormLayout>
+                    <FormLayoutGroup>
+                        <Cell>Добавить / изменить</Cell>
+                        <Textarea
+                            name={'body'}
+                            bottom={this.state.body ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                            top="О себе"
+                            value={this.state.body}
+                            onChange={this.handleChange}/>
+                    </FormLayoutGroup>
+                    <Button size="xl" onClick={this.save}>Сохранить</Button>
+                    {this.state.activeFind}
+                </FormLayout>
+            );
+        }
 
-        );
     }
 }
 

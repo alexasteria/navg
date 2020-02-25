@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Cell, Div, Group, Separator} from "@vkontakte/vkui"
+import {Avatar, Cell, Div, Group, Separator, Spinner} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
 
 
@@ -21,7 +21,7 @@ class FindModel extends React.Component {
     }
     componentDidMount() {
         console.log(BACKEND.findModel.onCity+this.props.user.city.id);
-        fetch(BACKEND.findModel.onCity+this.props.user.city.id)
+        fetch(BACKEND.findModel.onCity+this.props.user.city.id)//ловим обьявления по городу юзера
             .then(res => res.json())
             .then(find => {
                 console.log(find);
@@ -55,12 +55,19 @@ class FindModel extends React.Component {
         )
     };
     render(){
-        return (
-            <Div>
-                {this.findList()}
-            </Div>
-
-        );
+        if (this.state.findArr.length === 0){
+            return (<Spinner size="large" style={{ marginTop: 20 }} />)
+        } else {
+            return (
+                <Div>
+                    <Cell
+                        expandable
+                        onClick={() => this.setState({ activePanel: 'nothing' })}
+                        indicator={this.props.user.city.title}>Выбранный город</Cell>
+                    {this.findList()}
+                </Div>
+            );
+        }
     }
 }
 

@@ -23,21 +23,26 @@ class Favourite extends React.Component {
     }
 
     loadFavsMasters = (user) => {
+        //console.log(BACKEND.favs.user + user._id);
         fetch(BACKEND.favs.user + user._id)
             .then(res => res.json())
             .then(favsArr => {
-                console.log(favsArr);
-                this.setState({favsArr: favsArr});
-                favsArr.map(fav => {
-                    fetch(BACKEND.masters.onID + fav.masterId)
-                        .then(res => res.json())
-                        .then(master => {
-                            let mastersArr = this.state.mastersArr;
-                            mastersArr.push(master);
-                            this.setState({mastersArr: mastersArr});
-                            this.setState({isLoaded: true});
-                        });
-                })
+                //console.log(favsArr);
+                //this.setState({favsArr: favsArr});
+                if(favsArr.length === 0){
+                    this.setState({isLoaded: true});
+                } else {
+                    favsArr.map(fav => {
+                        fetch(BACKEND.masters.onID + fav.masterId)
+                            .then(res => res.json())
+                            .then(master => {
+                                let mastersArr = this.state.mastersArr;
+                                mastersArr.push(master);
+                                this.setState({mastersArr: mastersArr});
+                            });
+                    });
+                    this.setState({isLoaded: true});
+                }
             });
     };
 
@@ -49,24 +54,34 @@ class Favourite extends React.Component {
                 </div>
             )
         } else {
-            return (
-                this.state.mastersArr.map(master => (
-                    <Group key={master._id}>
-                        <Separator style={{margin: '12px 0'}}/>
-                        <Cell expandable
-                              photo={master.avatarLink}
-                              description={<Div style={{display: '-webkit-inline-box'}}>
-                                  <Icon16Like/><Icon16Like/><Icon16Like/><Icon16Like/><Icon16LikeOutline/>
-                              </Div>
-                              }
-                              before={<Avatar src={master.avatarLink} size={50}/>}
-                              size="l"
-                              onClick={() => this.props.openMaster(master)}
-                        >{master.firstname} {master.lastname}
+            if(this.state.mastersArr.length === 0) {
+                return (
+                    <Group>
+                        <Cell multiline>
+                            Вы еще не добавили ни одного мастера в список избранного
                         </Cell>
                     </Group>
-                ))
-            );
+                )
+            } else {
+                return (
+                    this.state.mastersArr.map(master => (
+                        <Group key={master._id}>
+                            <Separator style={{margin: '12px 0'}}/>
+                            <Cell expandable
+                                  photo={master.avatarLink}
+                                  description={<Div style={{display: '-webkit-inline-box'}}>
+                                      <Icon16Like/><Icon16Like/><Icon16Like/><Icon16Like/><Icon16LikeOutline/>
+                                  </Div>
+                                  }
+                                  before={<Avatar src={master.avatarLink} size={50}/>}
+                                  size="l"
+                                  onClick={() => this.props.openMaster(master)}
+                            >{master.firstname} {master.lastname}
+                            </Cell>
+                        </Group>
+                    ))
+                );
+            }
         }
     }
 }
