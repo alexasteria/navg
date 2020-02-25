@@ -152,7 +152,8 @@ class Lk extends React.Component {
     };
 
     render() {
-        if (this.state.activeMaster.priceList.length === 0) {
+        console.log(this.state);
+        if (!this.state.activeMaster._id) {
             console.log(this.state.activeMaster);
             return (<div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Spinner size="large" style={{marginTop: 120}}/>
@@ -205,12 +206,25 @@ class Lk extends React.Component {
                     {this.state.add &&
                     <Div>
                         <Cell description="Добавления нового элемента" multiline>
-                            <Input name="newProdTitle" type="text" value={this.state.newProdTitle}
-                                   placeholder={'Введите название'} onChange={this.handleChange}/>
-                            <Textarea name="newProdBody" value={this.state.newProdBody} placeholder={'Укажите описание'}
-                                      onChange={this.handleChange}/>
-                            <Input name="newProdPrice" type="text" value={this.state.newProdPrice}
-                                   placeholder={'Укажите цену'} onChange={this.handleChange}/>
+                            <Input
+                                require
+                                name="newProdTitle"
+                                type="text"
+                                value={this.state.newProdTitle}
+                                placeholder={'Введите название'}
+                                onChange={this.handleChange}/>
+                            <Textarea
+                                require
+                                name="newProdBody"
+                                value={this.state.newProdBody}
+                                placeholder={'Укажите описание'}
+                                onChange={this.handleChange}/>
+                            <Input
+                                require
+                                name="newProdPrice"
+                                type="number" value={this.state.newProdPrice}
+                                placeholder={'Укажите цену'}
+                                onChange={this.handleChange}/>
                         </Cell>
                         <Div style={{display: 'flex'}}>
                             <Button size="l" stretched style={{marginRight: 8}}

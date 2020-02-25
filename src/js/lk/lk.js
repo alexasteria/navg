@@ -7,6 +7,7 @@ import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import Icon24Users from '@vkontakte/icons/dist/24/users';
 import Icon24Like from '@vkontakte/icons/dist/24/like';
 import Icon24Recent from '@vkontakte/icons/dist/24/recent';
+import Icon28Search from '@vkontakte/icons/dist/28/search';
 import {BACKEND} from "../func/func";
 
 class Lk extends React.Component {
@@ -122,6 +123,11 @@ class Lk extends React.Component {
                         onClick={() => this.setState({ activePanel: 'nothing' })}
                         indicator={'В разработке'}
                     >Портфолио</Cell>
+                        <Cell
+                            expandable
+                            before={<Icon28Search />}
+                            onClick={this.props.openFindModel}
+                        >Поиск модели</Cell>
                     <Cell
                         expandable
                         onClick={this.props.openSetting}

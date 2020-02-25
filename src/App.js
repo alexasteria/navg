@@ -29,10 +29,12 @@ import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
 import Setting from './js/lk/setting.js';
 import Favourite from './js/lk/favourite.js';
+import FindModel from "./js/findmodel/findModel";
+import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-import VKConnect from "@vkontakte/vkui-connect-mock";
-//import connect from '@vkontakte/vk-connect';
+//import VKConnect from "@vkontakte/vkui-connect-mock";
+import connect from '@vkontakte/vk-connect';
 const osname = platform();
 
 
@@ -80,7 +82,7 @@ class App extends React.Component {
 
     }
     componentWillMount() {
-        VKConnect.subscribe((e) => {
+        connect.subscribe((e) => {
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
                 const user = {
                     vkUid: e.detail.data.id,
@@ -97,7 +99,7 @@ class App extends React.Component {
                 this.verifiedUser(user);
             }
         });
-        VKConnect.send('VKWebAppGetUserInfo', {});
+        connect.send('VKWebAppGetUserInfo', {});
     }
     verifiedUser = (user) => {
         console.log('auth');
@@ -174,6 +176,16 @@ class App extends React.Component {
         this.setState({ activePanelMasters: 'masterInfo' });
         this.setState({ activeMaster: master });
     };
+    openMasterOnId = (masterId) => {
+        fetch(BACKEND.masters.onID+masterId)
+            .then(res => res.json())
+            .then(master => {
+                this.setState({ activeMaster: master });
+                this.setState({ activeViewMasters: 'cellMasters' });
+                this.setState({ activeStory: 'masters' });
+                this.setState({ activePanelMasters: 'masterInfo' });
+            });
+    };
     activePanelMasters = (name) => {
         this.setState({ activePanelMasters: name });
         console.log(this.state.activePanelMasters);
@@ -210,17 +222,27 @@ class App extends React.Component {
                     ><Icon28ServicesOutline /></TabbarItem>
                     <TabbarItem
                         onClick={this.onStoryChange}
+                        selected={this.state.activeStory === 'findmodel'}
+                        data-story="findmodel"
+                        text="Ищу модель"
+                    ><Icon28Notifications /></TabbarItem>
+                    <TabbarItem
+                        onClick={this.onStoryChange}
                         selected={this.state.activeStory === 'idea'}
                         data-story="idea"
                         text="Идеи"
                     ><Icon28HelpOutline /></TabbarItem>
-                    <TabbarItem
+                    {
+                        /*
+                        <TabbarItem
                         onClick={this.onStoryChange}
                         selected={this.state.activeStory === 'notifications'}
                         data-story="notifications"
                         text="Уведомлен."
                         label="1"
                     ><Icon28Notifications /></TabbarItem>
+                        * */
+                    }
                     <TabbarItem
                         onClick={this.onStoryChange}
                         selected={this.state.activeStory === 'lk'}
@@ -321,6 +343,12 @@ class App extends React.Component {
                         <Idea />
                     </Panel>
                 </View>
+                <View id="findmodel" activePanel="findmodel">
+                    <Panel id="findmodel">
+                        <PanelHeader>Мастер ищет модель</PanelHeader>
+                        <FindModel openMasterOnId={this.openMasterOnId} user={this.state.user}/>
+                    </Panel>
+                </View>
                 <View id="notifications" activePanel="notifications">
                     <Panel id="notifications">
                         <PanelHeader>Уведомления</PanelHeader>
@@ -342,6 +370,7 @@ class App extends React.Component {
                                 openReg={() => this.setState({ activeViewLk: 'masterReg' })}
                                 openSetting={() => this.setState({ activePanelLk: 'setting' })}
                                 openFavourite={() => this.setState({ activePanelLk: 'favourite' })}
+                                openFindModel={() => this.setState({ activePanelLk: 'findModel' })}
                             />
                         </Panel>
                         <Panel id='favourite'>
@@ -351,6 +380,14 @@ class App extends React.Component {
                                 addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
                             >Избранное</PanelHeader>
                             <Favourite user={this.state.user} openMaster={this.openMaster}/>
+                        </Panel>
+                        <Panel id='findModel'>
+                            <PanelHeader
+                                theme="light"
+                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
+                            >Мастер ищет модель</PanelHeader>
+                            <FindModelMaster user={this.state.user} popout={this.openAlert}/>
                         </Panel>
                         <Panel id='setting'>
                             <PanelHeader
