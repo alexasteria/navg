@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Поиск модели">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Полу рабочие категории">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -158,7 +153,9 @@
       <workItem from="1582662581104" duration="1796000" />
       <workItem from="1582664387932" duration="1799000" />
       <workItem from="1582666200214" duration="1076000" />
-      <workItem from="1582668012592" duration="706000" />
+      <workItem from="1582668012592" duration="1796000" />
+      <workItem from="1582669822440" duration="796000" />
+      <workItem from="1583343235803" duration="885000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -328,7 +325,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582654351761</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Полу рабочие категории">
+      <created>1582668759002</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1582668759002</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -372,21 +376,26 @@
     <MESSAGE value="Переход в мастера из избранного" />
     <MESSAGE value="Добавлены ссылки на приветственную страницу" />
     <MESSAGE value="Поиск модели" />
-    <option name="LAST_COMMIT_MESSAGE" value="Поиск модели" />
+    <MESSAGE value="Полу рабочие категории" />
+    <option name="LAST_COMMIT_MESSAGE" value="Полу рабочие категории" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1582654351412">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1582668758583">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1582654351412" />
-    <state x="794" y="232" key="RollbackChangesDialog" timestamp="1581015768039">
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1582668758583" />
+    <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="794" y="232" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1581015768039" />
+    <state x="196" y="81" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582669181274" />
+    <state x="794" y="232" key="RollbackChangesDialog" timestamp="1582669242921">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="794" y="232" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582669242921" />
     <state x="552" y="254" key="Vcs.Push.Dialog.v2" timestamp="1582654372643">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -399,6 +408,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1580689662596" />
+    <state x="1021" y="324" key="git4idea.merge.GitMergeDialog" timestamp="1582669311131">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1021" y="324" key="git4idea.merge.GitMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582669311131" />
+    <state x="952" y="324" key="git4idea.merge.GitPullDialog" timestamp="1582669254282">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="952" y="324" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582669254282" />
     <state x="993" y="244" key="run.anything.popup" timestamp="1581019694400">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

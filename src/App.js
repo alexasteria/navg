@@ -101,13 +101,6 @@ class App extends React.Component {
             }
         });
         VKConnect.send('VKWebAppGetUserInfo', {});
-        this.loadMasterList();
-    }
-    loadMasterList = () => {
-        console.log('load all masters');
-        fetch(BACKEND.masters.all)
-            .then(res => res.json())
-            .then(mastersList => this.setState({mastersList: mastersList}));
     }
     verifiedUser = (user) => {
         console.log('auth');

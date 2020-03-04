@@ -8,30 +8,33 @@ class MasterList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            category: '', //{id: '1', label: 'Маникюр'},
-            title: '',
-            mastersList: this.props.mastersList
+            category: this.props.category, //{id: '1', label: 'Маникюр'},
+            mastersList: null,
+            title: ''
         };
     }
+
     componentDidMount() {
-        console.log('dodmount');
-        this.setTitle(this.props.mastersList.length);
-        this.setState({mastersList: this.props.mastersList});
-        this.setState({category: this.props.category});
-    }
-    componentWillUpdate(nextProps, nextState, nextContext) {
-        //console.log(nextProps.category, this.state.category);
-        if (nextProps.category !== this.state.category){
-            //console.log(BACKEND.masters.category+nextProps.category.id);
-            fetch(BACKEND.masters.category+nextProps.category.id)
-                .then(res => res.json())
-                .then(mastersList => {
-                    this.setState({mastersList: mastersList});
-                    this.setTitle(this.state.mastersList.length);
-                    //console.log(mastersList);
-                });
+        console.log('Страница загрузилась');
+        if(this.state.mastersList === null) {
+            console.log('this.state.mastersList === null');
+            if(this.state.category === '') {
+                console.log('this.state.category === \'\'');
+                fetch(BACKEND.masters.all)
+                    .then(res => res.json())
+                    .then(mastersList => this.setState({mastersList: mastersList}, () =>
+                        this.setTitle(this.state.mastersList.length)
+                    ));
+            } else {
+                console.log('this.state.category !== null');
+                fetch(BACKEND.masters.category+this.state.category.id)
+                    .then(res => res.json())
+                    .then(mastersList => this.setState({mastersList: mastersList}, () =>
+                        this.setTitle(this.state.mastersList.length)
+                    ));
+            }
         }
-    }
+        }
 
     setTitle(count) {
         if (count===undefined){
