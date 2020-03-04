@@ -46,9 +46,9 @@ class App extends React.Component {
             popout: null,
             activeStory: 'news',
             activePanelFindModels: 'findmodel',
-            activePanelMasters: 'cellMasters',
+            activePanelMasters: 'mastersList',
             activeMasterId: '',
-            activeViewMasters: 'cellMasters',
+            activeViewMasters: 'mastersList',
             activeViewLk: 'lk',
             activePanelLk: 'lk',
             targetCategory: '',
@@ -167,12 +167,29 @@ class App extends React.Component {
         //this.verifiedUser(master); //проходит до запроса в БД пофиксить
         this.setState({ activeViewLk: 'lk' });
     };
+    change = (story, view, panel) => {
+        this.setState({ story: story });
+        this.setState({ story: story });
+        this.setState({ story: story });
+    };
+    /*
+    *Story (news,masters,findmodel,idea,lk)
+    * mastersView -> mastersPanel
+    *
+    *
+    */
+
+    /*
+    *
+    *
+    *
+     */
     openPanelMaster = (panelName, master) => {
         this.setState({ activePanelMasters: panelName });
         this.setState({ activeMaster: master });
     };
     openMaster = (master) => {
-        this.setState({ activeViewMasters: 'cellMasters' });
+        this.setState({ activeViewMasters: 'mastersList' });
         this.setState({ activeStory: 'masters' });
         this.setState({ activePanelMasters: 'masterInfo' });
         this.setState({ activeMaster: master });
@@ -182,9 +199,19 @@ class App extends React.Component {
             .then(res => res.json())
             .then(master => {
                 this.setState({ activeMaster: master });
-                //this.setState({ activeViewMasters: 'cellMasters' });
+                //this.setState({ activeViewMasters: 'mastersList' });
                 //this.setState({ activeStory: 'masters' });
                 this.setState({ activePanelFindModels: 'masterInfo' });
+            });
+    };
+    openFavMasterOnId = (masterId) => {
+        fetch(BACKEND.masters.onID+masterId)
+            .then(res => res.json())
+            .then(master => {
+                this.setState({ activeMaster: master });
+                //this.setState({ activeViewMasters: 'mastersList' });
+                //this.setState({ activeStory: 'masters' });
+                this.setState({ activePanelLk: 'masterInfo' });
             });
     };
     activePanelMasters = (name) => {
@@ -227,12 +254,12 @@ class App extends React.Component {
                         data-story="findmodel"
                         text="Ищу модель"
                     ><Icon28Notifications /></TabbarItem>
-                    <TabbarItem
-                        onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'idea'}
-                        data-story="idea"
-                        text="Идеи"
-                    ><Icon28HelpOutline /></TabbarItem>
+                    {/*<TabbarItem*/}
+                    {/*    onClick={this.onStoryChange}*/}
+                    {/*    selected={this.state.activeStory === 'idea'}*/}
+                    {/*    data-story="idea"*/}
+                    {/*    text="Идеи"*/}
+                    {/*><Icon28HelpOutline /></TabbarItem>*/}
                     {
                         /*
                         <TabbarItem
@@ -268,8 +295,8 @@ class App extends React.Component {
                     </Panel>
                 </View>
                 <Root id="masters" activeView={this.state.activeViewMasters}>
-                    <View id="cellMasters" activePanel={this.state.activePanelMasters}>
-                        <Panel id="cellMasters">
+                    <View id="mastersList" activePanel={this.state.activePanelMasters}>
+                        <Panel id="mastersList">
                             <FormLayout>
                                 <Cell
                                     expandable
@@ -287,12 +314,12 @@ class App extends React.Component {
                         <Panel id="masterInfo">
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'cellMasters' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'cellMasters' })}>Назад</HeaderButton>}
+                                left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                                addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>Назад</HeaderButton>}
                             >
                                 О мастере
                             </PanelHeader>
-                            <MasterCard user={this.state.user} activeMaster={this.state.activeMaster} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
+                            <MasterCard openPhoto={() => this.setState({ activePanelMasters: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelMasters: 'masterComments' })}/>
                         </Panel>
                         <Panel id="masterPhoto">
                             <PanelHeader
@@ -312,7 +339,7 @@ class App extends React.Component {
                             >
                                 Отзывы
                             </PanelHeader>
-                            <MasterComments activeMasterId={this.state.activeMasterId} />
+                            <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
                         </Panel>
                     </View>
                     <View activePanel="masterCat" id="masterCat">
@@ -326,7 +353,7 @@ class App extends React.Component {
                                             return (
                                                 <Cell
                                                     key={category.id}
-                                                    onClick={() => this.setState({ targetCategory: category, activeViewMasters: 'cellMasters' })}
+                                                    onClick={() => this.setState({ targetCategory: category, activeViewMasters: 'mastersList' })}
                                                     asideContent={this.state.targetCategory === category ? <Icon24Done fill="var(--accent)" /> : null}
                                                 >
                                                     {category.label}
@@ -357,13 +384,13 @@ class App extends React.Component {
                         >
                             О мастере
                         </PanelHeader>
-                        <MasterCard user={this.state.user} activeMaster={this.state.activeMaster} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
+                        <MasterCard openPhoto={() => this.setState({ activePanelFindModels: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelFindModels: 'masterComments' })}/>
                     </Panel>
                     <Panel id="masterPhoto">
                         <PanelHeader
                             theme="light"
-                            left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                            addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</HeaderButton>}
+                            left={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                            addon={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</HeaderButton>}
                         >
                             Портфолио
                         </PanelHeader>
@@ -372,12 +399,12 @@ class App extends React.Component {
                     <Panel id="masterComments">
                         <PanelHeader
                             theme="light"
-                            left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                            addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</HeaderButton>}
+                            left={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                            addon={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</HeaderButton>}
                         >
                             Отзывы
                         </PanelHeader>
-                        <MasterComments activeMasterId={this.state.activeMasterId} />
+                        <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
                     </Panel>
                 </View>
                 <View id="notifications" activePanel="notifications">
@@ -410,7 +437,37 @@ class App extends React.Component {
                                 left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
                                 addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
                             >Избранное</PanelHeader>
-                            <Favourite user={this.state.user} openMaster={this.openMaster}/>
+                            <Favourite user={this.state.user} openFavMasterOnId={this.openFavMasterOnId}/>
+                        </Panel>
+                        <Panel id="masterInfo">
+                            <PanelHeader
+                                theme="light"
+                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>Назад</HeaderButton>}
+                            >
+                                О мастере
+                            </PanelHeader>
+                            <MasterCard openPhoto={() => this.setState({ activePanelLk: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelLk: 'masterComments' })}/>
+                        </Panel>
+                        <Panel id="masterPhoto">
+                            <PanelHeader
+                                theme="light"
+                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</HeaderButton>}
+                            >
+                                Портфолио
+                            </PanelHeader>
+                            <MasterPhoto activeMasterId={this.state.activeMasterId} />
+                        </Panel>
+                        <Panel id="masterComments">
+                            <PanelHeader
+                                theme="light"
+                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</HeaderButton>}
+                            >
+                                Отзывы
+                            </PanelHeader>
+                            <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
                         </Panel>
                         <Panel id='findModel'>
                             <PanelHeader

@@ -18,6 +18,10 @@ const BACKEND = {
         new: BACK_LINK+'findmodel/',
         onMasterId: BACK_LINK+'findmodel/onMasterId/',
         onCity: BACK_LINK+'findmodel/onCity/'
+    },
+    comment: {
+        new: BACK_LINK+'comment/master/',
+        onMasterId: BACK_LINK+'comment/master/'
     }
 };
 

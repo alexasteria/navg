@@ -28,22 +28,7 @@ class MastersCard extends React.Component {
 
     loadFavs = () => {
         console.log(BACKEND.favs.master+this.props.activeMaster._id);
-        fetch(BACKEND.favs.master+this.props.activeMaster._id)
-            .then(res => res.json())
-            .then(favsArr => {
-                this.setState({favsArr: favsArr});
-                let count = favsArr.length;
-                this.setState({countFavs: count});
-                this.state.favsArr.map(fav => {
-                    if (fav.userId === this.props.user._id) {
-                        this.setState({isFavourite: {status: true, id: fav._id}});
-                        console.log('У тебя в избранном');
-                    } else {
-                        this.setState({isFavourite: {status: false}})
-                        console.log('Нет в избранном');
-                    }
-                });
-            });
+
     }
     changeVisible = (index) => {
         this.setState({[index]: !this.state[index]})
@@ -99,7 +84,7 @@ class MastersCard extends React.Component {
             </Group>
             <Group title="">
                 <List>
-                    <Cell expandable onClick={() => this.props.activePanelMasters('masterComments')} indicator={'32'}>Отзывы</Cell>
+                    <Cell expandable onClick={() => this.props.openComments()}>Отзывы</Cell>
                     {
                         this.state.isFavourite.status === false &&
                         <Cell
@@ -171,7 +156,7 @@ class MastersCard extends React.Component {
                         <div style={{ backgroundImage: 'url(https://avatars.mds.yandex.net/get-zen_doc/1554513/pub_5d77a5dd74f1bc00ad79c9f1_5d77a5f198930900ae483c74/scale_1200)', backgroundSize: 'cover' }} />
                         <div style={{ backgroundImage: 'url(https://womans.ws/wp-content/uploads/2019/10/1523527373_44-1068x1068.jpg)', backgroundSize: 'cover' }} />
                     </Gallery>
-                    <Cell expandable onClick={() => this.props.activePanelMasters('masterPhoto')}>Посмотреть все работы</Cell>
+                    <Cell expandable onClick={() => this.props.openPhoto()}>Посмотреть все работы</Cell>
                 </Group>
                 {/*<Group title="Сертификаты">
                     <Gallery

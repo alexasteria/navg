@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="онтрольная точка перед редактированием мастер листа">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="КТ до смены роутинга">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +159,13 @@
       <workItem from="1582668012592" duration="1796000" />
       <workItem from="1582669822440" duration="796000" />
       <workItem from="1583343235803" duration="1793000" />
-      <workItem from="1583345056104" duration="1322000" />
+      <workItem from="1583345056104" duration="1795000" />
+      <workItem from="1583346870457" duration="1797000" />
+      <workItem from="1583348688941" duration="986000" />
+      <workItem from="1583351507395" duration="1797000" />
+      <workItem from="1583353319054" duration="1796000" />
+      <workItem from="1583355128506" duration="1796000" />
+      <workItem from="1583356947052" duration="988000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -340,7 +349,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583344233508</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="КТ до смены роутинга">
+      <created>1583346389804</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1583346389804</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -361,7 +377,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Первый коммит с ПС" />
     <MESSAGE value="Стартовая страница" />
     <MESSAGE value="Настройки  GH Pages" />
     <MESSAGE value="Импортирована библиотека ВК коннект" />
@@ -386,17 +401,18 @@
     <MESSAGE value="Поиск модели" />
     <MESSAGE value="Полу рабочие категории" />
     <MESSAGE value="онтрольная точка перед редактированием мастер листа" />
-    <option name="LAST_COMMIT_MESSAGE" value="онтрольная точка перед редактированием мастер листа" />
+    <MESSAGE value="КТ до смены роутинга" />
+    <option name="LAST_COMMIT_MESSAGE" value="КТ до смены роутинга" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1583344233121">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1583346389410">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1583344233121" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1583346389410" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
