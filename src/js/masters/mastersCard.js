@@ -20,7 +20,7 @@ class MastersCard extends React.Component {
             }
         };
     }
-    componentWillMount() {
+    componentDidMount() {
         console.log(this.props);
         this.setState({activeMaster: this.props.activeMaster});
         this.loadFavs();
@@ -28,7 +28,22 @@ class MastersCard extends React.Component {
 
     loadFavs = () => {
         console.log(BACKEND.favs.master+this.props.activeMaster._id);
-
+        fetch(BACKEND.favs.master+this.props.activeMaster._id)
+            .then(res => res.json())
+            .then(favsArr => {
+                this.setState({favsArr: favsArr});
+                let count = favsArr.length;
+                this.setState({countFavs: count});
+                this.state.favsArr.map(fav => {
+                    if (fav.userId === this.props.user._id) {
+                        this.setState({isFavourite: {status: true, id: fav._id}});
+                        console.log('У тебя в избранном');
+                    } else {
+                        this.setState({isFavourite: {status: false}})
+                        console.log('Нет в избранном');
+                    }
+                });
+            });
     }
     changeVisible = (index) => {
         this.setState({[index]: !this.state[index]})
