@@ -60,7 +60,7 @@ class App extends React.Component {
                 Shugaring: 'Шугаринг',
                 Hairstyles: 'Уход за волосами'
             },
-            mastersList: [],
+            mastersList: null,
             user: {
                 firstname: '',
                 lastname: '',
@@ -282,7 +282,7 @@ class App extends React.Component {
                                 >{this.state.targetCategory.label}</SelectMimicry>
                             </FormLayout>
                             <PanelHeader>Мастера</PanelHeader>
-                            <PanelMasterList category={this.state.targetCategory} city={this.state.user.city} mastersList={this.state.mastersList} openPanelMaster={this.openPanelMaster}/>
+                            <PanelMasterList category={this.state.targetCategory} city={this.state.user.city} openPanelMaster={this.openPanelMaster}/>
                         </Panel>
                         <Panel id="masterInfo">
                             <PanelHeader
@@ -358,6 +358,26 @@ class App extends React.Component {
                             О мастере
                         </PanelHeader>
                         <MasterCard user={this.state.user} activeMaster={this.state.activeMaster} activePanelMasters={this.activePanelMasters} openMasterComments={this.openMasterComments}/>
+                    </Panel>
+                    <Panel id="masterPhoto">
+                        <PanelHeader
+                            theme="light"
+                            left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                            addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</HeaderButton>}
+                        >
+                            Портфолио
+                        </PanelHeader>
+                        <MasterPhoto activeMasterId={this.state.activeMasterId} />
+                    </Panel>
+                    <Panel id="masterComments">
+                        <PanelHeader
+                            theme="light"
+                            left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
+                            addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</HeaderButton>}
+                        >
+                            Отзывы
+                        </PanelHeader>
+                        <MasterComments activeMasterId={this.state.activeMasterId} />
                     </Panel>
                 </View>
                 <View id="notifications" activePanel="notifications">

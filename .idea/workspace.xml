@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Полу рабочие категории">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="онтрольная точка перед редактированием мастер листа">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
@@ -155,7 +155,8 @@
       <workItem from="1582666200214" duration="1076000" />
       <workItem from="1582668012592" duration="1796000" />
       <workItem from="1582669822440" duration="796000" />
-      <workItem from="1583343235803" duration="885000" />
+      <workItem from="1583343235803" duration="1793000" />
+      <workItem from="1583345056104" duration="1322000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -332,7 +333,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582668759002</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="онтрольная точка перед редактированием мастер листа">
+      <created>1583344233507</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1583344233508</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -377,17 +385,18 @@
     <MESSAGE value="Добавлены ссылки на приветственную страницу" />
     <MESSAGE value="Поиск модели" />
     <MESSAGE value="Полу рабочие категории" />
-    <option name="LAST_COMMIT_MESSAGE" value="Полу рабочие категории" />
+    <MESSAGE value="онтрольная точка перед редактированием мастер листа" />
+    <option name="LAST_COMMIT_MESSAGE" value="онтрольная точка перед редактированием мастер листа" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1582668758583">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1583344233121">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1582668758583" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1583344233121" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
