@@ -3,17 +3,10 @@ import {
     Placeholder,
     Separator,
     Group,
-    HorizontalScroll,
-    FixedLayout,
-    TabsItem,
-    Tabs,
-    Panel,
-    PanelHeader,
     Cell,
     Div,
     Avatar
 } from "@vkontakte/vkui"
-import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 import Icon24UserIncoming from '@vkontakte/icons/dist/24/user_incoming';
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 

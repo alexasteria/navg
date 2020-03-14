@@ -1,6 +1,5 @@
 import React from 'react';
 import {Div, Separator, CellButton, Avatar, Cell, List, Group} from "@vkontakte/vkui"
-//import {BACKEND} from '../func/func';
 import Icon24Settings from '@vkontakte/icons/dist/24/settings';
 import Icon24Story from '@vkontakte/icons/dist/24/story';
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
@@ -8,7 +7,6 @@ import Icon24Users from '@vkontakte/icons/dist/24/users';
 import Icon24Like from '@vkontakte/icons/dist/24/like';
 import Icon24Recent from '@vkontakte/icons/dist/24/recent';
 import Icon28Search from '@vkontakte/icons/dist/28/search';
-import {BACKEND} from "../func/func";
 
 class Lk extends React.Component {
     constructor(props) {

@@ -39,7 +39,7 @@ class FindModel extends React.Component {
                         <Separator style={{ margin: '12px 0' }} />
                         <Cell expandable
                               photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                              description={'Место под категории'}
+                              // description={'Место под категории'}
                               before={<Avatar src={find.avatarLink} size={50}/>}
                               size="l"
                               onClick={() => this.props.openMasterOnId(find.masterId)}

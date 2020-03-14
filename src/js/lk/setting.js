@@ -1,6 +1,4 @@
 import React from 'react';
-//import connect from '@vkontakte/vk-connect';
-import VKConnect from '@vkontakte/vkui-connect-mock';
 import {
     Group,
     Div,

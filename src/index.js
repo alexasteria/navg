@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-//import connect from '@vkontakte/vk-connect';
 import VKConnect from '@vkontakte/vkui-connect-mock';
+//import bridge from '@vkontakte/vk-bridge';
 
 VKConnect.send("VKWebAppInit", {});
 

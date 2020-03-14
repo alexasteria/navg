@@ -148,9 +148,10 @@ class MastersCard extends React.Component {
                                         onClick={() => this.changeVisible(index)}
                                     >
                                         <Cell
-                                            description="Название процедуры"
+                                            description={'От '+item.price+" рублей"}
                                             expandable
-                                            indicator={'От '+item.price}>{this.state.activeMaster.priceList[index].title}
+                                            indicator="">
+                                            {this.state.activeMaster.priceList[index].title}
                                         </Cell>
                                         {
                                             this.state[index] &&

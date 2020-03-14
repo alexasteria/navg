@@ -15,7 +15,6 @@ import Icon28More from '@vkontakte/icons/dist/28/more.js';
 import '@vkontakte/vkui/dist/vkui.css';
 import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
 import Icon28ServicesOutline from '@vkontakte/icons/dist/28/services_outline';
-import Icon28HelpOutline from '@vkontakte/icons/dist/28/help_outline';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 //import Sale from './js/sale/sale.js';
@@ -34,7 +33,7 @@ import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
 import VKConnect from "@vkontakte/vkui-connect-mock";
-//import connect from '@vkontakte/vk-connect';
+//import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
 
 
@@ -139,19 +138,19 @@ class App extends React.Component {
             .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
 
     }
-    openAlert = () => {
+    openAlert = (title, body, action) => {
         this.setState({ popout:
                 <Alert
                     actionsLayout="vertical"
                     actions={[{
-                        title: 'Закрыть',
+                        title: action || 'Закрыть',
                         autoclose: true,
                         mode: 'cancel'
                     }]}
                     onClose={this.closeAlert}
                 >
-                    <h2>Изменения сохранены</h2>
-                    <p>Внесенные изменение отобразятся в поиске в течении 2-х минут.</p>
+                    <h2>{title || 'Изменения сохранены'}</h2>
+                    <p>{body || 'Изменения вступят в силу в течении 2-х минут'}</p>
                 </Alert>
         });
     };

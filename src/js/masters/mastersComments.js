@@ -1,7 +1,8 @@
 import React from 'react';
-import {Group, Div, Cell, Avatar, List, CellButton, Textarea, Button, Spinner} from "@vkontakte/vkui"
+import {Group, Div, Cell, Avatar, List, CellButton, Textarea, Spinner} from "@vkontakte/vkui"
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
+import Pop from "../func/alert";
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class MastersCard extends React.Component {
                     if (comment.user.userId === this.props.user._id) {
                         this.setState({isCommended: true})
                     }
-                })
+                });
                 this.setState({commentsArr: commentsArr})
                 let count = commentsArr.length;
                 this.setState({countComments: count})
@@ -36,16 +37,22 @@ class MastersCard extends React.Component {
 
     }
     sendComment = () => {
-        let comment = {
-            user: {
-                userId: this.props.user._id,
-                firstname: this.props.user.firstname,
-                lastname: this.props.user.lastname,
-                avatarLink: this.props.user.avatarLink
-            },
-            body: this.state.body
-        };
-        this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
+            let comment = {
+                user: {
+                    userId: this.props.user._id,
+                    firstname: this.props.user.firstname,
+                    lastname: this.props.user.lastname,
+                    avatarLink: this.props.user.avatarLink
+                },
+                body: this.state.body
+            };
+            try {
+                this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
+                this.setState({isCommended: true});
+            } catch (e) {
+                alert(e);
+                console.log(e.message);
+            }
     }
     postData(url = '', data = {}, method) {
         // Значения по умолчанию обозначены знаком *
