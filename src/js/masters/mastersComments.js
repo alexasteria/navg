@@ -1,5 +1,5 @@
 import React from 'react';
-import {Group, Div, Cell, Avatar, List, CellButton, Textarea, Spinner} from "@vkontakte/vkui"
+import {Group, Div, Cell, Avatar, Separator, CellButton, Textarea, Spinner} from "@vkontakte/vkui"
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
 import Pop from "../func/alert";
@@ -69,7 +69,14 @@ class MastersCard extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
-            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+            .then(response => {
+                console.log(data);
+                console.log(response.json());
+                let arr = this.state.commentsArr;
+                data.date = "Только что";
+                arr.push(data);
+                this.setState({commentsArr: arr});
+            }); // парсит JSON ответ в Javascript объект
     }
     commentList() {
         if (this.state.isLoad === false) {
@@ -81,19 +88,29 @@ class MastersCard extends React.Component {
         } else {
             return this.state.commentsArr.map(comment => {
                 return (
-                    <List key={comment._id}>
-                        <Cell before={ <Avatar size={40} src={comment.user.avatarLink} /> }>{comment.user.firstname+' '+comment.user.lastname}</Cell>
+                    <Group key={comment._id}>
+                        <Cell
+                            description={comment.date}
+                            before={ <Avatar size={40} src={comment.user.avatarLink} /> }
+                        >
+                            {comment.user.firstname+' '+comment.user.lastname}
+                        </Cell>
                         <Cell multiline>{comment.body}</Cell>
-                        <Cell>{comment.date}</Cell>
-                    </List>
+                    </Group>
                 )
             });
         }
     };
     validate() {
-        if (this.state.isCommended === true) {
+        //console.log(this.props.activeMaster.vkUid, this.props.user.vkUid);
+        if (this.props.activeMaster.vkUid === this.props.user.vkUid) {
             return (
-                <Cell multiline>Вы уже оставляли комментарий об этом пользователе</Cell>
+                <Cell multiline>Нельзя оставлять комментарий на самого себя</Cell>
+            )
+        }
+        else if (this.state.isCommended === true) {
+            return (
+                <Cell multiline>Вы уже оставляли комментарий об этом мастере</Cell>
             )
         } else {
             return (
@@ -116,13 +133,11 @@ class MastersCard extends React.Component {
     };
     render(){
         return (
-            <Group title="">
                 <Div>
                     {this.commentList()}
                     {this.validate()}
 
                 </Div>
-            </Group>
         );
     }
 }

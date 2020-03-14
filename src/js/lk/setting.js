@@ -8,16 +8,18 @@ import {
     Textarea,
     Switch,
     FormLayoutGroup,
-    List, Button, CellButton, Input, Spinner
+    List, Button, CellButton, Input, Spinner,Snackbar
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from '../func/func';
 import Icon24Add from '@vkontakte/icons/dist/24/add';
+import Icon16Done from '@vkontakte/icons/dist/16/done';
 
 class Lk extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            about: 'non info',
             tooltip: true,
             popout: null,
             vkuid: '',
@@ -47,9 +49,11 @@ class Lk extends React.Component {
     componentDidMount() {
         fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
             .then(res => res.json())
-            .then(activeMaster => this.setState({activeMaster: activeMaster[0]}, () =>
+            .then(activeMaster => {
+                this.setState({activeMaster: activeMaster[0]})
                 this.loadCount()
-            ));
+                this.setState({about: activeMaster[0].description})
+            });
     }
 
     handleChange = (event) => {
@@ -57,11 +61,12 @@ class Lk extends React.Component {
     };
 
     onChange(event) {
-        console.log(event.target.value)
+        //console.log(event.target.value)
     }
 
-    patchData(url = '', data = {}) {
-        console.log('пошло');
+    patchData(url = '', activeMaster = {}) {
+        //console.log(activeMaster);
+        activeMaster.description = this.state.about;
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
             method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
@@ -74,19 +79,36 @@ class Lk extends React.Component {
             },
             redirect: 'follow', // manual, *follow, error
             referrer: 'no-referrer', // no-referrer, *client
-            body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+            body: JSON.stringify(activeMaster), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
             .then(response => {
                 console.log(response.json());
-                this.props.popout();
+                this.openSnack("Изменения сохранены");
+                //this.props.popout();
+                console.log(activeMaster);
             }); // парсит JSON ответ в Javascript объект
     }
 
+    openSnack (text) {
+        const blueBackground = {
+            backgroundColor: 'var(--accent)'
+        };
+        if (this.state.snackbar) return;
+        this.setState({ snackbar:
+                <Snackbar
+                    layout="vertical"
+                    onClose={() => this.setState({ snackbar: null })}
+                    before={<Avatar size={24} style={blueBackground}><Icon16Done fill="#fff" width={14} height={14} /></Avatar>}
+                >
+                    {text}
+                </Snackbar>
+        });
+    }
     showProfile = event => {
         const target = event.target;
         const name = target.name;
         let activeMaster = this.state.activeMaster;
-        console.log('Изменено с ', activeMaster[name], ' на ', !activeMaster[name]);
+        //console.log('Изменено с ', activeMaster[name], ' на ', !activeMaster[name]);
         activeMaster[name] = !activeMaster[name];
         this.setState({activeMaster: activeMaster});
     }
@@ -99,7 +121,7 @@ class Lk extends React.Component {
         this.setState({add: status})
     };
     saveProd = (title, body, price) => {
-        console.log(title, body, price);
+        //console.log(title, body, price);
         let activeMaster = this.state.activeMaster;
         activeMaster.priceList.push({
             title: this.state.newProdTitle,
@@ -108,7 +130,7 @@ class Lk extends React.Component {
         });
         this.setState({activeMaster: activeMaster});
         this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
-        console.log(this.state.activeMaster);
+        //console.log(this.state.activeMaster);
         this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)
     }
 
@@ -146,18 +168,18 @@ class Lk extends React.Component {
         let count = this.state.count;
         count[name] = countMass.length;
         this.setState({count: count});
-        console.log(this.state.activeMaster);
+        //console.log(this.state.activeMaster);
     };
 
     render() {
-        console.log(this.state);
+        //console.log(this.state);
         if (!this.state.activeMaster._id) {
-            console.log(this.state.activeMaster);
+            //console.log(this.state.activeMaster);
             return (<div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Spinner size="large" style={{marginTop: 120}}/>
             </div>)
         } else {
-            console.log(this.state.activeMaster);
+            //console.log(this.state.activeMaster);
             return (
                 <Div>
                     <Cell
@@ -242,10 +264,10 @@ class Lk extends React.Component {
                         <FormLayout onSubmit={this.handleSubmit}>
                             <Textarea
                                 name={'about'}
-                                status={this.state.activeMaster.description ? 'valid' : 'error'}
-                                bottom={this.state.activeMaster.description ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                                status={this.state.about ? 'valid' : 'error'}
+                                bottom={this.state.about ? '' : 'Пожалуйста, напишите пару слов о себе'}
                                 top="О себе"
-                                value={this.state.activeMaster.description}
+                                value={this.state.about}
                                 onChange={this.handleChange}/>
                         </ FormLayout>
                         <FormLayoutGroup top="Сфера деятельности"
@@ -410,7 +432,7 @@ class Lk extends React.Component {
                                 onClick={() => this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)}>Сохранить
                             изменения</Button>
                     </Group>
-
+                    {this.state.snackbar}
                 </Div>
             );
         }
