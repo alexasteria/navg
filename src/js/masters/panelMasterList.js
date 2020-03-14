@@ -1,5 +1,6 @@
 import React from 'react';
 import {Spinner, Separator, Avatar, Button, Cell, Div, Group, List} from "@vkontakte/vkui";
+import Icon24Favorite from '@vkontakte/icons/dist/24/favorite';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from "../func/func";
@@ -64,14 +65,17 @@ class MasterList extends React.Component {
                     return this.state.mastersList.map(master => {
                         return (
                             <Group key={master.vkUid}>
-                                <Separator style={{margin: '12px 0'}}/>
                                 <Cell expandable
                                       photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                                      description={<Div style={{display: '-webkit-inline-box'}}>
-                                          <Icon16Like/><Icon16Like/><Icon16Like/><Icon16Like/><Icon16LikeOutline/>
-                                      </Div>
+                                      description={
+                                          master.category.map(category => {
+                                              if(category.active === true) {
+                                                  return category.label+" "
+                                              }
+                                          })
                                       }
-                                      before={<Avatar src={master.avatarLink} size={50}/>}
+                                      bottomContent={<Div style={{padding: 0, fontSize: 12}}>Рейтинг - 4.7</Div>}
+                                      before={<Avatar src={master.avatarLink} size={70}/>}
                                       size="l"
                                       onClick={() => this.props.openPanelMaster('masterInfo', master)}
                                 >{master.firstname} {master.lastname}

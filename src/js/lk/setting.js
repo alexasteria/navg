@@ -198,9 +198,7 @@ class Lk extends React.Component {
                             Показывать мой профиль в поиске
                         </Cell>
                     </Group>
-                    <Group>
-                        <Cell>Прайс-лист</Cell>
-                    </Group>
+                    <Group title={'Прайс-лист'}>
                     {this.state.activeMaster.priceList.length === 0 &&
                     <Cell multiline>Вы еще не указали ни одной процедуры</Cell>
                     }
@@ -254,6 +252,7 @@ class Lk extends React.Component {
                         </Div>
                     </Div>
                     }
+                    </Group>
                     <Group>
                         <CellButton
                             onClick={() => this.addProd(true)}
