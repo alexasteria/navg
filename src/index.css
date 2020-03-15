@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.CardGrid :first-child {
+  margin-left: 0px;
+  margin-right: 5px;
+}
+.CardGrid .Card--sz-s+.Card--sz-s:nth-child(1n) {
+  margin-left: 0px;
+  margin-right: 5px;
+}

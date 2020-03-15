@@ -7,13 +7,34 @@ class MastersCard extends React.Component {
         super(props);
         this.state = {
             activeMasterId: this.props.activeMasterId,
-            activeMaster: {}
+            activeMaster: {},
+            photoArr: []
         };
     }
     componentDidMount() {
+        fetch('http://jsonplaceholder.typicode.com/photos?albumId=1')
+            .then(response => response.json())
+            .then(photoArr => {
+                this.setState({photoArr: photoArr})
+            })
         console.log(this.props)
     }
-
+    gridPhoto() {
+        return (
+            <CardGrid>
+                {
+                    this.state.photoArr.map(photo => {
+                        //console.log(photo);
+                        return (
+                            <Card size="s" mode="shadow" key={photo.id}>
+                                <div style={{height: 96, backgroundImage: 'url('+photo.url+')'}} />
+                            </Card>
+                        )
+                    })
+                }
+            </ CardGrid>
+        )
+    }
     render(){
         return (
             <Div>
@@ -24,17 +45,7 @@ class MastersCard extends React.Component {
                         </File>
                     </FormLayout>
                     <Group separator="hide">
-                        <CardGrid>
-                            <Card size="s">
-                                <div style={{ height: 96 }} />
-                            </Card>
-                            <Card size="s">
-                                <div style={{ height: 96 }} />
-                            </Card>
-                            <Card size="s">
-                                <div style={{ height: 96 }} />
-                            </Card>
-                        </CardGrid>
+                            {this.gridPhoto()}
                     </Group>
                 </Group>
             </Div>

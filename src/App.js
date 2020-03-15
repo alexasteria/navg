@@ -8,7 +8,7 @@ import {
     Epic,
     SelectMimicry,
     FormLayout,
-    Group, List, Cell, Root, HeaderButton, platform, IOS, Alert
+    Group, List, Cell, Root, PanelHeaderButton, platform, IOS, Alert
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
@@ -314,8 +314,8 @@ class App extends React.Component {
                         <Panel id="masterInfo">
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>Назад</PanelHeaderButton>}
                             >
                                 О мастере
                             </PanelHeader>
@@ -324,8 +324,8 @@ class App extends React.Component {
                         <Panel id="masterPhoto">
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</PanelHeaderButton>}
                             >
                                 Портфолио
                             </PanelHeader>
@@ -334,8 +334,8 @@ class App extends React.Component {
                         <Panel id="masterComments">
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</PanelHeaderButton>}
                             >
                                 Отзывы
                             </PanelHeader>
@@ -379,8 +379,8 @@ class App extends React.Component {
                     <Panel id="masterInfo">
                         <PanelHeader
                             theme="light"
-                            left={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                            addon={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>Назад</HeaderButton>}
+                            left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                            addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>Назад</PanelHeaderButton>}
                         >
                             О мастере
                         </PanelHeader>
@@ -389,8 +389,8 @@ class App extends React.Component {
                     <Panel id="masterPhoto">
                         <PanelHeader
                             theme="light"
-                            left={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                            addon={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</HeaderButton>}
+                            left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                            addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</PanelHeaderButton>}
                         >
                             Портфолио
                         </PanelHeader>
@@ -399,8 +399,8 @@ class App extends React.Component {
                     <Panel id="masterComments">
                         <PanelHeader
                             theme="light"
-                            left={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                            addon={<HeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</HeaderButton>}
+                            left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                            addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</PanelHeaderButton>}
                         >
                             Отзывы
                         </PanelHeader>
@@ -435,16 +435,16 @@ class App extends React.Component {
                         <Panel id='favourite'>
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
                             >Избранное</PanelHeader>
                             <Favourite user={this.state.user} openFavMasterOnId={this.openFavMasterOnId}/>
                         </Panel>
                         <Panel id="masterInfo">
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>Назад</PanelHeaderButton>}
                             >
                                 О мастере
                             </PanelHeader>
@@ -453,8 +453,8 @@ class App extends React.Component {
                         <Panel id="masterPhoto">
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</PanelHeaderButton>}
                             >
                                 Портфолио
                             </PanelHeader>
@@ -463,8 +463,8 @@ class App extends React.Component {
                         <Panel id="masterComments">
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</PanelHeaderButton>}
                             >
                                 Отзывы
                             </PanelHeader>
@@ -473,16 +473,16 @@ class App extends React.Component {
                         <Panel id='findModel'>
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
                             >Мастер ищет модель</PanelHeader>
                             <FindModelMaster user={this.state.user} popout={this.openAlert}/>
                         </Panel>
                         <Panel id='setting'>
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
                             >Настройки</PanelHeader>
                             <Setting user={this.state.user} popout={this.openAlert}/>
                         </Panel>
@@ -491,8 +491,8 @@ class App extends React.Component {
                         <Panel id="masterReg">
                             <PanelHeader
                                 theme="light"
-                                left={<HeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</HeaderButton>}
-                                addon={<HeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>Назад</HeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>Назад</PanelHeaderButton>}
                             >Регистрация мастера
                             </PanelHeader>
                             <Invite user={this.state.user} closeReg={this.closeReg}/>
