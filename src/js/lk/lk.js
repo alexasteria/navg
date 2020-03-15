@@ -118,8 +118,7 @@ class Lk extends React.Component {
                     <Cell
                         expandable
                         before={<Icon24Story />}
-                        onClick={() => this.setState({ activePanel: 'nothing' })}
-                        indicator={'В разработке'}
+                        onClick={this.props.openMasterPhoto}
                     >Портфолио</Cell>
                         <Cell
                             expandable

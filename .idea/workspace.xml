@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Дизайн карточки мастер листа">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Фикс лайков">
+      <change afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,16 +77,16 @@
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PhpStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
-      <recent name="D:\automaster\src\js\sale" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\lk" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\news" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\masters" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\func" />
       <recent name="C:\Users\repla\Desktop\navg\src\js\idea" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
+      <recent name="D:\automaster\src\js\sale" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -190,7 +190,9 @@
       <workItem from="1584281852800" duration="75000" />
       <workItem from="1584285601292" duration="1950000" />
       <workItem from="1584288323651" duration="719000" />
-      <workItem from="1584290268854" duration="326000" />
+      <workItem from="1584290268854" duration="1498000" />
+      <workItem from="1584291782947" duration="1798000" />
+      <workItem from="1584293597688" duration="10000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -416,7 +418,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584207942288</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Фикс лайков">
+      <created>1584290763412</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1584290763412</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,7 +446,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Запись пользователя в БД при первом входе" />
     <MESSAGE value="ЛК пользователя, открытие попап окна регистрации мастера" />
     <MESSAGE value="Счетчик выбранных типов услуг при регистрации" />
     <MESSAGE value="Меню мастера, ЛК" />
@@ -462,17 +470,18 @@
     <MESSAGE value="Отображение цены в карточке мастера" />
     <MESSAGE value="Снэкбары" />
     <MESSAGE value="Дизайн карточки мастер листа" />
-    <option name="LAST_COMMIT_MESSAGE" value="Дизайн карточки мастер листа" />
+    <MESSAGE value="Фикс лайков" />
+    <option name="LAST_COMMIT_MESSAGE" value="Фикс лайков" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1584207941922">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1584290762905">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584207941922" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584290762905" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

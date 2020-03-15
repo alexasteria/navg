@@ -26,6 +26,7 @@ import Idea from './js/idea/idea.js';
 import News from './js/news/news.js';
 import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
+import Portfolio from './js/lk/portfolio.js'
 import Setting from './js/lk/setting.js';
 import Favourite from './js/lk/favourite.js';
 import FindModel from "./js/findmodel/findModel";
@@ -428,6 +429,7 @@ class App extends React.Component {
                                 openSetting={() => this.setState({ activePanelLk: 'setting' })}
                                 openFavourite={() => this.setState({ activePanelLk: 'favourite' })}
                                 openFindModel={() => this.setState({ activePanelLk: 'findModel' })}
+                                openMasterPhoto={() => this.setState({ activePanelLk: 'masterPhoto' })}
                             />
                         </Panel>
                         <Panel id='favourite'>
@@ -456,7 +458,7 @@ class App extends React.Component {
                             >
                                 Портфолио
                             </PanelHeader>
-                            <MasterPhoto activeMasterId={this.state.activeMasterId} />
+                            <Portfolio activeMasterId={this.state.activeMasterId} />
                         </Panel>
                         <Panel id="masterComments">
                             <PanelHeader
