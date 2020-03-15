@@ -75,7 +75,7 @@ class MastersCard extends React.Component {
             this.postData(BACKEND.favs.new, fav, 'POST');
             this.setState({isFavourite: {status: true}});
             this.setState({countFavs: this.state.countFavs+1});
-            this.openSnackAvatar('Вы подписались на обновления мастера', this.state.activeMaster.avatarLink);
+            this.openSnackAvatar('Вы подписались на обновления мастера. Отменить подписку можно во вкладке Кабинет, в разделе Избранное.', this.state.activeMaster.avatarLink);
         }
 
     };
@@ -123,18 +123,17 @@ class MastersCard extends React.Component {
                             description="для получения быстрого доступа к мастеру"
                         >
                             Подписаться
-                            {
-                                this.state.favsArr.map(fav => {
-                                    return fav.userVkUid
-                                })
-                            }
+                            {/*{*/}
+                            {/*    this.state.favsArr.map(fav => {*/}
+                            {/*        return console.log(fav.userVkUid)*/}
+                            {/*    })*/}
+                            {/*}*/}
                         </Cell>
 
                     }
                     {
                         this.state.isFavourite.status &&
                             <Cell
-                                description="отменить подписку можно в ЛК"
                                 before={<Icon16Like fill="var(--blue)"/>}
                             >Вы подписаны на мастера</Cell>
 

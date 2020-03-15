@@ -16,7 +16,8 @@ class FindModel extends React.Component {
                 firstname: 'Евгения',
                 lastname: 'Плюхова'
             },
-            findArr: []
+            findArr: [],
+            isLoad: false
         };
     }
     componentDidMount() {
@@ -27,35 +28,41 @@ class FindModel extends React.Component {
                 console.log(find);
                 this.setState({findArr: find});
                 console.log('Найдено '+find.length);
-
+                this.setState({isLoad: true})
             });
     }
 
     findList = () => {
-        return (
-            this.state.findArr.map(find => {
-                return (
-                    <Group key={find._id}>
-                        <Separator style={{ margin: '12px 0' }} />
-                        <Cell expandable
-                              photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                              // description={'Место под категории'}
-                              before={<Avatar src={find.avatarLink} size={50}/>}
-                              size="l"
-                              onClick={() => this.props.openMasterOnId(find.masterId)}
-                              bottom=""
-                        >{find.firstname} {find.lastname}
-                        </Cell>
-                        <Cell multiline>
-                            {find.body}
-                        </Cell>
-                    </Group>
-                )
-            })
-        )
+        if (this.state.findArr.length === 0) {
+            return (
+                <Cell multiline>В данный в вашем городе нет поиска моледей</Cell>
+            )
+        } else {
+            return (
+                this.state.findArr.map(find => {
+                    return (
+                        <Group key={find._id}>
+                            <Separator style={{ margin: '12px 0' }} />
+                            <Cell expandable
+                                  photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
+                                // description={'Место под категории'}
+                                  before={<Avatar src={find.avatarLink} size={50}/>}
+                                  size="l"
+                                  onClick={() => this.props.openMasterOnId(find.masterId)}
+                                  bottom=""
+                            >{find.firstname} {find.lastname}
+                            </Cell>
+                            <Cell multiline>
+                                {find.body}
+                            </Cell>
+                        </Group>
+                    )
+                })
+            )
+        }
     };
     render(){
-        if (this.state.findArr.length === 0){
+        if (this.state.isLoad === false){
             return (<Spinner size="large" style={{ marginTop: 20 }} />)
         } else {
             return (

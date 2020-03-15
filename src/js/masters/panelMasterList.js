@@ -74,7 +74,7 @@ class MasterList extends React.Component {
                                               }
                                           })
                                       }
-                                      bottomContent={<Div style={{padding: 0, fontSize: 12}}>Рейтинг - 4.7</Div>}
+                                      bottomContent={<Div style={{padding: 0, fontSize: 12, color: "#a9a9a9"}}>Рейтинг - 4.7 (На основе 23 отзывов)</Div>}
                                       before={<Avatar src={master.avatarLink} size={70}/>}
                                       size="l"
                                       onClick={() => this.props.openPanelMaster('masterInfo', master)}
@@ -88,12 +88,16 @@ class MasterList extends React.Component {
         }
     }
     render() {
-        return (
-            <Div>
-                <Cell>{this.state.title}</Cell>
-                {this.renderMaster()}
-            </Div>
-        )
+        if(this.state.isLoad === false) {
+            return (<Spinner size="large" style={{ marginTop: 20 }} />)
+        } else {
+            return (
+                <Div>
+                    <Cell>{this.state.title}</Cell>
+                    {this.renderMaster()}
+                </Div>
+            )
+        }
     }
 }
 

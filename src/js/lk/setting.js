@@ -116,6 +116,8 @@ class Lk extends React.Component {
         let activeMaster = this.state.activeMaster;
         activeMaster.priceList = [...this.state.activeMaster.priceList.slice(0, index), ...this.state.activeMaster.priceList.slice(index + 1)];
         this.setState({activeMaster: activeMaster});
+        this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)
+        this.openSnack("Процедура удалена")
     }
     addProd = (status) => {
         this.setState({add: status})
