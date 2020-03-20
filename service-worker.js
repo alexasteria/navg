@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/navg/precache-manifest.5f386521e7dbd6303cf5604b1d21460d.js"
+  "/navg/precache-manifest.0696241d19ac0a80c674ac2ff25f039d.js"
 );
 
 self.addEventListener('message', (event) => {
