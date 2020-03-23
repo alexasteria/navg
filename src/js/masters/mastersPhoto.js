@@ -1,45 +1,72 @@
 import React from 'react';
-import {Group, Div, Gallery} from "@vkontakte/vkui"
+import {Group, Div, Gallery, CardGrid, Card, Spinner, FormLayout, File} from "@vkontakte/vkui"
+import bridge from "@vkontakte/vk-bridge";
 
 class MastersCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             activeMasterId: this.props.activeMasterId,
-            activeMaster: {}
+            activeMaster: {},
+            isLoad: false
         };
     }
     componentDidMount() {
+        fetch('https://jsonplaceholder.typicode.com/photos?albumId=1')
+            .then(response => response.json())
+            .then(photoArr => {
+                const images = photoArr.map(photo => {
+                    return photo.url
+                });
+                //console.log(images);
+                this.setState({images: images});
+                this.setState({isLoad: true});
+            })
         console.log('photo ', this.state.activeMasterId)
     }
-
-    render(){
+    openShowImages(images, index) {
+        bridge.send("VKWebAppShowImages", {
+            images: images,
+            start_index: index
+        }).then(data => console.log(data));
+    }
+    gridPhoto() {
         return (
-            <Div>
-                <Group title="">
-                    <Gallery
-                        slideWidth="100%"
-                        style={{ height: "80vh" }}
-                        bullets="dark"
-                    >
-                        <div style={{
-                            backgroundImage: "url(https://i.pinimg.com/474x/9a/57/f0/9a57f0e84191e278d840a5536ebab34c.jpg)",
-                            backgroundSize: 'cover',
-                            backgroundRepeat: 'no-repeat' }} />
-                        <div style={{
-                            backgroundImage: "url(https://avatars.mds.yandex.net/get-zen_doc/1554513/pub_5d77a5dd74f1bc00ad79c9f1_5d77a5f198930900ae483c74/scale_1200)",
-                            backgroundSize: 'cover',
-                            backgroundRepeat: 'no-repeat' }} />
-                        <div style={{
-                            backgroundImage: "url(https://womans.ws/wp-content/uploads/2019/10/1523527373_44-1068x1068.jpg)",
-                            backgroundSize: 'cover',
-                            backgroundRepeat: 'no-repeat' }} />
-                        <div style={{ backgroundColor: 'var(--button_commerce_background)' }} />
-                        <div style={{ backgroundColor: 'var(--accent)' }} />
-                    </Gallery>
-                </Group>
-            </Div>
-        );
+            <CardGrid>
+                {
+                    this.state.images.map((image, index) => {
+                        //console.log(image, index);
+                        return (
+                            <Card
+                                size="s"
+                                mode="shadow"
+                                key={index}
+                                onClick={() => this.openShowImages(this.state.images, index)}
+                            >
+                                <div style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover'}} />
+                            </Card>
+                        )
+                    })
+                }
+            </ CardGrid>
+        )
+    }
+    render(){
+        if(this.state.isLoad===false){
+            return (
+                <Spinner size="large" style={{ marginTop: 20 }} />
+            )
+        } else {
+            return (
+                <Div>
+                    <Group title="Портфолио">
+                        <Group separator="hide">
+                            {this.gridPhoto()}
+                        </Group>
+                    </Group>
+                </Div>
+            )
+        }
     }
 }
 

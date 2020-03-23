@@ -28,17 +28,12 @@ class FindModelMaster extends React.Component {
             .then(res => res.json())
             .then(master => {
                 this.setState({master: master[0]});
-                console.log(master[0]);
                 fetch(BACKEND.findModel.onMasterId+master[0]._id)
                     .then(res => res.json())
                     .then(find => {
-                        console.log(find);
-                        this.setState({findArr: find});
-                        console.log(find.length);
-                        this.setState({isLoaded: true});
+                        this.setState({findArr: find, isLoaded: true});
                         if (find.length > 0) {
-                            this.setState({body: find[0].body});
-                            this.setState({loadFind: find[0]});
+                            this.setState({body: find[0].body, loadFind: find[0]});
                             let activeFind =
                                 <Group>
                                     <Cell>Ваш активный поиск</Cell>

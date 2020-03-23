@@ -33,8 +33,9 @@ import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-import VKConnect from "@vkontakte/vkui-connect-mock";
-//import bridge from '@vkontakte/vk-bridge';
+//import VKConnect from "@vkontakte/vkui-connect-mock";
+//import bridge from '@vkontakte/vk-bridge-mock';
+import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
 
 
@@ -83,7 +84,7 @@ class App extends React.Component {
 
     }
     componentWillMount() {
-        VKConnect.subscribe((e) => {
+        bridge.subscribe((e) => {
             if (e.detail.type === 'VKWebAppGetUserInfoResult') {
                 const user = {
                     vkUid: e.detail.data.id,
@@ -100,7 +101,8 @@ class App extends React.Component {
                 this.verifiedUser(user);
             }
         });
-        VKConnect.send('VKWebAppGetUserInfo', {});
+        bridge.send("VKWebAppInit", {}).then(data => console.log(data));
+        bridge.send('VKWebAppGetUserInfo', {}).then(data => console.log(data));
     }
     verifiedUser = (user) => {
         console.log('auth');
@@ -453,12 +455,12 @@ class App extends React.Component {
                         <Panel id="masterPhoto">
                             <PanelHeader
                                 theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</PanelHeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
                             >
                                 Портфолио
                             </PanelHeader>
-                            <Portfolio activeMasterId={this.state.activeMasterId} />
+                            <Portfolio activeMasterId={this.state.activeMasterId} openShowImages={this.openShowImages} />
                         </Panel>
                         <Panel id="masterComments">
                             <PanelHeader

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Spinner, Separator, Avatar, Button, Cell, Div, Group, List} from "@vkontakte/vkui";
+import {Spinner, Separator, Avatar, Button, Cell, Div, Group, List, UsersStack} from "@vkontakte/vkui";
 import Icon24Favorite from '@vkontakte/icons/dist/24/favorite';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
@@ -74,7 +74,9 @@ class MasterList extends React.Component {
                                               }
                                           })
                                       }
-                                      bottomContent={<Div style={{padding: 0, fontSize: 12, color: "#a9a9a9"}}>Рейтинг - 4.7 (На основе 23 отзывов)</Div>}
+                                      bottomContent={
+                                          <Div style={{padding: 0, fontSize: 12, color: "#a9a9a9"}}>Рейтинг - 4.7 (На основе 23 отзывов)</Div>
+                                      }
                                       before={<Avatar src={master.avatarLink} size={70}/>}
                                       size="l"
                                       onClick={() => this.props.openPanelMaster('masterInfo', master)}

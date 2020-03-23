@@ -1,6 +1,9 @@
 import React from 'react';
-import {Group, Div, File, FormLayout, CardGrid, Card} from "@vkontakte/vkui"
+import {Group, Div, File, FormLayout, CardGrid, Card, Spinner, Button, Snackbar, Avatar} from "@vkontakte/vkui"
+import {BACKEND} from '../func/func.js';
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
+//import bridge from '@vkontakte/vk-bridge-mock';
+import bridge from '@vkontakte/vk-bridge';
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -8,26 +11,84 @@ class MastersCard extends React.Component {
         this.state = {
             activeMasterId: this.props.activeMasterId,
             activeMaster: {},
-            photoArr: []
+            photoArr: [],
+            isLoad: false,
+            photoFile: ''
         };
     }
     componentDidMount() {
-        fetch('http://jsonplaceholder.typicode.com/photos?albumId=1')
+        fetch('https://jsonplaceholder.typicode.com/photos?albumId=1')
             .then(response => response.json())
             .then(photoArr => {
-                this.setState({photoArr: photoArr})
+                const images = photoArr.map(photo => {
+                    return photo.url
+                });
+                //console.log(images);
+                this.setState({images: images, isLoad: true});
+                this.getToken();
+            });
+        //console.log(this.props)
+    }
+    openSnack (text) {
+        const blueBackground = {
+            backgroundColor: 'var(--accent)'
+        };
+        if (this.state.snackbar) return;
+        this.setState({ snackbar:
+                <Snackbar
+                    layout="vertical"
+                    onClose={() => this.setState({ snackbar: null })}
+                >
+                    {text}
+                </Snackbar>
+        });
+    }
+    openShowImages(images, index) {
+        bridge.send("VKWebAppShowImages", {
+            images: images,
+            start_index: index
+        }).then(data => console.log(data));
+    }
+    uploadPhoto = () =>{
+        const formData = new FormData();
+        let selectedFile = document.getElementById('input').files[0];
+        formData.append('token', this.state.token);
+        formData.append('file1', selectedFile);
+        console.log(formData);
+        fetch(BACKEND.vkapi.loadphoto, {
+                method: 'POST',
+                body: formData
             })
-        console.log(this.props)
+                .then(res => res.json())
+                .then(response => {
+                    this.openSnack(response.message);
+                    console.log(response)
+                })
+                .catch(error => this.openSnack(error))
+
+    }
+    getToken = () => {
+        bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
+            .then(data => {
+                console.log('Токен '+data.access_token);
+                this.setState({token: data.access_token})
+            })
+            .catch(error => console.log(error))
     }
     gridPhoto() {
         return (
             <CardGrid>
                 {
-                    this.state.photoArr.map(photo => {
-                        //console.log(photo);
+                    this.state.images.map((image, index) => {
+                        //console.log(image, index);
                         return (
-                            <Card size="s" mode="shadow" key={photo.id}>
-                                <div style={{height: 96, backgroundImage: 'url('+photo.url+')'}} />
+                            <Card
+                                size="s"
+                                mode="shadow"
+                                key={index}
+                                onClick={() => this.openShowImages(this.state.images, index)}
+                            >
+                                <div style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover'}} />
                             </Card>
                         )
                     })
@@ -35,21 +96,35 @@ class MastersCard extends React.Component {
             </ CardGrid>
         )
     }
+
     render(){
-        return (
-            <Div>
-                <Group title="">
-                    <FormLayout>
-                        <File top="Загрузите ваше фото" before={<Icon24Camera />} size="l">
-                            Открыть галерею
-                        </File>
-                    </FormLayout>
-                    <Group separator="hide">
+        if(this.state.isLoad===false){
+            return (
+                <Spinner size="large" style={{ marginTop: 20 }} />
+            )
+        } else {
+            return (
+                <Div>
+                    <Group title="">
+                        <FormLayout>
+                            <File
+                                top="Добавьте фото в портфолио"
+                                before={<Icon24Camera />}
+                                size="l"
+                                onChange={this.uploadPhoto}
+                                id="input"
+                            >
+                                Открыть галерею
+                            </File>
+                        </FormLayout>
+                        <Group separator="hide">
                             {this.gridPhoto()}
+                        </Group>
                     </Group>
-                </Group>
-            </Div>
-        );
+                    {this.state.snackbar}
+                </Div>
+            )
+        }
     }
 }
 

@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Обновлены зависимости пакетов">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="CSS портфолио">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +57,7 @@
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
   </component>
+  <component name="PhpDebugGeneral" listening_started="true" />
   <component name="ProjectId" id="1VFvy14SFsM9c9ywdsxhB4N9MWx" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -194,7 +202,35 @@
       <workItem from="1584291782947" duration="1798000" />
       <workItem from="1584293597688" duration="1795000" />
       <workItem from="1584295406916" duration="1797000" />
-      <workItem from="1584297217609" duration="552000" />
+      <workItem from="1584297217609" duration="1544000" />
+      <workItem from="1584299031459" duration="1795000" />
+      <workItem from="1584313099458" duration="203000" />
+      <workItem from="1584566457352" duration="965000" />
+      <workItem from="1584645919930" duration="1818000" />
+      <workItem from="1584647761193" duration="1822000" />
+      <workItem from="1584651231796" duration="1798000" />
+      <workItem from="1584653040533" duration="147000" />
+      <workItem from="1584720168941" duration="1316000" />
+      <workItem from="1584722003616" duration="1794000" />
+      <workItem from="1584723811608" duration="1235000" />
+      <workItem from="1584725653292" duration="760000" />
+      <workItem from="1584729515102" duration="1795000" />
+      <workItem from="1584731342674" duration="1794000" />
+      <workItem from="1584733486510" duration="1808000" />
+      <workItem from="1584735308351" duration="2046000" />
+      <workItem from="1584737365889" duration="1796000" />
+      <workItem from="1584739171395" duration="1798000" />
+      <workItem from="1584740981234" duration="1320000" />
+      <workItem from="1584743041481" duration="1448000" />
+      <workItem from="1584882519245" duration="2067000" />
+      <workItem from="1584901355190" duration="1794000" />
+      <workItem from="1584903266076" duration="402000" />
+      <workItem from="1584904600345" duration="605000" />
+      <workItem from="1584911165148" duration="1571000" />
+      <workItem from="1584978039406" duration="1794000" />
+      <workItem from="1584979846203" duration="1794000" />
+      <workItem from="1584981659140" duration="1816000" />
+      <workItem from="1584983489308" duration="795000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -434,7 +470,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584293734705</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="CSS портфолио">
+      <created>1584297812824</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1584297812824</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -455,7 +498,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Счетчик выбранных типов услуг при регистрации" />
     <MESSAGE value="Меню мастера, ЛК" />
     <MESSAGE value="Починили мастер лист" />
     <MESSAGE value="Работает поиск по категориям" />
@@ -480,21 +522,42 @@
     <MESSAGE value="Дизайн карточки мастер листа" />
     <MESSAGE value="Фикс лайков" />
     <MESSAGE value="Обновлены зависимости пакетов" />
-    <option name="LAST_COMMIT_MESSAGE" value="Обновлены зависимости пакетов" />
+    <MESSAGE value="CSS портфолио" />
+    <option name="LAST_COMMIT_MESSAGE" value="CSS портфолио" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1584293734151">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1584313113763">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584293734151" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1584313113763" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="196" y="81" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582669181274" />
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1584651295663">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1584651295663" />
+    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1584651295663">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1584651295663" />
+    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1584651295663">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1584651295663" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1584651295663">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584651295663" />
+    <state x="508" y="470" key="NewPhpFileDialog" timestamp="1584903289205">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="508" y="470" key="NewPhpFileDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1584903289205" />
     <state x="794" y="232" key="RollbackChangesDialog" timestamp="1582669242921">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
