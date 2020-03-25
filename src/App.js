@@ -460,7 +460,7 @@ class App extends React.Component {
                             >
                                 Портфолио
                             </PanelHeader>
-                            <Portfolio activeMasterId={this.state.activeMasterId} openShowImages={this.openShowImages} />
+                            <Portfolio user={this.state.user}/>
                         </Panel>
                         <Panel id="masterComments">
                             <PanelHeader

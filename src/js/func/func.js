@@ -24,7 +24,7 @@ const BACKEND = {
         onMasterId: BACK_LINK+'comment/master/'
     },
     vkapi: {
-        loadphoto: BACK_LINK+'vkapi/loadphoto/'
+        uploadPhoto: BACK_LINK+'vkapi/uploadPhoto/'
     }
 };
 
