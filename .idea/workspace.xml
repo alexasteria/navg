@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Добавляются фотки локально">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="оложение элементов в карточке мастера">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,7 +248,10 @@
       <workItem from="1585748407729" duration="2111000" />
       <workItem from="1585754694644" duration="610000" />
       <workItem from="1586111049171" duration="1794000" />
-      <workItem from="1586112864165" duration="834000" />
+      <workItem from="1586112864165" duration="1796000" />
+      <workItem from="1586114672087" duration="1796000" />
+      <workItem from="1586116594945" duration="1683000" />
+      <workItem from="1586118287138" duration="38000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -519,7 +512,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585171692160</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="оложение элементов в карточке мастера">
+      <created>1586113727966</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1586113727966</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -540,7 +540,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Работает поиск по категориям" />
     <MESSAGE value="Cписок категорий в ЛК ренеринтся через .map" />
     <MESSAGE value="Апдейт данных в лк" />
     <MESSAGE value="Добавлены страницы портфолио и комментариев" />
@@ -565,17 +564,18 @@
     <MESSAGE value="CSS портфолио" />
     <MESSAGE value="Передали фото в бэк" />
     <MESSAGE value="Добавляются фотки локально" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавляются фотки локально" />
+    <MESSAGE value="оложение элементов в карточке мастера" />
+    <option name="LAST_COMMIT_MESSAGE" value="оложение элементов в карточке мастера" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1585171691690">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1586113727559">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1585171691690" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586113727559" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

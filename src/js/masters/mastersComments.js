@@ -1,5 +1,5 @@
 import React from 'react';
-import {Group, Div, Cell, Avatar, Separator, CellButton, Textarea, Spinner} from "@vkontakte/vkui"
+import {Group, Div, Cell, Avatar, Footer, CellButton, Textarea, Spinner, Separator} from "@vkontakte/vkui"
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
 import Pop from "../func/alert";
@@ -20,21 +20,15 @@ class MastersCard extends React.Component {
         };
     }
     componentDidMount() {
-        //console.log('comments ',  this.props);
-        fetch(BACKEND.comment.onMasterId+this.props.activeMaster._id)
-            .then(res => res.json())
-            .then(commentsArr => {
-                commentsArr.map(comment => {
-                    if (comment.user.userId === this.props.user._id) {
-                        this.setState({isCommended: true})
-                    }
-                });
-                this.setState({commentsArr: commentsArr})
-                let count = commentsArr.length;
-                this.setState({countComments: count})
-                this.setState({isLoad: true})
-            });
-
+        this.setState({commentsArr: this.props.activeMaster.comments});
+        //console.log('comments ',   this.props.activeMaster.comments);
+        this.props.activeMaster.comments.map(comment => {
+            if (comment.user.userId === this.props.user._id) {
+                this.setState({isCommended: true})
+            }
+        });
+        let count = this.props.activeMaster.comments.length;
+        this.setState({countComments: count, isLoad: true});
     }
     sendComment = () => {
             let comment = {
@@ -96,6 +90,7 @@ class MastersCard extends React.Component {
                             {comment.user.firstname+' '+comment.user.lastname}
                         </Cell>
                         <Cell multiline>{comment.body}</Cell>
+                        <Separator/>
                     </Group>
                 )
             });
@@ -105,12 +100,12 @@ class MastersCard extends React.Component {
         //console.log(this.props.activeMaster.vkUid, this.props.user.vkUid);
         if (this.props.activeMaster.vkUid === this.props.user.vkUid) {
             return (
-                <Cell multiline>Нельзя оставлять комментарий на самого себя</Cell>
+                <Div style={{fontSize: 12, color: 'darkgray'}}>Нельзя оставлять комментарий на самого себя</Div >
             )
         }
         else if (this.state.isCommended === true) {
             return (
-                <Cell multiline>Вы уже оставляли комментарий об этом мастере</Cell>
+                <Div style={{fontSize: 12, color: 'darkgray'}}>Вы уже оставляли комментарий об этом мастере</Div>
             )
         } else {
             return (
@@ -135,8 +130,7 @@ class MastersCard extends React.Component {
         return (
                 <Div>
                     {this.commentList()}
-                    {this.validate()}
-
+                    <Footer>{this.validate()}</Footer>
                 </Div>
         );
     }

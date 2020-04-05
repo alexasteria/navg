@@ -34,8 +34,8 @@ import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
 //import VKConnect from "@vkontakte/vkui-connect-mock";
-import bridge from '@vkontakte/vk-bridge-mock';
-//import bridge from '@vkontakte/vk-bridge';
+//import bridge from '@vkontakte/vk-bridge-mock';
+import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
 
 
@@ -111,7 +111,7 @@ class App extends React.Component {
             .then(usersArr => {
                 if (usersArr.length === 0){
                     console.log('Пользователь зашел впервые');
-                    this.state.regNewUser();
+                    this.regNewUser();
                 } else {
                     console.log('Пользователь уже заходил в приложение');
                     this.setState({user: usersArr[0]});

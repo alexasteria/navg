@@ -10,7 +10,7 @@ import {
     Gallery,
     Snackbar,
     UsersStack,
-    Spinner, Header
+    Spinner, Header, Card, CardGrid
 } from "@vkontakte/vkui"
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
@@ -41,19 +41,23 @@ class MastersCard extends React.Component {
     favStatus = () => {
         if(this.state.isFavourite.status === false) {
             return (
-                <Cell
-                    onClick={this.checkFavs}
-                    before={<Icon16LikeOutline width={20} height={20} fill="red"/>}
-                    //description="для получения быстрого доступа к мастеру"
-                >
-                    Подписаться
-                </Cell>
+                        <Cell
+                            onClick={this.checkFavs}
+                            before={<Icon16LikeOutline width={20} height={20} fill="red"/>}
+                           // description="на обновления"
+                        >
+                            Подписаться
+                        </Cell>
             )
         } else {
             return (
-                <Cell
-                    before={<Icon16Like width={20} height={20} fill="red"/>}
-                >Вы подписаны</Cell>
+                <CardGrid style={{padding: 0}}>
+                    <Card size="l">
+                        <Cell
+                            before={<Icon16Like width={20} height={20} fill="red"/>}
+                        >В избранном</Cell>
+                    </Card>
+                </CardGrid>
             )
         }
     }
@@ -71,6 +75,17 @@ class MastersCard extends React.Component {
                 </Snackbar>
         });
     }
+    // subscribers = () => {
+    //     return (
+    //         <UsersStack
+    //         photos={[
+    //             'https://sun9-1.userapi.com/c850624/v850624456/9f63e/c2_IbBit7I8.jpg?ava=1',
+    //             'https://sun9-6.userapi.com/c851528/v851528416/e0360/1UfQ8aSIGVA.jpg?ava=1'
+    //         ]}
+    //         size="s"
+    //     >Настя и Jean и еще {this.state.countFavs} подписчиков</UsersStack>
+    //     )
+    // }
     loadFavs = () => {
         //console.log(BACKEND.favs.master+this.props.activeMaster._id);
         fetch(BACKEND.favs.master+this.props.activeMaster._id)
@@ -136,43 +151,22 @@ class MastersCard extends React.Component {
         } else {
             return (
                 <Div>
-                    <Group title="" separator={'hide'}>
+                    <Group title="">
                         <Cell
                             photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
                             description={this.state.activeMaster.type}
                             bottomContent={
                                 this.favStatus()
                             }
-                            before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
+                            before={<Avatar src={this.state.activeMaster.avatarLink} size={90}/>}
                             size="l"
                         >
                             {this.state.activeMaster.firstname} {this.state.activeMaster.lastname}
                         </Cell>
-                        {<UsersStack
-                            photos={[
-                                'https://sun9-1.userapi.com/c850624/v850624456/9f63e/c2_IbBit7I8.jpg?ava=1',
-                                'https://sun9-6.userapi.com/c851528/v851528416/e0360/1UfQ8aSIGVA.jpg?ava=1'
-                            ]}
-                            size="s"
-                        >Настя и Jean и еще {this.state.countFavs} подписчиков</UsersStack>}
-                        {/*<Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>*/}
+                        <Separator/>
                         <Cell expandable onClick={() => this.props.openComments()}>Отзывы</Cell>
-                    </Group>
-                    <Group title="">
-                        <List>
-                            {/*<Cell expandable onClick={() => this.props.openComments()}>Отзывы</Cell>*/}
-                            {/*{*/}
-                            {/*    this.state.isFavourite.status === false &&*/}
-                            {/*    <Cell*/}
-                            {/*        onClick={this.checkFavs}*/}
-                            {/*        before={<Icon16LikeOutline fill="red"/>}*/}
-                            {/*        description="для получения быстрого доступа к мастеру"*/}
-                            {/*    >*/}
-                            {/*        Подписаться*/}
-                            {/*    </Cell>*/}
-
-                            {/*}*/}
-                        </List>
+                        {/*{this.subscribers()}*/}
+                        <Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>
                     </Group>
                     <Group title="Портфолио">
                         <Cell
