@@ -1,6 +1,7 @@
 import React from 'react';
-import {Avatar, Cell, Div, Group, Separator, Spinner} from "@vkontakte/vkui"
+import {Avatar, Cell, Div, Group, Separator, Spinner, Placeholder, Button} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
+import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 
 
 class FindModel extends React.Component {
@@ -35,7 +36,14 @@ class FindModel extends React.Component {
     findList = () => {
         if (this.state.findArr.length === 0) {
             return (
-                <Cell multiline>В данный момент в городе {this.props.user.city.title} нет поиска моледей</Cell>
+                <Placeholder
+                    icon={<Icon56UsersOutline />}
+                    header="Не расстраивайтесь"
+                    action={<Button size="l">Поделиться</Button>}
+                >
+                    В данный момент в городе {this.props.user.city.title} нет поиска моледей. Мы расширяем базу мастеров, и скоро - предложения появятся.
+                    Поделитесь приложением с мастерами, которых Вы знаете.
+                </Placeholder>
             )
         } else {
             return (

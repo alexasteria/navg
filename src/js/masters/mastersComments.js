@@ -1,5 +1,17 @@
 import React from 'react';
-import {Group, Div, Cell, Avatar, Footer, CellButton, Textarea, Spinner, Separator} from "@vkontakte/vkui"
+import {
+    Group,
+    Div,
+    Cell,
+    Avatar,
+    Footer,
+    CellButton,
+    Textarea,
+    Spinner,
+    Separator,
+    Slider,
+    Counter
+} from "@vkontakte/vkui"
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
 import Pop from "../func/alert";
@@ -16,7 +28,8 @@ class MastersCard extends React.Component {
             },
             body: '',
             commentsArr: [],
-            isLoad: false
+            isLoad: false,
+            rating: 3
         };
     }
     componentDidMount() {
@@ -38,6 +51,7 @@ class MastersCard extends React.Component {
                     lastname: this.props.user.lastname,
                     avatarLink: this.props.user.avatarLink
                 },
+                rating: Number(this.state.rating),
                 body: this.state.body
             };
             try {
@@ -90,6 +104,7 @@ class MastersCard extends React.Component {
                             {comment.user.firstname+' '+comment.user.lastname}
                         </Cell>
                         <Cell multiline>{comment.body}</Cell>
+                        <Cell><Counter mode="primary">Оценка: {comment.rating} из 5</Counter></Cell>
                         <Separator/>
                     </Group>
                 )
@@ -110,6 +125,15 @@ class MastersCard extends React.Component {
         } else {
             return (
                 <Div>
+                    <Slider
+                        step={1}
+                        min={1}
+                        max={5}
+                        value={Number(this.state.rating)}
+                        onChange={rating => this.setState({rating})}
+                        top="Оцените работу мастера"
+                    />
+                    <Counter mode="primary">Ваша оценка: {this.state.rating}</Counter>
                     <Textarea
                         name={'body'}
                         value={this.state.body}
