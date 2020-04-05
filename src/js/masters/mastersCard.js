@@ -110,9 +110,8 @@ class MastersCard extends React.Component {
         this.setState({[index]: !this.state[index]})
     }
     checkFavs = () => {
-        //console.log('click');
+        console.log('прежний статус '+this.state.isFavourite.status);
         if (this.state.isFavourite.status === false) {
-            //console.log('post');
             let fav = {
                 userId: this.props.user._id,
                 userVkUid: this.props.user.vkUid,
@@ -164,7 +163,7 @@ class MastersCard extends React.Component {
                             {this.state.activeMaster.firstname} {this.state.activeMaster.lastname}
                         </Cell>
                         <Separator/>
-                        <Cell expandable onClick={() => this.props.openComments()}>Отзывы</Cell>
+                        <Cell expandable onClick={() => this.props.openComments()} indicator={this.state.activeMaster.comments.length}>Отзывы</Cell>
                         {/*{this.subscribers()}*/}
                         <Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>
                     </Group>
@@ -177,26 +176,29 @@ class MastersCard extends React.Component {
                                     this.state.activeMaster.photos.length+' фото в портфолио' :
                                     'У мастера еще нет фотографий работ'
                             }
+                            indicator={this.state.activeMaster.photos.length}
                         >Посмотреть все фото</Cell>
                         {
                             this.state.activeMaster.photos.length > 0 &&
-                                <Gallery
-                                    slideWidth="90%"
-                                    align="center"
-                                    style={{height: 250}}
-                                >
+                                <Div>
                                     <Cell>Последние работы мастера</Cell>
-                                    {
-                                        this.state.activeMaster.photos.slice(0, 5).map((photoUrl, index) => {
-                                            return (
-                                                <div key={index} style={{
-                                                    backgroundImage: 'url('+photoUrl+')',
-                                                    backgroundSize: 'cover'
-                                                }}/>
-                                            )
-                                        })
-                                    }
-                                </Gallery>
+                                    <Gallery
+                                        slideWidth="90%"
+                                        align="center"
+                                        style={{height: 250}}
+                                    >
+                                        {
+                                            this.state.activeMaster.photos.slice(0, 5).map((photoUrl, index) => {
+                                                return (
+                                                    <div key={index} style={{
+                                                        backgroundImage: 'url('+photoUrl+')',
+                                                        backgroundSize: 'cover'
+                                                    }}/>
+                                                )
+                                            })
+                                        }
+                                    </Gallery>
+                                </Div>
                         }
                     </Group>
                     <Group separator="hide">

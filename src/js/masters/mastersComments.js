@@ -82,7 +82,7 @@ class MastersCard extends React.Component {
         } else {
             return this.state.commentsArr.map(comment => {
                 return (
-                    <Group key={comment._id}>
+                    <Group key={comment._id} separator={'hide'}>
                         <Cell
                             description={comment.date}
                             before={ <Avatar size={40} src={comment.user.avatarLink} /> }
