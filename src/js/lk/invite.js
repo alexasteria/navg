@@ -83,10 +83,10 @@ class Invite extends React.Component {
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.type !== this.state.type || prevState.about !== this.state.about || prevState.category !== this.state.category) {
-            let user = this.state.activeMaster;
-            user.type = this.state.type;
-            user.description = this.state.about;
-            user.category = [
+            let master = this.state.activeMaster;
+            master.type = this.state.type;
+            master.description = this.state.about;
+            master.category = [
                 {id: '5e37537a58b85c13bcffb8b4', active: this.state.count.manicureStatus > 0, label:'Маникюр'},
                 {id: '5e3753be58b85c13bcffb8b5', active: this.state.count.pedicureStatus > 0, label: 'Педикюр'},
                 {id: '5e3753c458b85c13bcffb8b6', active: this.state.count.eyelashesStatus > 0, label: 'Ресницы'},
@@ -95,7 +95,7 @@ class Invite extends React.Component {
                 {id: '5e3753d558b85c13bcffb8b9', active: this.state.count.hairStatus > 0, label: 'Уход за волосами'},
                 {id: '5e3753dc58b85c13bcffb8ba', active: this.state.count.cosmeticStatus > 0, label: 'Косметология'}
             ];
-            this.setState({activeMaster: user});
+            this.setState({activeMaster: master});
         }
     }
 

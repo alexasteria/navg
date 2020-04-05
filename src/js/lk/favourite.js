@@ -23,12 +23,9 @@ class Favourite extends React.Component {
     }
 
     loadFavsMasters = (user) => {
-        //console.log(BACKEND.favs.user + user._id);
         fetch(BACKEND.favs.user + user._id)
             .then(res => res.json())
             .then(favsArr => {
-                //console.log(favsArr);
-                //this.setState({favsArr: favsArr});
                 if(favsArr.length === 0){
                     this.setState({isLoaded: true});
                 } else {
@@ -69,10 +66,7 @@ class Favourite extends React.Component {
                             <Separator style={{margin: '12px 0'}}/>
                             <Cell expandable
                                   photo={master.avatarLink}
-                                  description={<Div style={{display: '-webkit-inline-box'}}>
-                                      <Icon16Like/><Icon16Like/><Icon16Like/><Icon16Like/><Icon16LikeOutline/>
-                                  </Div>
-                                  }
+                                  description={master.type}
                                   before={<Avatar src={master.avatarLink} size={50}/>}
                                   size="l"
                                   onClick={() => this.props.openFavMasterOnId(master._id)}

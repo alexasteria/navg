@@ -34,8 +34,8 @@ import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
 //import VKConnect from "@vkontakte/vkui-connect-mock";
-//import bridge from '@vkontakte/vk-bridge-mock';
-import bridge from '@vkontakte/vk-bridge';
+import bridge from '@vkontakte/vk-bridge-mock';
+//import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
 
 
@@ -83,38 +83,37 @@ class App extends React.Component {
         this.onStoryChange = this.onStoryChange.bind(this);
 
     }
-    componentWillMount() {
-        bridge.subscribe((e) => {
-            if (e.detail.type === 'VKWebAppGetUserInfoResult') {
-                const user = {
-                    vkUid: e.detail.data.id,
-                    firstname: e.detail.data.first_name,
-                    lastname: e.detail.data.last_name,
-                    avatarLink: e.detail.data.photo_200,
-                    sex: e.detail.data.sex,
-                    city: {id: e.detail.data.city.id, title: e.detail.data.city.title},
-                    country: {id: e.detail.data.country.id, title: e.detail.data.country.title},
-                    isMaster: false
-                };
-                this.setState({user: user});
-                //console.log(this.state.user);
-                this.verifiedUser(user);
-            }
-        });
-        bridge.send("VKWebAppInit", {}).then(data => console.log(data));
-        bridge.send('VKWebAppGetUserInfo', {}).then(data => console.log(data));
+    componentDidMount() {
+        bridge.send("VKWebAppInit", {}).then(data => console.log('Инициализировали апи вк? '+data.result));
+            console.log('Пользователь с VKid: '+this.props.vkUserId);
+            this.verifiedUser(this.props.vkUserId);
     }
-    verifiedUser = (user) => {
-        console.log('auth');
-        //console.log(BACKEND.users+'/vkuid/'+user.vkUid);
-        fetch(BACKEND.users+'/vkuid/'+user.vkUid)
+    regNewUser = () => {
+        bridge.send('VKWebAppGetUserInfo', {}).then(data => {
+            console.log('Данные с моста '+data);
+            const user = {
+                vkUid: data.id,
+                firstname: data.first_name,
+                lastname: data.last_name,
+                avatarLink: data.photo_200,
+                sex: data.sex,
+                city: {id: data.city.id, title: data.city.title},
+                country: {id: data.country.id, title: data.country.title},
+                isMaster: false
+            };
+            this.setState({user: user});
+            this.postData(BACKEND.users, user); //регитрируем
+        });
+    }
+    verifiedUser = (vkUserId) => {
+        fetch(BACKEND.users+'/vkuid/'+vkUserId)
             .then(res => res.json())
             .then(usersArr => {
                 if (usersArr.length === 0){
-                    console.log('Пользователь ', user, ' не найден');
-                    this.postData(BACKEND.users, user); //регитрируем
+                    console.log('Пользователь зашел впервые');
+                    this.state.regNewUser();
                 } else {
-                    console.log('Пришло при авторизации', usersArr[0]);
+                    console.log('Пользователь уже заходил в приложение');
                     this.setState({user: usersArr[0]});
                 }
             })
@@ -200,6 +199,7 @@ class App extends React.Component {
         fetch(BACKEND.masters.onID+masterId)
             .then(res => res.json())
             .then(master => {
+                console.log(master);
                 this.setState({ activeMaster: master });
                 //this.setState({ activeViewMasters: 'mastersList' });
                 //this.setState({ activeStory: 'masters' });
@@ -331,7 +331,7 @@ class App extends React.Component {
                             >
                                 Портфолио
                             </PanelHeader>
-                            <MasterPhoto activeMasterId={this.state.activeMasterId} />
+                            <MasterPhoto activeMaster={this.state.activeMaster} />
                         </Panel>
                         <Panel id="masterComments">
                             <PanelHeader
@@ -396,7 +396,7 @@ class App extends React.Component {
                         >
                             Портфолио
                         </PanelHeader>
-                        <MasterPhoto activeMasterId={this.state.activeMasterId} />
+                        <MasterPhoto activeMaster={this.state.activeMaster} />
                     </Panel>
                     <Panel id="masterComments">
                         <PanelHeader

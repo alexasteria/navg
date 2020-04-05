@@ -1,5 +1,5 @@
-const BACK_LINK = 'http://localhost:3030/';
-//const BACK_LINK = 'https://mysterious-garden-57052.herokuapp.com/';
+//const BACK_LINK = 'http://localhost:3030/';
+const BACK_LINK = 'https://mysterious-garden-57052.herokuapp.com/';
 
 const BACKEND = {
     users: BACK_LINK+'users',
@@ -24,7 +24,8 @@ const BACKEND = {
         onMasterId: BACK_LINK+'comment/master/'
     },
     vkapi: {
-        uploadPhoto: BACK_LINK+'vkapi/uploadPhoto/'
+        uploadPhoto: BACK_LINK+'vkapi/uploadPhoto/',
+        savePhoto: BACK_LINK+'vkapi/savePhoto/'
     }
 };
 

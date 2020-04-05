@@ -21,7 +21,7 @@ class FindModel extends React.Component {
         };
     }
     componentDidMount() {
-        console.log(BACKEND.findModel.onCity+this.props.user.city.id);
+        console.log(this.props.user);
         fetch(BACKEND.findModel.onCity+this.props.user.city.id)//ловим обьявления по городу юзера
             .then(res => res.json())
             .then(find => {
@@ -35,7 +35,7 @@ class FindModel extends React.Component {
     findList = () => {
         if (this.state.findArr.length === 0) {
             return (
-                <Cell multiline>В данный в вашем городе нет поиска моледей</Cell>
+                <Cell multiline>В данный момент в городе {this.props.user.city.title} нет поиска моледей</Cell>
             )
         } else {
             return (

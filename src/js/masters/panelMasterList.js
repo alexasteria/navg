@@ -1,5 +1,5 @@
 import React from 'react';
-import {Spinner, Separator, Avatar, Button, Cell, Div, Group, List, UsersStack} from "@vkontakte/vkui";
+import {Spinner, Separator, Avatar, Button, Cell, Div, Group, List, Header, CardGrid, Card} from "@vkontakte/vkui";
 import Icon24Favorite from '@vkontakte/icons/dist/24/favorite';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
@@ -64,25 +64,27 @@ class MasterList extends React.Component {
                 } else {
                     return this.state.mastersList.map(master => {
                         return (
-                            <Group key={master.vkUid}>
-                                <Cell expandable
-                                      photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                                      description={
-                                          master.category.map(category => {
-                                              if(category.active === true) {
-                                                  return category.label+" "
-                                              }
-                                          })
-                                      }
-                                      bottomContent={
-                                          <Div style={{padding: 0, fontSize: 12, color: "#a9a9a9"}}>Рейтинг - 4.7 (На основе 23 отзывов)</Div>
-                                      }
-                                      before={<Avatar src={master.avatarLink} size={70}/>}
-                                      size="l"
-                                      onClick={() => this.props.openPanelMaster('masterInfo', master)}
-                                >{master.firstname} {master.lastname}
-                                </Cell>
-                            </Group>
+                                <CardGrid key={master.vkUid} style={{padding: 0}}>
+                                    <Card size="l" mode="shadow">
+                                        <Cell expandable
+                                                      photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
+                                                      description={
+                                                          master.category.map(category => {
+                                                              if(category.active === true) {
+                                                                  return category.label+" "
+                                                              }
+                                                          })
+                                                      }
+                                                      bottomContent={
+                                                          <Div style={{margin: 0, padding: 0, fontSize: 12, color: "#a9a9a9"}}>Рейтинг - 4.7 (На основе 23 отзывов)</Div>
+                                                      }
+                                                      before={<Avatar src={master.avatarLink} size={70}/>}
+                                                      size="l"
+                                                      onClick={() => this.props.openPanelMaster('masterInfo', master)}
+                                                >{master.firstname} {master.lastname}
+                                                </Cell>
+                                    </Card>
+                                </CardGrid>
                         );
                     })
                 }
@@ -95,8 +97,9 @@ class MasterList extends React.Component {
         } else {
             return (
                 <Div>
-                    <Cell>{this.state.title}</Cell>
-                    {this.renderMaster()}
+                    <Group separator="hide" header={<Header mode="secondary">{this.state.title}</Header>}>
+                        {this.renderMaster()}
+                        </Group>
                 </Div>
             )
         }

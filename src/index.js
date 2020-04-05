@@ -3,12 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-//import VKConnect from '@vkontakte/vkui-connect-mock';
-//import bridge from '@vkontakte/vk-bridge-mock';
-//import bridge from '@vkontakte/vk-bridge';
+let params = window
+    .location
+    .search
+    .replace('?','')
+    .split('&')
+    .reduce(
+        function(p,e){
+            let a = e.split('=');
+            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+            return p;
+        },
+        {}
+    );
+
+console.log(params);
 
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App vkUserId={params.vk_user_id} />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

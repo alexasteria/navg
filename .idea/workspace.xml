@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Передали фото в бэк">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Добавляются фотки локально">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -233,7 +243,22 @@
       <workItem from="1585156976919" duration="1806000" />
       <workItem from="1585158809161" duration="2037000" />
       <workItem from="1585168196527" duration="1490000" />
-      <workItem from="1585170008777" duration="1666000" />
+      <workItem from="1585170008777" duration="2069000" />
+      <workItem from="1585172120626" duration="1801000" />
+      <workItem from="1585173936016" duration="1796000" />
+      <workItem from="1585234724215" duration="1529000" />
+      <workItem from="1585236534926" duration="1791000" />
+      <workItem from="1585238338696" duration="599000" />
+      <workItem from="1585240418646" duration="1795000" />
+      <workItem from="1585242225991" duration="1566000" />
+      <workItem from="1585246369854" duration="1346000" />
+      <workItem from="1585250072779" duration="1798000" />
+      <workItem from="1585253806195" duration="1809000" />
+      <workItem from="1585255627919" duration="706000" />
+      <workItem from="1585748407729" duration="2111000" />
+      <workItem from="1585754694644" duration="610000" />
+      <workItem from="1586111049171" duration="1794000" />
+      <workItem from="1586112864165" duration="834000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -487,7 +512,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584984382221</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Добавляются фотки локально">
+      <created>1585171692160</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1585171692160</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -508,7 +540,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Починили мастер лист" />
     <MESSAGE value="Работает поиск по категориям" />
     <MESSAGE value="Cписок категорий в ЛК ренеринтся через .map" />
     <MESSAGE value="Апдейт данных в лк" />
@@ -533,21 +564,26 @@
     <MESSAGE value="Обновлены зависимости пакетов" />
     <MESSAGE value="CSS портфолио" />
     <MESSAGE value="Передали фото в бэк" />
-    <option name="LAST_COMMIT_MESSAGE" value="Передали фото в бэк" />
+    <MESSAGE value="Добавляются фотки локально" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавляются фотки локально" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1585159497406">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1585171691690">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1585159497406" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1585171691690" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="196" y="81" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582669181274" />
+    <state x="953" y="276" key="FileChooserDialogImpl" timestamp="1586112648478">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="953" y="276" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1586112648478" />
     <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1584651295663">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

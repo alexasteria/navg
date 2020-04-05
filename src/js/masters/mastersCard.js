@@ -10,7 +10,7 @@ import {
     Gallery,
     Snackbar,
     UsersStack,
-    Spinner
+    Spinner, Header
 } from "@vkontakte/vkui"
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
@@ -34,11 +34,29 @@ class MastersCard extends React.Component {
         };
     }
     componentDidMount() {
-        //console.log(this.props);
+        console.log(this.props);
         this.setState({activeMaster: this.props.activeMaster});
         this.loadFavs();
     }
-
+    favStatus = () => {
+        if(this.state.isFavourite.status === false) {
+            return (
+                <Cell
+                    onClick={this.checkFavs}
+                    before={<Icon16LikeOutline width={20} height={20} fill="red"/>}
+                    //description="для получения быстрого доступа к мастеру"
+                >
+                    Подписаться
+                </Cell>
+            )
+        } else {
+            return (
+                <Cell
+                    before={<Icon16Like width={20} height={20} fill="red"/>}
+                >Вы подписаны</Cell>
+            )
+        }
+    }
     openSnackAvatar (text, avatarLink) {
         if (this.state.snackbar) return;
         this.setState({ snackbar:
@@ -118,72 +136,76 @@ class MastersCard extends React.Component {
         } else {
             return (
                 <Div>
-                    <Group title="">
+                    <Group title="" separator={'hide'}>
                         <Cell
                             photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
                             description={this.state.activeMaster.type}
-                            bottomContent={<Div style={{display: '-webkit-inline-box'}}>
-                                <Icon16Like/><Icon16Like/><Icon16Like/><Icon16Like/><Icon16LikeOutline/>
-                            </Div>/*<Button>В избранное</Button>*/}
+                            bottomContent={
+                                this.favStatus()
+                            }
                             before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
                             size="l"
                         >
                             {this.state.activeMaster.firstname} {this.state.activeMaster.lastname}
                         </Cell>
+                        {<UsersStack
+                            photos={[
+                                'https://sun9-1.userapi.com/c850624/v850624456/9f63e/c2_IbBit7I8.jpg?ava=1',
+                                'https://sun9-6.userapi.com/c851528/v851528416/e0360/1UfQ8aSIGVA.jpg?ava=1'
+                            ]}
+                            size="s"
+                        >Настя и Jean и еще {this.state.countFavs} подписчиков</UsersStack>}
+                        {/*<Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>*/}
+                        <Cell expandable onClick={() => this.props.openComments()}>Отзывы</Cell>
                     </Group>
                     <Group title="">
                         <List>
-                            <Cell expandable onClick={() => this.props.openComments()}>Отзывы</Cell>
-                            {
-                                this.state.isFavourite.status === false &&
-                                <Cell
-                                    onClick={this.checkFavs}
-                                    before={<Icon16LikeOutline fill="red"/>}
-                                    description="для получения быстрого доступа к мастеру"
-                                >
-                                    Подписаться
-                                </Cell>
+                            {/*<Cell expandable onClick={() => this.props.openComments()}>Отзывы</Cell>*/}
+                            {/*{*/}
+                            {/*    this.state.isFavourite.status === false &&*/}
+                            {/*    <Cell*/}
+                            {/*        onClick={this.checkFavs}*/}
+                            {/*        before={<Icon16LikeOutline fill="red"/>}*/}
+                            {/*        description="для получения быстрого доступа к мастеру"*/}
+                            {/*    >*/}
+                            {/*        Подписаться*/}
+                            {/*    </Cell>*/}
 
-                            }
-                            {
-                                this.state.isFavourite.status &&
-                                <Cell
-                                    before={<Icon16Like fill="var(--blue)"/>}
-                                >Вы подписаны на мастера</Cell>
-
-                            }
-                            {<UsersStack
-                                photos={[
-                                    'https://sun9-1.userapi.com/c850624/v850624456/9f63e/c2_IbBit7I8.jpg?ava=1',
-                                    'https://sun9-6.userapi.com/c851528/v851528416/e0360/1UfQ8aSIGVA.jpg?ava=1'
-                                ]}
-                                size="s"
-                            >Настя и Jean подписаны на мастера</UsersStack>}
-                            <Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>
+                            {/*}*/}
                         </List>
                     </Group>
                     <Group title="Портфолио">
-                        <Gallery
-                            slideWidth="90%"
-                            align="center"
-                            style={{height: 250}}
-                        >
-                            <div style={{
-                                backgroundImage: 'url(https://i.pinimg.com/474x/9a/57/f0/9a57f0e84191e278d840a5536ebab34c.jpg)',
-                                backgroundSize: 'cover'
-                            }}/>
-                            <div style={{
-                                backgroundImage: 'url(https://avatars.mds.yandex.net/get-zen_doc/1554513/pub_5d77a5dd74f1bc00ad79c9f1_5d77a5f198930900ae483c74/scale_1200)',
-                                backgroundSize: 'cover'
-                            }}/>
-                            <div style={{
-                                backgroundImage: 'url(https://womans.ws/wp-content/uploads/2019/10/1523527373_44-1068x1068.jpg)',
-                                backgroundSize: 'cover'
-                            }}/>
-                        </Gallery>
-                        <Cell expandable onClick={() => this.props.openPhoto()}>Посмотреть все работы</Cell>
+                        <Cell
+                            expandable
+                            onClick={() => this.props.openPhoto()}
+                            description={
+                                this.state.activeMaster.photos.length > 0 ?
+                                    this.state.activeMaster.photos.length+' фото в портфолио' :
+                                    'У мастера еще нет фотографий работ'
+                            }
+                        >Посмотреть все фото</Cell>
+                        {
+                            this.state.activeMaster.photos.length > 0 &&
+                                <Gallery
+                                    slideWidth="90%"
+                                    align="center"
+                                    style={{height: 250}}
+                                >
+                                    <Cell>Последние работы мастера</Cell>
+                                    {
+                                        this.state.activeMaster.photos.slice(0, 5).map((photoUrl, index) => {
+                                            return (
+                                                <div key={index} style={{
+                                                    backgroundImage: 'url('+photoUrl+')',
+                                                    backgroundSize: 'cover'
+                                                }}/>
+                                            )
+                                        })
+                                    }
+                                </Gallery>
+                        }
                     </Group>
-                    <Group>
+                    <Group separator="hide">
                         {
                             this.state.activeMaster.priceList.map((item, index) => (
                                     <Cell
@@ -207,8 +229,8 @@ class MastersCard extends React.Component {
                                 )
                             )}
                     </Group>
-                    <Group>
-                        <Cell multiline title="Информация">
+                    <Group separator="hide" header={<Header mode="secondary">Информация о мастере</Header>}>
+                        <Cell multiline>
                             {this.state.activeMaster.description}
                         </Cell>
                     </Group>
