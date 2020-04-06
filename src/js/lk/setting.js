@@ -50,41 +50,17 @@ class Lk extends React.Component {
         fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
             .then(res => res.json())
             .then(activeMaster => {
-                this.setState({activeMaster: activeMaster[0]})
-                this.loadCount()
-                this.setState({about: activeMaster[0].description})
+                this.setState({activeMaster: activeMaster[0], description: activeMaster[0].description});
             });
-    }
-    componentWillUpdate(prevProps, prevState, snapshot) {
-        if  (prevState.type !== this.state.type || prevState.about !== this.state.about || prevState.count !== this.state.count) {
-            let master = this.state.activeMaster;
-            master.type = this.state.type;
-            master.description = this.state.about;
-            master.category = [
-                {id: '5e37537a58b85c13bcffb8b4', active: this.state.count.manicureStatus > 0, label:'Маникюр'},
-                {id: '5e3753be58b85c13bcffb8b5', active: this.state.count.pedicureStatus > 0, label: 'Педикюр'},
-                {id: '5e3753c458b85c13bcffb8b6', active: this.state.count.eyelashesStatus > 0, label: 'Ресницы'},
-                {id: '5e3753c858b85c13bcffb8b7', active: this.state.count.eyebrowsStatus > 0, label: 'Брови'},
-                {id: '5e3753cd58b85c13bcffb8b8', active: this.state.count.shugaringStatus > 0, label: 'Шугаринг'},
-                {id: '5e3753d558b85c13bcffb8b9', active: this.state.count.hairStatus > 0, label: 'Уход за волосами'},
-                {id: '5e3753dc58b85c13bcffb8ba', active: this.state.count.cosmeticStatus > 0, label: 'Косметология'}
-            ];
-            console.log(master.category);
-            this.setState({activeMaster: master});
-        }
     }
 
     handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
     };
 
-    onChange(event) {
-        //console.log(event.target.value)
-    }
-
     patchData(url = '', activeMaster = {}) {
         //console.log(activeMaster);
-        activeMaster.description = this.state.about;
+        activeMaster.description = this.state.description;
 
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -123,21 +99,20 @@ class Lk extends React.Component {
                 </Snackbar>
         });
     }
-    showProfile = event => {
+    visible = event => {
         const target = event.target;
         const name = target.name;
         let activeMaster = this.state.activeMaster;
-        //console.log('Изменено с ', activeMaster[name], ' на ', !activeMaster[name]);
         activeMaster[name] = !activeMaster[name];
         this.setState({activeMaster: activeMaster});
-    }
+    };
     onRemove = (index) => {
         let activeMaster = this.state.activeMaster;
         activeMaster.priceList = [...this.state.activeMaster.priceList.slice(0, index), ...this.state.activeMaster.priceList.slice(index + 1)];
         this.setState({activeMaster: activeMaster});
         this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)
         this.openSnack("Процедура удалена")
-    }
+    };
     addProd = (status) => {
         this.setState({add: status})
     };
@@ -155,69 +130,41 @@ class Lk extends React.Component {
         this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)
     }
 
-    loadCount() {
-        const arrCategory = ['manicureStatus', 'pedicureStatus', 'eyelashesStatus',
-            'eyebrowsStatus', 'shugaringStatus', 'hairStatus'];
-        arrCategory.map(category => {
-            let countMass = this.state.activeMaster[category].filter(
-                item => item.active === true
-            );
-            let count = this.state.count;
-            count[category] = countMass.length;
-            this.setState({count: count});
-        });
-    }
-
-    handleCheck = event => {
-        const target = event.target;
-        const name = target.name;
-        //const value = target.type === 'checkbox' ? target.checked : target.value;
-        let mass = this.state.activeMaster[name];
-        const index = target.id;
-        //console.log(mass);
-        mass[index].active = !mass[index].active;
-        this.setState({[name]: mass});
-        let countMass = this.state.activeMaster[name].filter(
-            function (item) {
-                //console.log(item);
-                if (item.active === true) {
+    counter = (index) => {
+        let countMass = this.state.activeMaster.categories[index].subcat.filter(
+            function(item){
+                if (item.active === true){
                     return item.active;
                 } else {
                     return null
                 }
-            });
-        let count = this.state.count;
-        count[name] = countMass.length;
-        this.setState({count: count});
-        let master = this.state.activeMaster;
-        master.category = [
-            {id: '5e37537a58b85c13bcffb8b4', active: this.state.count.manicureStatus > 0, label:'Маникюр'},
-            {id: '5e3753be58b85c13bcffb8b5', active: this.state.count.pedicureStatus > 0, label: 'Педикюр'},
-            {id: '5e3753c458b85c13bcffb8b6', active: this.state.count.eyelashesStatus > 0, label: 'Ресницы'},
-            {id: '5e3753c858b85c13bcffb8b7', active: this.state.count.eyebrowsStatus > 0, label: 'Брови'},
-            {id: '5e3753cd58b85c13bcffb8b8', active: this.state.count.shugaringStatus > 0, label: 'Шугаринг'},
-            {id: '5e3753d558b85c13bcffb8b9', active: this.state.count.hairStatus > 0, label: 'Уход за волосами'},
-            {id: '5e3753dc58b85c13bcffb8ba', active: this.state.count.cosmeticStatus > 0, label: 'Косметология'}
-        ];
-        this.setState({activeMaster: master});
-        //console.log(this.state.count);
-        //console.log(this.state.activeMaster);
+            }
+        );
+        return countMass.length;
+    };
+
+    checkSubcat = event => {
+        const target = event.target;
+        const indexCat = target.name;
+        const indexSubcat = target.id;
+        let activeMaster = this.state.activeMaster;
+        activeMaster.categories[indexCat].subcat[indexSubcat].active = !this.state.activeMaster.categories[indexCat].subcat[indexSubcat].active;
+        this.setState({activeMaster: activeMaster});
     };
 
     render() {
-        //console.log(this.state);
         if (!this.state.activeMaster._id) {
-            //console.log(this.state.activeMaster);
             return (<div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Spinner size="large" style={{marginTop: 120}}/>
             </div>)
         } else {
-            //console.log(this.state.activeMaster);
             return (
                 <Div>
                     <Cell
                         size="l"
-                        description={'Показывать в поиске'}
+                        description={
+                            this.state.activeMaster.visible ? 'Ваш профиль доступен в поиске' : 'Ваш профиль не выводится в поиске'
+                        }
                         before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
                     >
                         {this.state.activeMaster.firstname + ' ' + this.state.activeMaster.lastname}
@@ -225,9 +172,9 @@ class Lk extends React.Component {
                     <Group>
                         <Cell
                             asideContent={<Switch
-                                name={'showProfile'}
-                                onChange={this.showProfile}
-                                checked={this.state.activeMaster.showProfile}/>}>
+                                name={'visible'}
+                                onChange={this.visible}
+                                checked={this.state.activeMaster.visible}/>}>
                             Показывать мой профиль в поиске
                         </Cell>
                     </Group>
@@ -295,169 +242,51 @@ class Lk extends React.Component {
                     <Group>
                         <FormLayout onSubmit={this.handleSubmit}>
                             <Textarea
-                                name={'about'}
-                                status={this.state.about ? 'valid' : 'error'}
-                                bottom={this.state.about ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                                name={'description'}
+                                status={this.state.description ? 'valid' : 'error'}
+                                bottom={this.state.description ? '' : 'Пожалуйста, напишите пару слов о себе'}
                                 top="О себе"
-                                value={this.state.about}
+                                value={this.state.description}
                                 onChange={this.handleChange}/>
                         </ FormLayout>
                         <FormLayoutGroup top="Сфера деятельности"
                                          bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."
                                          id={'category'}>
-                            <Cell expandable name={'manicureVisible'}
-                                  onClick={() => this.setState({manicureVisible: !this.state.manicureVisible})}
-                                  indicator={'Выбрано: ' + this.state.count.manicureStatus}>Маникюр</Cell>
-                            {this.state.manicureVisible &&
-                            <Div>
-                                {
-                                    this.state.activeMaster.manicureStatus.map((subcategory, index) => {
-                                        return (
-                                            <Cell
-                                                key={subcategory.id}
-                                                asideContent={<Switch
-                                                    name={'manicureStatus'}
-                                                    id={index}
-                                                    onChange={this.handleCheck}
-                                                    checked={this.state.activeMaster.manicureStatus[index].active}/>}>
-                                                {this.state.activeMaster.manicureStatus[index].label}
+                            {
+                                this.state.activeMaster.categories.map((category, i) => {
+                                    return (
+                                        <Group key={category._id}>
+                                            <Cell expandable name={category._id}
+                                                  onClick={() => this.setState({[category._id]: !this.state[category._id]})}
+                                                  indicator={
+                                                      'Выбрано: ' + this.counter(i)
+                                                  }>
+                                                {category.label}
                                             </Cell>
-                                        )
-                                    })
-                                }
-                            </Div>
-                            }
-                            <Cell expandable name={'pedicureVisible'}
-                                  onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
-                                  indicator={'Выбрано: ' + this.state.count.pedicureStatus}>Педикюр</Cell>
-                            {this.state.pedicureVisible &&
-                            <Div>
-                                {
-                                    this.state.activeMaster.pedicureStatus.map((subcategory, index) => {
-                                        return (
-                                            <Cell
-                                                key={subcategory.id}
-                                                asideContent={<Switch
-                                                    name={'pedicureStatus'}
-                                                    id={index}
-                                                    onChange={this.handleCheck}
-                                                    checked={this.state.activeMaster.pedicureStatus[index].active}/>}>
-                                                {this.state.activeMaster.pedicureStatus[index].label}
-                                            </Cell>
-                                        )
-                                    })
-                                }
-                            </Div>
-                            }
-                            <Cell expandable name={'eyelashesVisible'}
-                                  onClick={() => this.setState({eyelashesVisible: !this.state.eyelashesVisible})}
-                                  indicator={'Выбрано: ' + this.state.count.eyelashesStatus}>Ресницы</Cell>
-                            {this.state.eyelashesVisible &&
-                            <Div>
-                                {
-                                    this.state.activeMaster.eyelashesStatus.map((subcategory, index) => {
-                                        return (
-                                            <Cell
-                                                key={subcategory.id}
-                                                asideContent={<Switch
-                                                    name={'eyelashesStatus'}
-                                                    id={index}
-                                                    onChange={this.handleCheck}
-                                                    checked={this.state.activeMaster.eyelashesStatus[index].active}/>}>
-                                                {this.state.activeMaster.eyelashesStatus[index].label}
-                                            </Cell>
-                                        )
-                                    })
-                                }
-                            </Div>
-                            }
-                            <Cell expandable name={'eyebrowsVisible'}
-                                  onClick={() => this.setState({eyebrowsVisible: !this.state.eyebrowsVisible})}
-                                  indicator={'Выбрано: ' + this.state.count.eyebrowsStatus}>Брови</Cell>
-                            {this.state.eyebrowsVisible &&
-                            <Div>
-                                {
-                                    this.state.activeMaster.eyebrowsStatus.map((subcategory, index) => {
-                                        return (
-                                            <Cell
-                                                key={subcategory.id}
-                                                asideContent={<Switch
-                                                    name={'eyebrowsStatus'}
-                                                    id={index}
-                                                    onChange={this.handleCheck}
-                                                    checked={this.state.activeMaster.eyebrowsStatus[index].active}/>}>
-                                                {this.state.activeMaster.eyebrowsStatus[index].label}
-                                            </Cell>
-                                        )
-                                    })
-                                }
-                            </Div>
-                            }
-                            <Cell expandable name={'shugaringVisible'}
-                                  onClick={() => this.setState({shugaringVisible: !this.state.shugaringVisible})}
-                                  indicator={'Выбрано: ' + this.state.count.shugaringStatus}>Шугаринг</Cell>
-                            {this.state.shugaringVisible &&
-                            <Div>
-                                {
-                                    this.state.activeMaster.shugaringStatus.map((subcategory, index) => {
-                                        return (
-                                            <Cell
-                                                key={subcategory.id}
-                                                asideContent={<Switch
-                                                    name={'shugaringStatus'}
-                                                    id={index}
-                                                    onChange={this.handleCheck}
-                                                    checked={this.state.activeMaster.shugaringStatus[index].active}/>}>
-                                                {this.state.activeMaster.shugaringStatus[index].label}
-                                            </Cell>
-                                        )
-                                    })
-                                }
-                            </Div>
-                            }
-                            <Cell expandable name={'hairVisible'}
-                                  onClick={() => this.setState({hairVisible: !this.state.hairVisible})}
-                                  indicator={'Выбрано: ' + this.state.count.hairStatus}>Уход за волосами</Cell>
-                            {this.state.hairVisible &&
-                            <Div>
-                                {
-                                    this.state.activeMaster.hairStatus.map((subcategory, index) => {
-                                        return (
-                                            <Cell
-                                                key={subcategory.id}
-                                                asideContent={<Switch
-                                                    name={'hairStatus'}
-                                                    id={index}
-                                                    onChange={this.handleCheck}
-                                                    checked={this.state.activeMaster.hairStatus[index].active}/>}>
-                                                {this.state.activeMaster.hairStatus[index].label}
-                                            </Cell>
-                                        )
-                                    })
-                                }
-                            </Div>
-                            }
-                            <Cell expandable name={'hairVisible'}
-                                  onClick={() => this.setState({cosmeticVisible: !this.state.cosmeticVisible})}
-                                  indicator={'Выбрано: ' + this.state.count.cosmeticStatus}>Косметология</Cell>
-                            {this.state.cosmeticVisible &&
-                            <Div>
-                                {
-                                    this.state.activeMaster.cosmeticStatus.map((subcategory, index) => {
-                                        return (
-                                            <Cell
-                                                key={subcategory.id}
-                                                asideContent={<Switch
-                                                    name={'cosmeticStatus'}
-                                                    id={index}
-                                                    onChange={this.handleCheck}
-                                                    checked={this.state.activeMaster.cosmeticStatus[index].active}/>}>
-                                                {this.state.activeMaster.cosmeticStatus[index].label}
-                                            </Cell>
-                                        )
-                                    })
-                                }
-                            </Div>
+                                            {this.state[category._id] &&
+                                            <Div>
+                                                {
+                                                    category.subcat.map((subcategory, index, category)=>{
+                                                        return (
+                                                            <Cell
+                                                                key={index}
+                                                                asideContent={
+                                                                    <Switch
+                                                                        name={i}
+                                                                        id={index}
+                                                                        onChange={this.checkSubcat}
+                                                                        checked={subcategory.active}/>
+                                                                }>
+                                                                {subcategory.label}
+                                                            </Cell>
+                                                        )
+                                                    })
+                                                }
+                                            </Div>
+                                            }
+                                        </Group>
+                                    )
+                                })
                             }
                         </FormLayoutGroup>
                         <Button size="xl"

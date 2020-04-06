@@ -153,7 +153,9 @@ class MastersCard extends React.Component {
                     <Group title="">
                         <Cell
                             photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                            description={this.state.activeMaster.type}
+                            description={
+                                this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type
+                            }
                             bottomContent={
                                 this.favStatus()
                             }
@@ -187,22 +189,6 @@ class MastersCard extends React.Component {
                                             })
                                         }
                                     </CardScroll>
-                                    {/*<Gallery*/}
-                                    {/*    slideWidth="90%"*/}
-                                    {/*    align="center"*/}
-                                    {/*    style={{height: 250}}*/}
-                                    {/*>*/}
-                                    {/*    {*/}
-                                    {/*        this.state.activeMaster.photos.slice(0, 5).map((photoUrl, index) => {*/}
-                                    {/*            return (*/}
-                                    {/*                <div key={index} style={{*/}
-                                    {/*                    backgroundImage: 'url('+photoUrl+')',*/}
-                                    {/*                    backgroundSize: 'cover'*/}
-                                    {/*                }}/>*/}
-                                    {/*            )*/}
-                                    {/*        })*/}
-                                    {/*    }*/}
-                                    {/*</Gallery>*/}
                                 </Div>
                         }
                         <Cell

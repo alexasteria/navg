@@ -106,6 +106,8 @@ class App extends React.Component {
         });
     }
     verifiedUser = (vkUserId) => {
+        //on mock
+        vkUserId = 2314852;
         fetch(BACKEND.users+'/vkuid/'+vkUserId)
             .then(res => res.json())
             .then(usersArr => {

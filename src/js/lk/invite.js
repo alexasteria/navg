@@ -1,5 +1,5 @@
 import React from 'react';
-import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar} from "@vkontakte/vkui"
+import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar, Input} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
 
 class Invite extends React.Component {
@@ -7,9 +7,7 @@ class Invite extends React.Component {
         super(props);
         this.state = {
             count: {},
-            activeMaster: {
-
-            },
+            activeMaster: {},
             categories: []
         };
         this.handleChange = this.handleChange.bind(this);
@@ -57,7 +55,8 @@ class Invite extends React.Component {
                 country: this.props.user.country,
                 city: [this.props.user.city]
             },
-            categories: this.state.categories
+            categories: this.state.categories,
+            brand: this.state.brand
         };
         this.props.closeReg(master);
     };
@@ -155,6 +154,12 @@ class Invite extends React.Component {
                                 <option value="Организация">Организация</option>
                                 <option value="Частный мастер">Частный мастер</option>
                             </Select>
+                            {
+                                this.state.type === 'Организация' &&
+                                <FormLayoutGroup top="Укажите наименование организации в которой вы работаете">
+                                    <Input name={'brand'} type="text" value={this.state.brand} onChange={this.handleChange}/>
+                                </FormLayoutGroup>
+                            }
                             <Checkbox onChange={() => this.setState({checkLicense: !this.state.checkLicense})}>Согласен
                                 c <Link>условиями использования приложения</Link></Checkbox>
                             {this.state.checkLicense && this.state.description && this.state.type &&

@@ -25,25 +25,7 @@ class Lk extends React.Component {
 
     componentDidMount() {
         console.log(this.state.user);
-        //this.verifiedUser(this.props.user);
     }
-    /*verifiedUser = (user) => {
-        console.log(BACKEND.users+'/vkuid/'+user.vkUid);
-        fetch(BACKEND.users+'/vkuid/'+user.vkUid)
-            .then(res => res.json())
-            .then(usersArr => {
-                if (usersArr.length === 0){
-                    console.log('Пользователь ', user, ' не найден');
-                    this.postData(BACKEND.users, user); //регитрируем
-                } else {
-                    console.log('Пришло при авторизации', usersArr[0]);
-                    this.setState({user: usersArr[0]});
-                }
-            })
-            .catch(error => {
-                console.log(error); // Error: Not Found
-            });
-    };*/
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -77,7 +59,7 @@ class Lk extends React.Component {
                         onClick={this.props.openReg}
                     >Зарегистрироваться как мастер</CellButton>
                 }
-                    <Group title="Основное">
+                    <Group title="Основное" separator={'hide'}>
                         <Cell
                             expandable
                             onClick={() => this.setState({ activePanel: 'nothing' })}
