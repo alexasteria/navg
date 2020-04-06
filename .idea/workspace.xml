@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Все работает. Коммит перед редактированием инвайта">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Рендер категории, показ/скрытие, без счетчика">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -259,7 +257,8 @@
       <workItem from="1586197550275" duration="1795000" />
       <workItem from="1586199356492" duration="1796000" />
       <workItem from="1586201165210" duration="1798000" />
-      <workItem from="1586202976830" duration="1176000" />
+      <workItem from="1586202976830" duration="1903000" />
+      <workItem from="1586205019479" duration="823000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -555,7 +554,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586196565055</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Рендер категории, показ/скрытие, без счетчика">
+      <created>1586204206955</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1586204206955</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -576,7 +582,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Убраны логи в консоль" />
     <MESSAGE value="Бэк добавлен на хироку" />
     <MESSAGE value="Вывод мастера из инвайта" />
     <MESSAGE value="Регистрация с костылем на isMaster" />
@@ -601,17 +606,18 @@
     <MESSAGE value="comments" />
     <MESSAGE value="bugfix" />
     <MESSAGE value="Все работает. Коммит перед редактированием инвайта" />
-    <option name="LAST_COMMIT_MESSAGE" value="Все работает. Коммит перед редактированием инвайта" />
+    <MESSAGE value="Рендер категории, показ/скрытие, без счетчика" />
+    <option name="LAST_COMMIT_MESSAGE" value="Рендер категории, показ/скрытие, без счетчика" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1586196564697">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1586204206572">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586196564697" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586204206572" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
