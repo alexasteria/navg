@@ -2,20 +2,13 @@ import React from 'react';
 //import connect from "@vkontakte/vk-connect";
 //import VKConnect from '@vkontakte/vkui-connect-mock';
 import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar} from "@vkontakte/vkui"
+import {BACKEND} from "../func/func";
 //import {BACKEND} from "../func/func";
 
 class Invite extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            checkLicense: false,
-            hairVisible: false,
-            manicureVisible: false,
-            pedicureVisible: false,
-            eyelashesVisible: false,
-            eyebrowsVisible: false,
-            shugaringVisible: false,
-            cosmeticVisible: false,
             count: {
                 manicureStatus: 0,
                 pedicureStatus: 0,
@@ -77,10 +70,23 @@ class Invite extends React.Component {
                     {active: false, id:"5e37587d7612461064809b49", label: "Чистка"},
                     {active: false, id:"5e3758827612461064809b4a", label: "Массаж лица"},
                 ],
-
+            categories: []
         };
         this.handleChange = this.handleChange.bind(this);
     }
+    componentDidMount() {
+        fetch(BACKEND.category.getAll)//ловим обьявления по городу юзера
+            .then(res => res.json())
+            .then(categories => {
+                this.setState({categories: categories});
+                categories.map(category => {
+                    this.setState({[category._id]: false});
+                });
+                console.log('State on load', this.state)
+            });
+
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.type !== this.state.type || prevState.about !== this.state.about || prevState.category !== this.state.category) {
             let master = this.state.activeMaster;
@@ -120,25 +126,13 @@ class Invite extends React.Component {
         this.setState({activeMaster: master});
 
     }
-    handleCheck = event => {
+    checkSubcat = event => {
         const target = event.target;
-        const name = target.name;
-        let mass = this.state.activeMaster[name];
-        const index = target.id;
-        mass[index].active = !mass[index].active;
-        this.setState({ [name]: mass });
-        let countMass = this.state.activeMaster[name].filter(
-            function(item){
-                //console.log(item);
-                if (item.active === true){
-                    return item.active;
-                } else {
-                    return null
-                }
-            });
-        let count = this.state.count;
-        count[name] = countMass.length;
-        this.setState({ count: count });
+        const indexCat = target.name;
+        const indexSubcat = target.id;
+        let categories = this.state.categories;
+        categories[indexCat].subcat[indexSubcat].active = !this.state.categories[indexCat].subcat[indexSubcat].active;
+        this.setState({categories: categories});
     };
    handleChange(event) {
         let {name, value} = event.target;
@@ -164,164 +158,201 @@ class Invite extends React.Component {
                                 top="О себе"
                                 value={this.state.about}
                                 onChange={this.handleChange}/>
-                            <FormLayoutGroup top="Сфера деятельности"
-                                             bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."
-                                             id={'category'}>
-                                <Cell expandable name={'manicureVisible'}
-                                      onClick={() => this.setState({manicureVisible: !this.state.manicureVisible})}
-                                      indicator={'Выбрано: ' + this.state.count.manicureStatus}>Маникюр</Cell>
-                                {this.state.manicureVisible &&
-                                <Div>
-                                    {
-                                        this.state.activeMaster.manicureStatus.map((subcategory, index)=>{
-                                            return (
-                                                <Cell
-                                                    key={subcategory.id}
-                                                    asideContent={<Switch
-                                                        name={'manicureStatus'}
-                                                        id={index}
-                                                        onChange={this.handleCheck}
-                                                        checked={this.state.activeMaster.manicureStatus[index].active}/>}>
-                                                    {this.state.activeMaster.manicureStatus[index].label}
-                                                </Cell>
-                                            )
-                                        })
-                                    }
-                                </Div>
-                                }
-                                <Cell expandable name={'pedicureVisible'}
-                                      onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
-                                      indicator={'Выбрано: ' + this.state.count.pedicureStatus}>Педикюр</Cell>
-                                {this.state.pedicureVisible &&
-                                <Div>
-                                    {
-                                        this.state.activeMaster.pedicureStatus.map((subcategory, index)=>{
-                                            return (
-                                                <Cell
-                                                    key={subcategory.id}
-                                                    asideContent={<Switch
-                                                        name={'pedicureStatus'}
-                                                        id={index}
-                                                        onChange={this.handleCheck}
-                                                        checked={this.state.activeMaster.pedicureStatus[index].active}/>}>
-                                                    {this.state.activeMaster.pedicureStatus[index].label}
-                                                </Cell>
-                                            )
-                                        })
-                                    }
-                                </Div>
-                                }
-                                <Cell expandable name={'eyelashesVisible'}
-                                      onClick={() => this.setState({eyelashesVisible: !this.state.eyelashesVisible})}
-                                      indicator={'Выбрано: ' + this.state.count.eyelashesStatus}>Ресницы</Cell>
-                                {this.state.eyelashesVisible &&
-                                <Div>
-                                    {
-                                        this.state.activeMaster.eyelashesStatus.map((subcategory, index)=>{
-                                            return (
-                                                <Cell
-                                                    key={subcategory.id}
-                                                    asideContent={<Switch
-                                                        name={'eyelashesStatus'}
-                                                        id={index}
-                                                        onChange={this.handleCheck}
-                                                        checked={this.state.activeMaster.eyelashesStatus[index].active}/>}>
-                                                    {this.state.activeMaster.eyelashesStatus[index].label}
-                                                </Cell>
-                                            )
-                                        })
-                                    }
-                                </Div>
-                                }
-                                <Cell expandable name={'eyebrowsVisible'}
-                                      onClick={() => this.setState({eyebrowsVisible: !this.state.eyebrowsVisible})}
-                                      indicator={'Выбрано: ' + this.state.count.eyebrowsStatus}>Брови</Cell>
-                                {this.state.eyebrowsVisible &&
-                                <Div>
-                                    {
-                                        this.state.activeMaster.eyebrowsStatus.map((subcategory, index)=>{
-                                            return (
-                                                <Cell
-                                                    key={subcategory.id}
-                                                    asideContent={<Switch
-                                                        name={'eyebrowsStatus'}
-                                                        id={index}
-                                                        onChange={this.handleCheck}
-                                                        checked={this.state.activeMaster.eyebrowsStatus[index].active}/>}>
-                                                    {this.state.activeMaster.eyebrowsStatus[index].label}
-                                                </Cell>
-                                            )
-                                        })
-                                    }
-                                </Div>
-                                }
-                                <Cell expandable name={'shugaringVisible'}
-                                      onClick={() => this.setState({shugaringVisible: !this.state.shugaringVisible})}
-                                      indicator={'Выбрано: ' + this.state.count.shugaringStatus}>Шугаринг</Cell>
-                                {this.state.shugaringVisible &&
-                                <Div>
-                                    {
-                                        this.state.activeMaster.shugaringStatus.map((subcategory, index)=>{
-                                            return (
-                                                <Cell
-                                                    key={subcategory.id}
-                                                    asideContent={<Switch
-                                                        name={'shugaringStatus'}
-                                                        id={index}
-                                                        onChange={this.handleCheck}
-                                                        checked={this.state.activeMaster.shugaringStatus[index].active}/>}>
-                                                    {this.state.activeMaster.shugaringStatus[index].label}
-                                                </Cell>
-                                            )
-                                        })
-                                    }
-                                </Div>
-                                }
-                                <Cell expandable name={'hairVisible'}
-                                      onClick={() => this.setState({hairVisible: !this.state.hairVisible})}
-                                      indicator={'Выбрано: ' + this.state.count.hairStatus}>Уход за волосами</Cell>
-                                {this.state.hairVisible &&
-                                <Div>
-                                    {
-                                        this.state.activeMaster.hairStatus.map((subcategory, index)=>{
-                                            return (
-                                                <Cell
-                                                    key={subcategory.id}
-                                                    asideContent={<Switch
-                                                        name={'hairStatus'}
-                                                        id={index}
-                                                        onChange={this.handleCheck}
-                                                        checked={this.state.activeMaster.hairStatus[index].active}/>}>
-                                                    {this.state.activeMaster.hairStatus[index].label}
-                                                </Cell>
-                                            )
-                                        })
-                                    }
-                                </Div>
-                                }
-                                <Cell expandable name={'hairVisible'}
-                                      onClick={() => this.setState({cosmeticVisible: !this.state.cosmeticVisible})}
-                                      indicator={'Выбрано: ' + this.state.count.cosmeticStatus}>Косметология</Cell>
-                                {this.state.cosmeticVisible &&
-                                <Div>
-                                    {
-                                        this.state.activeMaster.cosmeticStatus.map((subcategory, index)=>{
-                                            return (
-                                                <Cell
-                                                    key={subcategory.id}
-                                                    asideContent={<Switch
-                                                        name={'cosmeticStatus'}
-                                                        id={index}
-                                                        onChange={this.handleCheck}
-                                                        checked={this.state.activeMaster.cosmeticStatus[index].active}/>}>
-                                                    {this.state.activeMaster.cosmeticStatus[index].label}
-                                                </Cell>
-                                            )
-                                        })
-                                    }
-                                </Div>
-                                }
-                            </FormLayoutGroup>
+
+                            {
+                                this.state.categories.map((category, i) => {
+                                    return (
+                                        <Group key={category._id}>
+                                            <Cell expandable name={category._id}
+                                                  onClick={() => this.setState({[category._id]: !this.state[category._id]})}
+                                                  indicator={
+                                                      'Выбрано: ' + this.state.count.manicureStatus
+                                                  }>
+                                                {category.label}
+                                            </Cell>
+                                            {this.state[category._id] &&
+                                            <Div>
+                                                {
+                                                    category.subcat.map((subcategory, index, category)=>{
+                                                        return (
+                                                            <Cell
+                                                                key={index}
+                                                                asideContent={
+                                                                    <Switch
+                                                                    name={i}
+                                                                    id={index}
+                                                                    onChange={this.checkSubcat}
+                                                                    checked={subcategory.active}/>
+                                                                }>
+                                                                {subcategory.label}
+                                                            </Cell>
+                                                        )
+                                                    })
+                                                }
+                                            </Div>
+                                            }
+                                        </Group>
+                                    )
+                                })
+                            }
+                            {/*<FormLayoutGroup top="Сфера деятельности"*/}
+                            {/*                 bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."*/}
+                            {/*                 id={'category'}>*/}
+                            {/*    <Cell expandable name={'manicureVisible'}*/}
+                            {/*          onClick={() => this.setState({manicureVisible: !this.state.manicureVisible})}*/}
+                            {/*          indicator={'Выбрано: ' + this.state.count.manicureStatus}>Маникюр</Cell>*/}
+                            {/*    {this.state.manicureVisible &&*/}
+                            {/*    <Div>*/}
+                            {/*        {*/}
+                            {/*            this.state.activeMaster.manicureStatus.map((subcategory, index)=>{*/}
+                            {/*                return (*/}
+                            {/*                    <Cell*/}
+                            {/*                        key={subcategory.id}*/}
+                            {/*                        asideContent={<Switch*/}
+                            {/*                            name={'manicureStatus'}*/}
+                            {/*                            id={index}*/}
+                            {/*                            onChange={this.handleCheck}*/}
+                            {/*                            checked={this.state.activeMaster.manicureStatus[index].active}/>}>*/}
+                            {/*                        {this.state.activeMaster.manicureStatus[index].label}*/}
+                            {/*                    </Cell>*/}
+                            {/*                )*/}
+                            {/*            })*/}
+                            {/*        }*/}
+                            {/*    </Div>*/}
+                            {/*    }*/}
+                            {/*    <Cell expandable name={'pedicureVisible'}*/}
+                            {/*          onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}*/}
+                            {/*          indicator={'Выбрано: ' + this.state.count.pedicureStatus}>Педикюр</Cell>*/}
+                            {/*    {this.state.pedicureVisible &&*/}
+                            {/*    <Div>*/}
+                            {/*        {*/}
+                            {/*            this.state.activeMaster.pedicureStatus.map((subcategory, index)=>{*/}
+                            {/*                return (*/}
+                            {/*                    <Cell*/}
+                            {/*                        key={subcategory.id}*/}
+                            {/*                        asideContent={<Switch*/}
+                            {/*                            name={'pedicureStatus'}*/}
+                            {/*                            id={index}*/}
+                            {/*                            onChange={this.handleCheck}*/}
+                            {/*                            checked={this.state.activeMaster.pedicureStatus[index].active}/>}>*/}
+                            {/*                        {this.state.activeMaster.pedicureStatus[index].label}*/}
+                            {/*                    </Cell>*/}
+                            {/*                )*/}
+                            {/*            })*/}
+                            {/*        }*/}
+                            {/*    </Div>*/}
+                            {/*    }*/}
+                            {/*    <Cell expandable name={'eyelashesVisible'}*/}
+                            {/*          onClick={() => this.setState({eyelashesVisible: !this.state.eyelashesVisible})}*/}
+                            {/*          indicator={'Выбрано: ' + this.state.count.eyelashesStatus}>Ресницы</Cell>*/}
+                            {/*    {this.state.eyelashesVisible &&*/}
+                            {/*    <Div>*/}
+                            {/*        {*/}
+                            {/*            this.state.activeMaster.eyelashesStatus.map((subcategory, index)=>{*/}
+                            {/*                return (*/}
+                            {/*                    <Cell*/}
+                            {/*                        key={subcategory.id}*/}
+                            {/*                        asideContent={<Switch*/}
+                            {/*                            name={'eyelashesStatus'}*/}
+                            {/*                            id={index}*/}
+                            {/*                            onChange={this.handleCheck}*/}
+                            {/*                            checked={this.state.activeMaster.eyelashesStatus[index].active}/>}>*/}
+                            {/*                        {this.state.activeMaster.eyelashesStatus[index].label}*/}
+                            {/*                    </Cell>*/}
+                            {/*                )*/}
+                            {/*            })*/}
+                            {/*        }*/}
+                            {/*    </Div>*/}
+                            {/*    }*/}
+                            {/*    <Cell expandable name={'eyebrowsVisible'}*/}
+                            {/*          onClick={() => this.setState({eyebrowsVisible: !this.state.eyebrowsVisible})}*/}
+                            {/*          indicator={'Выбрано: ' + this.state.count.eyebrowsStatus}>Брови</Cell>*/}
+                            {/*    {this.state.eyebrowsVisible &&*/}
+                            {/*    <Div>*/}
+                            {/*        {*/}
+                            {/*            this.state.activeMaster.eyebrowsStatus.map((subcategory, index)=>{*/}
+                            {/*                return (*/}
+                            {/*                    <Cell*/}
+                            {/*                        key={subcategory.id}*/}
+                            {/*                        asideContent={<Switch*/}
+                            {/*                            name={'eyebrowsStatus'}*/}
+                            {/*                            id={index}*/}
+                            {/*                            onChange={this.handleCheck}*/}
+                            {/*                            checked={this.state.activeMaster.eyebrowsStatus[index].active}/>}>*/}
+                            {/*                        {this.state.activeMaster.eyebrowsStatus[index].label}*/}
+                            {/*                    </Cell>*/}
+                            {/*                )*/}
+                            {/*            })*/}
+                            {/*        }*/}
+                            {/*    </Div>*/}
+                            {/*    }*/}
+                            {/*    <Cell expandable name={'shugaringVisible'}*/}
+                            {/*          onClick={() => this.setState({shugaringVisible: !this.state.shugaringVisible})}*/}
+                            {/*          indicator={'Выбрано: ' + this.state.count.shugaringStatus}>Шугаринг</Cell>*/}
+                            {/*    {this.state.shugaringVisible &&*/}
+                            {/*    <Div>*/}
+                            {/*        {*/}
+                            {/*            this.state.activeMaster.shugaringStatus.map((subcategory, index)=>{*/}
+                            {/*                return (*/}
+                            {/*                    <Cell*/}
+                            {/*                        key={subcategory.id}*/}
+                            {/*                        asideContent={<Switch*/}
+                            {/*                            name={'shugaringStatus'}*/}
+                            {/*                            id={index}*/}
+                            {/*                            onChange={this.handleCheck}*/}
+                            {/*                            checked={this.state.activeMaster.shugaringStatus[index].active}/>}>*/}
+                            {/*                        {this.state.activeMaster.shugaringStatus[index].label}*/}
+                            {/*                    </Cell>*/}
+                            {/*                )*/}
+                            {/*            })*/}
+                            {/*        }*/}
+                            {/*    </Div>*/}
+                            {/*    }*/}
+                            {/*    <Cell expandable name={'hairVisible'}*/}
+                            {/*          onClick={() => this.setState({hairVisible: !this.state.hairVisible})}*/}
+                            {/*          indicator={'Выбрано: ' + this.state.count.hairStatus}>Уход за волосами</Cell>*/}
+                            {/*    {this.state.hairVisible &&*/}
+                            {/*    <Div>*/}
+                            {/*        {*/}
+                            {/*            this.state.activeMaster.hairStatus.map((subcategory, index)=>{*/}
+                            {/*                return (*/}
+                            {/*                    <Cell*/}
+                            {/*                        key={subcategory.id}*/}
+                            {/*                        asideContent={<Switch*/}
+                            {/*                            name={'hairStatus'}*/}
+                            {/*                            id={index}*/}
+                            {/*                            onChange={this.handleCheck}*/}
+                            {/*                            checked={this.state.activeMaster.hairStatus[index].active}/>}>*/}
+                            {/*                        {this.state.activeMaster.hairStatus[index].label}*/}
+                            {/*                    </Cell>*/}
+                            {/*                )*/}
+                            {/*            })*/}
+                            {/*        }*/}
+                            {/*    </Div>*/}
+                            {/*    }*/}
+                            {/*    <Cell expandable name={'hairVisible'}*/}
+                            {/*          onClick={() => this.setState({cosmeticVisible: !this.state.cosmeticVisible})}*/}
+                            {/*          indicator={'Выбрано: ' + this.state.count.cosmeticStatus}>Косметология</Cell>*/}
+                            {/*    {this.state.cosmeticVisible &&*/}
+                            {/*    <Div>*/}
+                            {/*        {*/}
+                            {/*            this.state.activeMaster.cosmeticStatus.map((subcategory, index)=>{*/}
+                            {/*                return (*/}
+                            {/*                    <Cell*/}
+                            {/*                        key={subcategory.id}*/}
+                            {/*                        asideContent={<Switch*/}
+                            {/*                            name={'cosmeticStatus'}*/}
+                            {/*                            id={index}*/}
+                            {/*                            onChange={this.handleCheck}*/}
+                            {/*                            checked={this.state.activeMaster.cosmeticStatus[index].active}/>}>*/}
+                            {/*                        {this.state.activeMaster.cosmeticStatus[index].label}*/}
+                            {/*                    </Cell>*/}
+                            {/*                )*/}
+                            {/*            })*/}
+                            {/*        }*/}
+                            {/*    </Div>*/}
+                            {/*    }*/}
+                            {/*</FormLayoutGroup>*/}
                             <Select
                                 name={'type'}
                                 value={this.state.type}

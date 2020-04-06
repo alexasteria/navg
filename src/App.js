@@ -34,8 +34,8 @@ import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
 //import VKConnect from "@vkontakte/vkui-connect-mock";
-//import bridge from '@vkontakte/vk-bridge-mock';
-import bridge from '@vkontakte/vk-bridge';
+import bridge from '@vkontakte/vk-bridge-mock';
+//import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
 
 
