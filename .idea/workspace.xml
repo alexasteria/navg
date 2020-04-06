@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="bugfix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -253,7 +251,9 @@
       <workItem from="1586116594945" duration="1683000" />
       <workItem from="1586118287138" duration="1797000" />
       <workItem from="1586120098642" duration="1832000" />
-      <workItem from="1586121941862" duration="772000" />
+      <workItem from="1586121941862" duration="831000" />
+      <workItem from="1586123299920" duration="35000" />
+      <workItem from="1586195730073" duration="631000" />
     </task>
     <task id="LOCAL-00001" summary="Стартовая страница">
       <created>1580672646187</created>
@@ -535,7 +535,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586119663190</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="bugfix">
+      <created>1586122723551</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1586122723552</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -588,10 +595,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1586119662889">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1586122723077">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586119662889" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586122723077" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

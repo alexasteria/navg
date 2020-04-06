@@ -10,7 +10,7 @@ import {
     Gallery,
     Snackbar,
     UsersStack,
-    Spinner, Header, Card, CardGrid
+    Spinner, Header, Card, CardGrid, CardScroll
 } from "@vkontakte/vkui"
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
@@ -55,7 +55,7 @@ class MastersCard extends React.Component {
                     <Card size="l">
                         <Cell
                             before={<Icon16Like width={20} height={20} fill="red"/>}
-                        >В избранном</Cell>
+                        >В избранных</Cell>
                     </Card>
                 </CardGrid>
             )
@@ -168,6 +168,43 @@ class MastersCard extends React.Component {
                         <Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>
                     </Group>
                     <Group title="Портфолио">
+                        {
+                            this.state.activeMaster.photos.length > 0 &&
+                                <Div>
+                                    <Cell>Последние работы мастера</Cell>
+                                    <CardScroll>
+                                        {
+                                            this.state.activeMaster.photos.slice(0, 5).map((photoUrl, index) => {
+                                                return (
+                                                    <Card size="s">
+                                                        <div key={index} style={{
+                                                            width: 144,
+                                                            height: 96,
+                                                            backgroundImage: 'url('+photoUrl+')',
+                                                            backgroundSize: 'cover'}} />
+                                                    </Card>
+                                                )
+                                            })
+                                        }
+                                    </CardScroll>
+                                    {/*<Gallery*/}
+                                    {/*    slideWidth="90%"*/}
+                                    {/*    align="center"*/}
+                                    {/*    style={{height: 250}}*/}
+                                    {/*>*/}
+                                    {/*    {*/}
+                                    {/*        this.state.activeMaster.photos.slice(0, 5).map((photoUrl, index) => {*/}
+                                    {/*            return (*/}
+                                    {/*                <div key={index} style={{*/}
+                                    {/*                    backgroundImage: 'url('+photoUrl+')',*/}
+                                    {/*                    backgroundSize: 'cover'*/}
+                                    {/*                }}/>*/}
+                                    {/*            )*/}
+                                    {/*        })*/}
+                                    {/*    }*/}
+                                    {/*</Gallery>*/}
+                                </Div>
+                        }
                         <Cell
                             expandable
                             onClick={() => this.props.openPhoto()}
@@ -178,28 +215,6 @@ class MastersCard extends React.Component {
                             }
                             indicator={this.state.activeMaster.photos.length}
                         >Посмотреть все фото</Cell>
-                        {
-                            this.state.activeMaster.photos.length > 0 &&
-                                <Div>
-                                    <Cell>Последние работы мастера</Cell>
-                                    <Gallery
-                                        slideWidth="90%"
-                                        align="center"
-                                        style={{height: 250}}
-                                    >
-                                        {
-                                            this.state.activeMaster.photos.slice(0, 5).map((photoUrl, index) => {
-                                                return (
-                                                    <div key={index} style={{
-                                                        backgroundImage: 'url('+photoUrl+')',
-                                                        backgroundSize: 'cover'
-                                                    }}/>
-                                                )
-                                            })
-                                        }
-                                    </Gallery>
-                                </Div>
-                        }
                     </Group>
                     <Group separator="hide">
                         {
@@ -209,18 +224,22 @@ class MastersCard extends React.Component {
                                         multiline
                                         onClick={() => this.changeVisible(index)}
                                     >
-                                        <Cell
-                                            description={'От ' + item.price + " рублей"}
-                                            expandable
-                                            indicator="">
-                                            {this.state.activeMaster.priceList[index].title}
-                                        </Cell>
-                                        {
-                                            this.state[index] &&
-                                            <Cell description="Краткое описание процедуры"
-                                                  multiline>{this.state.activeMaster.priceList[index].body}</Cell>
-                                        }
-                                        <Separator></Separator>
+                                        <CardGrid style={{padding: 0}}>
+                                            <Card size="l">
+                                                <Cell
+                                                    description={'От ' + item.price + " рублей"}
+                                                    expandable
+                                                    indicator="">
+                                                    {this.state.activeMaster.priceList[index].title}
+                                                </Cell>
+                                                {
+                                                    this.state[index] &&
+                                                    <Cell description="Краткое описание процедуры"
+                                                          multiline>{this.state.activeMaster.priceList[index].body}</Cell>
+                                                }
+                                                <Separator></Separator>
+                                            </Card>
+                                        </CardGrid>
                                     </Cell>
                                 )
                             )}
