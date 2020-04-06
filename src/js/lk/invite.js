@@ -1,9 +1,6 @@
 import React from 'react';
-//import connect from "@vkontakte/vk-connect";
-//import VKConnect from '@vkontakte/vkui-connect-mock';
 import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
-//import {BACKEND} from "../func/func";
 
 class Invite extends React.Component {
     constructor(props) {
@@ -30,45 +27,41 @@ class Invite extends React.Component {
 
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevState.type !== this.state.type || prevState.about !== this.state.about || prevState.category !== this.state.category) {
-            let master = this.state.activeMaster;
-            master.type = this.state.type;
-            master.description = this.state.about;
-            master.category = [
-                {id: '5e37537a58b85c13bcffb8b4', active: this.state.count.manicureStatus > 0, label:'Маникюр'},
-                {id: '5e3753be58b85c13bcffb8b5', active: this.state.count.pedicureStatus > 0, label: 'Педикюр'},
-                {id: '5e3753c458b85c13bcffb8b6', active: this.state.count.eyelashesStatus > 0, label: 'Ресницы'},
-                {id: '5e3753c858b85c13bcffb8b7', active: this.state.count.eyebrowsStatus > 0, label: 'Брови'},
-                {id: '5e3753cd58b85c13bcffb8b8', active: this.state.count.shugaringStatus > 0, label: 'Шугаринг'},
-                {id: '5e3753d558b85c13bcffb8b9', active: this.state.count.hairStatus > 0, label: 'Уход за волосами'},
-                {id: '5e3753dc58b85c13bcffb8ba', active: this.state.count.cosmeticStatus > 0, label: 'Косметология'}
-            ];
-            this.setState({activeMaster: master});
-        }
-    }
+    regMaster = () => {
+        let categories = this.state.categories;
+        categories.map((category, index) => {
+            let countCat = category.subcat.filter(
+                function(item){
+                    if (item.active === true){
+                        return item.active;
+                    } else {
+                        return null
+                    }
+                }
+            );
+            if (countCat.length > 0) {
+                category.active = true;
+            } else {
+                category.active = false;
+            }
+        });
+        let master = {
+            firstname: this.props.user.firstname,
+            lastname: this.props.user.lastname,
+            description: this.state.description,
+            vkUid: this.props.user.vkUid,
+            type: this.state.type,
+            avatarLink: this.props.user.avatarLink,
+            sex: this.props.user.sex,
+            location: {
+                country: this.props.user.country,
+                city: [this.props.user.city]
+            },
+            categories: this.state.categories
+        };
+        this.props.closeReg(master);
+    };
 
-    componentWillMount() {
-        let master = this.state.activeMaster;
-        console.log('user пришел из props', this.props.user);
-        master.firstname = this.props.user.firstname;
-        master.lastname =this.props.user.lastname;
-        master.vkUid =this.props.user.vkUid;
-        master.avatarLink =this.props.user.avatarLink;
-        master.sex =this.props.user.sex;
-        master.city =this.props.user.city;
-        master.country =this.props.user.country;
-        master.manicureStatus = this.state.manicureStatus;
-        master.pedicureStatus = this.state.pedicureStatus;
-        master.eyelashesStatus = this.state.eyelashesStatus;
-        master.eyebrowsStatus = this.state.eyebrowsStatus;
-        master.shugaringStatus = this.state.shugaringStatus;
-        master.hairStatus = this.state.hairStatus;
-        master.cosmeticStatus = this.state.cosmeticStatus;
-        console.log('после обработки', master);
-        this.setState({activeMaster: master});
-
-    }
     checkSubcat = event => {
         const target = event.target;
         const indexCat = target.name;
@@ -76,18 +69,6 @@ class Invite extends React.Component {
         let categories = this.state.categories;
         categories[indexCat].subcat[indexSubcat].active = !this.state.categories[indexCat].subcat[indexSubcat].active;
         this.setState({categories: categories});
-        // let countMass = this.state.activeMaster[name].filter(
-        //     function(item){
-        //         //console.log(item);
-        //         if (item.active === true){
-        //             return item.active;
-        //         } else {
-        //             return null
-        //         }
-        //     });
-        // let count = this.state.count;
-        // count[name] = countMass.length;
-        // this.setState({ count: count });
     };
     counter = (index) => {
         let countMass = this.state.categories[index].subcat.filter(
@@ -109,21 +90,20 @@ class Invite extends React.Component {
     render(){
         return (
                     <Group>
-                        <FormLayout onSubmit={this.handleSubmit}>
+                        <FormLayout>
                             <Cell
                                 size="l"
                                 description="Регистрация мастера"
-                                before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
-                                bottomContent={'Bottom content'}
+                                before={<Avatar src={this.props.user.avatarLink} size={80}/>}
                             >
-                                {this.state.activeMaster.firstname + ' ' + this.state.activeMaster.lastname}
+                                {this.props.user.firstname + ' ' + this.props.user.lastname}
                             </Cell>
                             <Textarea
-                                name={'about'}
-                                status={this.state.about ? 'valid' : 'error'}
-                                bottom={this.state.about ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                                name={'description'}
+                                status={this.state.description ? 'valid' : 'error'}
+                                bottom={this.state.description ? '' : 'Пожалуйста, напишите пару слов о себе'}
                                 top="О себе"
-                                value={this.state.about}
+                                value={this.state.description}
                                 onChange={this.handleChange}/>
                             <FormLayoutGroup top="Сфера деятельности"
                                              bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."
@@ -177,8 +157,8 @@ class Invite extends React.Component {
                             </Select>
                             <Checkbox onChange={() => this.setState({checkLicense: !this.state.checkLicense})}>Согласен
                                 c <Link>условиями использования приложения</Link></Checkbox>
-                            {this.state.checkLicense && this.state.about && this.state.type &&
-                            <Button size="xl" onClick={() => this.props.closeReg(this.state.activeMaster)}>Зарегистрироваться как мастер</Button>
+                            {this.state.checkLicense && this.state.description && this.state.type &&
+                            <Button size="xl" onClick={this.regMaster}>Зарегистрироваться как мастер</Button>
                             }
                         </FormLayout>
                     </Group>

@@ -160,13 +160,12 @@ class App extends React.Component {
         this.setState({ popout: null });
     };
     closeReg = (master) => {
-        console.log('master - ', master);
+       console.log(master);
         this.postData(BACKEND.masters.all, master);
         let user = this.state.user;
         user.isMaster = true;
-        this.setState({ user: user });
-        //this.verifiedUser(master); //проходит до запроса в БД пофиксить
-        this.setState({ activeViewLk: 'lk' });
+        this.setState({ user: user, activeViewLk: 'lk' });
+        // //this.verifiedUser(master); //проходит до запроса в БД пофиксить
     };
     change = (story, view, panel) => {
         this.setState({ story: story });
