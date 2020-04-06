@@ -84,9 +84,24 @@ class App extends React.Component {
 
     }
     componentDidMount() {
+        this.loadCategories();
         bridge.send("VKWebAppInit", {}).then(data => console.log('Инициализировали апи вк? '+data.result));
             console.log('Пользователь с VKid: '+this.props.vkUserId);
             this.verifiedUser(this.props.vkUserId);
+    }
+    loadCategories = () => {
+        fetch(BACKEND.category.getAll)
+            .then(res => res.json())
+            .then(categories => {
+                let catArr = categories.map(category=>{
+                    return {id: category._id, label: category.label}
+                });
+                console.log(catArr);
+                this.setState({categories: catArr})
+            })
+            .catch(error => {
+                console.log(error); // Error: Not Found
+            });
     }
     regNewUser = () => {
         bridge.send('VKWebAppGetUserInfo', {}).then(data => {
