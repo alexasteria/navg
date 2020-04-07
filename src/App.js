@@ -33,9 +33,7 @@ import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-//import VKConnect from "@vkontakte/vkui-connect-mock";
-import bridge from '@vkontakte/vk-bridge-mock';
-//import bridge from '@vkontakte/vk-bridge';
+import bridge from "@vkontakte/vk-bridge-mock";
 const osname = platform();
 
 
@@ -63,12 +61,13 @@ class App extends React.Component {
             },
             mastersList: null,
             user: {
-                firstname: '',
-                lastname: '',
-                avatarLink: '',
-                vkUid: '',
-                status: '',
-                city: {id:1, title: 'СПБ'}
+                firstname: '???',
+                lastname: '???',
+                avatarLink: '???',
+                vkUid: '???',
+                status: '???',
+                city: {id:1, title: '???'},
+                isMaster: false
             },
             categories: [
                 {id: '5e37537a58b85c13bcffb8b4', label: 'Маникюр'},
@@ -84,10 +83,12 @@ class App extends React.Component {
 
     }
     componentDidMount() {
+        bridge.send('VKWebAppGetUserInfo', {})
+            .then(data=> {
+                console.log(data);
+                this.verifiedUser(data.id);
+            });
         this.loadCategories();
-        bridge.send("VKWebAppInit", {}).then(data => console.log('Инициализировали апи вк? '+data.result));
-            console.log('Пользователь с VKid: '+this.props.vkUserId);
-            this.verifiedUser(this.props.vkUserId);
     }
     loadCategories = () => {
         fetch(BACKEND.category.getAll)
@@ -112,9 +113,10 @@ class App extends React.Component {
                 lastname: data.last_name,
                 avatarLink: data.photo_200,
                 sex: data.sex,
-                city: {id: data.city.id, title: data.city.title},
-                country: {id: data.country.id, title: data.country.title},
-                isMaster: false
+                location: {
+                    country: data.country,
+                    city: data.city
+                }``
             };
             this.setState({user: user});
             this.postData(BACKEND.users, user); //регитрируем
@@ -122,7 +124,7 @@ class App extends React.Component {
     }
     verifiedUser = (vkUserId) => {
         //on mock
-        vkUserId = 2314852;
+        //vkUserId = 2314852;
         fetch(BACKEND.users+'/vkuid/'+vkUserId)
             .then(res => res.json())
             .then(usersArr => {
@@ -309,7 +311,7 @@ class App extends React.Component {
                 <View id="news" activePanel="news">
                     <Panel id="news">
                         <PanelHeader>Горячие новости</PanelHeader>
-                        <News user={this.state.user} openStory={this.openStory}/>
+                        <News openReg={() => this.setState({ activeViewLk: 'masterReg',activeStory:'lk' })} user={this.state.user} openStory={this.openStory}/>
                     </Panel>
                 </View>
                 <Root id="masters" activeView={this.state.activeViewMasters}>
@@ -317,9 +319,9 @@ class App extends React.Component {
                         <Panel id="mastersList">
                             <FormLayout>
                                 <Cell
-                                    expandable
+                                    //expandable
                                     onClick={() => this.setState({ activePanel: 'nothing' })}
-                                    indicator={this.state.user.city.title}>Выбранный город</Cell>
+                                        indicator={this.state.user.city.title}>Ваш город</Cell>
                                 <SelectMimicry
                                     top="Выберите категорию"
                                     placeholder="Не выбрана"
@@ -384,11 +386,11 @@ class App extends React.Component {
                         </Panel>
                     </View>
                 </Root>
-                <View id="idea" activePanel="idea">
-                    <Panel id="idea">
-                        <Idea />
-                    </Panel>
-                </View>
+                {/*<View id="idea" activePanel="idea">*/}
+                {/*    <Panel id="idea">*/}
+                {/*        <Idea />*/}
+                {/*    </Panel>*/}
+                {/*</View>*/}
                 <View id="findmodel" activePanel={this.state.activePanelFindModels}>
                     <Panel id="findmodel">
                         <PanelHeader>Мастер ищет модель</PanelHeader>
@@ -443,7 +445,6 @@ class App extends React.Component {
                             <PanelHeader>Личный кабинет</PanelHeader>
                             <Lk
                                 user={this.state.user}
-                                openReg={() => this.setState({ activeViewLk: 'masterReg' })}
                                 openSetting={() => this.setState({ activePanelLk: 'setting' })}
                                 openFavourite={() => this.setState({ activePanelLk: 'favourite' })}
                                 openFindModel={() => this.setState({ activePanelLk: 'findModel' })}

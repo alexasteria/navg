@@ -76,9 +76,9 @@ class FindModel extends React.Component {
             return (
                 <Div>
                     <Cell
-                        expandable
+                        //expandable
                         onClick={() => this.setState({ activePanel: 'nothing' })}
-                        indicator={this.props.user.city.title}>Выбранный город</Cell>
+                        indicator={this.props.user.city.title}>Ваш город</Cell>
                     {this.findList()}
                 </Div>
             );

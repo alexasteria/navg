@@ -5,7 +5,7 @@ import {
     Group,
     Cell,
     Div,
-    Avatar, PanelSpinner
+    Avatar, PanelSpinner, Spinner, FixedLayout
 } from "@vkontakte/vkui"
 import Icon24UserIncoming from '@vkontakte/icons/dist/24/user_incoming';
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
@@ -22,24 +22,32 @@ class News extends React.Component {
         return (
             <Div>
                     <Group>
-                        <Placeholder icon={<Avatar src={this.props.user.avatarLink} size={80}/>}>
-                            Привет, {this.props.user.firstname}!
-                        </Placeholder>
+                        {
+                            this.props.user.firstname === '???' ?
+                                <Placeholder >
+                                    <Spinner size="large" style={{ marginTop: 20 }} />
+                                </Placeholder> :
+                                <Placeholder icon={<Avatar src={this.props.user.avatarLink} size={80}/>}>
+                                    Привет, {this.props.user.firstname}!
+                                </Placeholder>
+                        }
                         <Cell multiline>
                             Ты находишься в сервисе "Навигатор красоты". Здесь ты можешь найти мастера практически по
                             любой области косметологии или предложить свои услуги.
                         </Cell>
-                        <Cell
-                            onClick={() => this.props.openStory('masters')}
-                            before={<Icon24UserIncoming/>}
-                            expandable
-                        >Я клиент - ищу мастера</Cell>
-                        <Cell
-                            onClick={() => this.props.openStory('lk')}
-                            before={<Icon24UserOutgoing/>}
-                            expandable
-                        >Я мастер - ищу клиентов</Cell>
                     </Group>
+                {this.props.user.isMaster === false &&
+                <FixedLayout vertical="bottom">
+                    <Cell
+                        multiline
+                        onClick={this.props.openReg}
+                        before={<Icon24UserOutgoing/>}
+                        expandable
+                    >
+                        Если вы - мастер, пройдите простую процедуру регистрации
+                    </Cell>
+                </FixedLayout>
+                }
                 <Separator wide />
             </Div>
         );

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Group,
-    Div, Separator, Cell, Avatar, Spinner
+    Div, Separator, Cell, Avatar, Spinner, Card, CardGrid, FixedLayout
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from "../func/func";
@@ -53,26 +53,29 @@ class Favourite extends React.Component {
         } else {
             if(this.state.mastersArr.length === 0) {
                 return (
-                    <Group>
-                        <Cell multiline>
-                            Вы еще не добавили ни одного мастера в список избранного
-                        </Cell>
-                    </Group>
+                        <CardGrid>
+                            <Card size="l" mode="shadow">
+                                <Cell multiline align="center">
+                                    Список избранного пуст
+                                </Cell>
+                            </Card>
+                        </CardGrid>
                 )
             } else {
                 return (
                     this.state.mastersArr.map(master => (
-                        <Group key={master._id}>
-                            <Separator style={{margin: '12px 0'}}/>
-                            <Cell expandable
-                                  photo={master.avatarLink}
-                                  description={master.type}
-                                  before={<Avatar src={master.avatarLink} size={50}/>}
-                                  size="l"
-                                  onClick={() => this.props.openFavMasterOnId(master._id)}
-                            >{master.firstname} {master.lastname}
-                            </Cell>
-                        </Group>
+                        <CardGrid key={master._id}>
+                            <Card size="l" mode="shadow">
+                                <Cell expandable
+                                      photo={master.avatarLink}
+                                      description={master.type}
+                                      before={<Avatar src={master.avatarLink} size={50}/>}
+                                      size="l"
+                                      onClick={() => this.props.openFavMasterOnId(master._id)}
+                                >{master.firstname} {master.lastname}
+                                </Cell>
+                            </Card>
+                        </CardGrid>
                     ))
                 );
             }

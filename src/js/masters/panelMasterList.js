@@ -23,7 +23,6 @@ class MasterList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            category: this.props.category, //{id: '1', label: 'Маникюр'},
             mastersList: null,
             title: '',
             isLoad: false
@@ -32,7 +31,7 @@ class MasterList extends React.Component {
 
     componentDidMount() {
         console.log('Страница загрузилась');
-            if(this.state.category === '') {
+            if(this.props.category === '') {
                 fetch(BACKEND.masters.all)
                     .then(res => res.json())
                     .then(mastersList => {
@@ -41,7 +40,8 @@ class MasterList extends React.Component {
                             this.setState({isLoad: true});
                     });
             } else {
-                fetch(BACKEND.masters.category+this.state.category.id)
+                console.log(BACKEND.masters.category+this.props.category.id)
+                fetch(BACKEND.masters.category+this.props.category.id)
                     .then(res => res.json())
                     .then(mastersList => {
                             this.setState({mastersList: mastersList});

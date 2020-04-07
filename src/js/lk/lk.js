@@ -54,18 +54,13 @@ class Lk extends React.Component {
                 >
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
-                {this.state.user.isMaster === false &&
-                    <CellButton
-                        onClick={this.props.openReg}
-                    >Зарегистрироваться как мастер</CellButton>
-                }
                     <Group title="Основное" separator={'hide'}>
                         <Cell
-                            expandable
+                            //expandable
                             onClick={() => this.setState({ activePanel: 'nothing' })}
                             user={this.state.user}
                             indicator={this.state.user.city.title}
-                        >Выбранный город</Cell>
+                        >Ваш город</Cell>
                         <Separator style={{ margin: '12px 0' }} />
                         <List>
                             <Cell
