@@ -63,20 +63,24 @@ class Favourite extends React.Component {
                 )
             } else {
                 return (
-                    this.state.mastersArr.map(master => (
-                        <CardGrid key={master._id}>
-                            <Card size="l" mode="shadow">
-                                <Cell expandable
-                                      photo={master.avatarLink}
-                                      description={master.type}
-                                      before={<Avatar src={master.avatarLink} size={50}/>}
-                                      size="l"
-                                      onClick={() => this.props.openFavMasterOnId(master._id)}
-                                >{master.firstname} {master.lastname}
-                                </Cell>
-                            </Card>
-                        </CardGrid>
-                    ))
+                    this.state.mastersArr.map(master => {
+                        if (master._id !== undefined) { //если мастер не удален
+                            return (
+                                <CardGrid key={master._id}>
+                                    <Card size="l" mode="shadow">
+                                        <Cell expandable
+                                              photo={master.avatarLink}
+                                              description={master.type}
+                                              before={<Avatar src={master.avatarLink} size={50}/>}
+                                              size="l"
+                                              onClick={() => this.props.openFavMasterOnId(master._id)}
+                                        >{master.firstname} {master.lastname}
+                                        </Cell>
+                                    </Card>
+                                </CardGrid>
+                            )
+                        }
+                    })
                 );
             }
         }

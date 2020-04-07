@@ -30,7 +30,6 @@ class MasterList extends React.Component {
     }
 
     componentDidMount() {
-        console.log('Страница загрузилась');
             if(this.props.category === '') {
                 fetch(BACKEND.masters.all)
                     .then(res => res.json())
@@ -40,13 +39,11 @@ class MasterList extends React.Component {
                             this.setState({isLoad: true});
                     });
             } else {
-                console.log(BACKEND.masters.category+this.props.category.id)
-                fetch(BACKEND.masters.category+this.props.category.id)
+                fetch(BACKEND.masters.category+this.props.category.id+'/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
-                            this.setState({mastersList: mastersList});
+                            this.setState({mastersList: mastersList, isLoad: true});
                             this.setTitle(this.state.mastersList.length);
-                            this.setState({isLoad: true});
                     });
             }
         }

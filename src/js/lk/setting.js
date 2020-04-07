@@ -149,6 +149,11 @@ class Lk extends React.Component {
         const indexSubcat = target.id;
         let activeMaster = this.state.activeMaster;
         activeMaster.categories[indexCat].subcat[indexSubcat].active = !this.state.activeMaster.categories[indexCat].subcat[indexSubcat].active;
+        if (this.counter(indexCat) > 0) {
+            activeMaster.categories[indexCat].active = true;
+        } else {
+            activeMaster.categories[indexCat].active = false;
+        }
         this.setState({activeMaster: activeMaster});
     };
 

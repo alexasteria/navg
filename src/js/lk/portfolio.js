@@ -168,7 +168,7 @@ class MastersCard extends React.Component {
             return (
                 <Div>
                     {
-                        this.state.loading ? <Div><Cell>Подождите немного... Фотография сохраняется</Cell><PanelSpinner /></Div>: <Group title="">
+                        this.state.loading ? <Div><Cell multiline>Подождите немного... Фотография сохраняется</Cell><PanelSpinner /></Div>: <Group title="">
                             <FormLayout>
                                 <File
                                     top="Добавьте фото в портфолио"

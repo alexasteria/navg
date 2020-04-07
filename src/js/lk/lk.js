@@ -6,7 +6,7 @@ import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import Icon24Users from '@vkontakte/icons/dist/24/users';
 import Icon24Like from '@vkontakte/icons/dist/24/like';
 import Icon24Recent from '@vkontakte/icons/dist/24/recent';
-import Icon28Search from '@vkontakte/icons/dist/28/search';
+import Icon24Search from '@vkontakte/icons/dist/24/search';
 
 class Lk extends React.Component {
     constructor(props) {
@@ -99,7 +99,7 @@ class Lk extends React.Component {
                     >Портфолио</Cell>
                         <Cell
                             expandable
-                            before={<Icon28Search />}
+                            before={<Icon24Search />}
                             onClick={this.props.openFindModel}
                         >Поиск модели</Cell>
                     <Cell

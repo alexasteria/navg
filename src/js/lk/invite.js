@@ -53,7 +53,7 @@ class Invite extends React.Component {
             sex: this.props.user.sex,
             location: {
                 country: this.props.user.country,
-                city: [this.props.user.city]
+                city: this.props.user.city
             },
             categories: this.state.categories,
             brand: this.state.brand

@@ -33,7 +33,8 @@ import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from "@vkontakte/vk-bridge-mock";
+import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
 
 
@@ -97,6 +98,7 @@ class App extends React.Component {
                 let catArr = categories.map(category=>{
                     return {id: category._id, label: category.label}
                 });
+                catArr.unshift({id: 'all', label: 'Мастера всех категорий'});
                 console.log(catArr);
                 this.setState({categories: catArr})
             })
@@ -116,7 +118,7 @@ class App extends React.Component {
                 location: {
                     country: data.country,
                     city: data.city
-                }``
+                }
             };
             this.setState({user: user});
             this.postData(BACKEND.users, user); //регитрируем
@@ -324,7 +326,7 @@ class App extends React.Component {
                                         indicator={this.state.user.city.title}>Ваш город</Cell>
                                 <SelectMimicry
                                     top="Выберите категорию"
-                                    placeholder="Не выбрана"
+                                    placeholder="Показаны мастера всех категорий"
                                     onClick={() => this.setState({ activeViewMasters: 'masterCat' })}
                                 >{this.state.targetCategory.label}</SelectMimicry>
                             </FormLayout>
