@@ -10,7 +10,7 @@ import {
     Spinner,
     Separator,
     Slider,
-    Counter
+    Counter, FormLayout
 } from "@vkontakte/vkui"
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
@@ -138,7 +138,7 @@ class MastersCard extends React.Component {
             )
         } else {
             return (
-                <Div>
+                <FormLayout>
                     <Slider
                         step={1}
                         min={1}
@@ -151,12 +151,14 @@ class MastersCard extends React.Component {
                     <Textarea
                         name={'body'}
                         value={this.state.body}
-                        top="Добавление отзыва"
+                        status={this.state.body.length > 50 ? 'valid' : 'error'}
+                        bottom={this.state.body.length > 50 ? '' : 'Опишите подробнее. Символов: '+this.state.body.replace(/ /g, "").length+' из 50' }
+                        top={"Добавление отзыва"}
                         placeholder="Опишите, что вам понравилось или не понравилось в работе мастера"
                         onChange={this.handleChange}
                     />
                     <CellButton onClick={() => this.sendComment()} before={<Icon24Add />}>Добавить отзыв</CellButton>
-                </Div>
+                </FormLayout>
             )
         }
     }
