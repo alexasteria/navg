@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Комментарии, баг фикс интерфейса для 5s">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Телефон">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -284,14 +283,9 @@
       <workItem from="1586377300481" duration="1568000" />
       <workItem from="1586380666272" duration="1796000" />
       <workItem from="1586382472958" duration="2250000" />
-      <workItem from="1586384958013" duration="1149000" />
-    </task>
-    <task id="LOCAL-00003" summary="Импортирована библиотека ВК коннект">
-      <created>1580673881848</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1580673881848</updated>
+      <workItem from="1586384958013" duration="1797000" />
+      <workItem from="1586386765847" duration="1796000" />
+      <workItem from="1586388572259" duration="1247000" />
     </task>
     <task id="LOCAL-00004" summary="Импортирована библиотека ВК коннект">
       <created>1580674449075</created>
@@ -629,7 +623,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586378089329</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Телефон">
+      <created>1586386136315</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1586386136316</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -650,7 +651,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="онтрольная точка перед редактированием мастер листа" />
     <MESSAGE value="КТ до смены роутинга" />
     <MESSAGE value="Добавление комментариев. Вывод листа комментов. Ограничение на одну запись." />
     <MESSAGE value="Починил лайки" />
@@ -675,17 +675,18 @@
     <MESSAGE value="Тест" />
     <MESSAGE value="Фикс мелких ошибок" />
     <MESSAGE value="Комментарии, баг фикс интерфейса для 5s" />
-    <option name="LAST_COMMIT_MESSAGE" value="Комментарии, баг фикс интерфейса для 5s" />
+    <MESSAGE value="Телефон" />
+    <option name="LAST_COMMIT_MESSAGE" value="Телефон" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1586378088988">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1586386135888">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586378088988" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586386135888" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

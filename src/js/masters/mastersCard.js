@@ -10,8 +10,9 @@ import {
     Gallery,
     Snackbar,
     UsersStack,
-    Spinner, Header, Card, CardGrid, CardScroll, Button, Alert, Input, ModalCard, ModalRoot
+    Spinner, Header, Card, CardGrid, CardScroll, Button, Alert, Input,FormLayout
 } from "@vkontakte/vkui"
+import InputMask from 'react-input-mask';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from '../func/func';
@@ -40,6 +41,10 @@ class MastersCard extends React.Component {
         this.setState({activeMaster: this.props.activeMaster});
         this.loadFavs();
     }
+    handleChange = (event) => {
+        this.setState({[event.target.name]: event.target.value});
+        console.log(this.state);
+    };
     favStatus = () => {
         if(this.state.isFavourite.status === false) {
             return (
@@ -47,7 +52,7 @@ class MastersCard extends React.Component {
                             <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                                 <Icon16LikeOutline width={30} height={30} fill="red"/>
                             </Div>
-                            <Button onClick={() => this.getPhone()}>Связаться</Button>
+                            <Button onClick={() => this.getPhone()}>Записаться</Button>
                         </Cell>
             )
         } else {
@@ -56,7 +61,7 @@ class MastersCard extends React.Component {
                     <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                         <Icon16Like width={30} height={30} fill="red"/>
                     </Div>
-                    <Button onClick={() => this.getPhone()}>Связаться</Button>
+                    <Button onClick={() => this.getPhone()}>Записаться</Button>
                 </Cell>
             )
         }
@@ -124,7 +129,7 @@ class MastersCard extends React.Component {
 
     };
     sendMessage = () => {
-        let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться к тебе! Информация для связи: Телефон - '+this.state.phone+', страница VK - http://vk.com/id'+this.props.user.vkUid;
+        let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться к тебе! Информация для связи: Телефон - +'+this.state.phone+', страница VK - http://vk.com/id'+this.props.user.vkUid;
         let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
         bridge.send("VKWebAppCallAPIMethod", {
             "method": "messages.send",
@@ -140,7 +145,8 @@ class MastersCard extends React.Component {
             .then(result => {
                 console.log(result);
                 this.setState({phone: result.phone_number});
-                this.sendMessage();
+                //this.sendMessage();
+                this.enterNumber(result.phone_number)
             })
             .catch(e => {
                 console.log(e);
@@ -149,7 +155,7 @@ class MastersCard extends React.Component {
                 }
             })
     }
-    enterNumber = () => {
+    enterNumber = (number) => {
         if (this.state.snackbar) return;
         this.setState({ snackbar:
                 <Snackbar
@@ -158,9 +164,33 @@ class MastersCard extends React.Component {
                     onClose={() => this.setState({ snackbar: null })}
                 >
                     <h2>Укажите номер телефона</h2>
-                    <Input name={'phone'} type="text" defaultValue="Введите номер" align="center" value={this.state.phone}/>
+                    <FormLayout>
+                    <Div className="FormField Input Input--center">
+                        <InputMask
+                            className="Input__el"
+                            mask="7 (999) 999-99-99"
+                            name='phone'
+                            type="text"
+                            defaultValue={number || ''}
+                            align="center"
+                            value={this.state.phone}
+                            onChange={this.handleChange}
+                        />
+                        <Div className="FormField__border"></Div>
+                    </Div>
+                    {/*<Input*/}
+                    {/*    mask="7 (999) 999-99-99"*/}
+                    {/*    inputmask="7 (999) 999-99-99"*/}
+                    {/*    name='phone'*/}
+                    {/*    type="text"*/}
+                    {/*    defaultValue={number || ''}*/}
+                    {/*    align="center"*/}
+                    {/*    value={this.state.phone}*/}
+                    {/*    onChange={this.handleChange}*/}
+                    {/*/>*/}
                     <p>Укажите номер телефона. Если мастер не сможет ответить прямо сейчас, он свяжется с вами.</p>
                     <Button onClick={this.sendMessage}>Отправить</Button>
+                    </FormLayout>
                 </Snackbar>
         });
     };
