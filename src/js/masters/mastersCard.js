@@ -10,7 +10,7 @@ import {
     Gallery,
     Snackbar,
     UsersStack,
-    Spinner, Header, Card, CardGrid, CardScroll, Button
+    Spinner, Header, Card, CardGrid, CardScroll, Button, Alert, Input, ModalCard, ModalRoot
 } from "@vkontakte/vkui"
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
@@ -31,7 +31,8 @@ class MastersCard extends React.Component {
             isFavourite: {
                 status: false
             },
-            isLoad: false
+            isLoad: false,
+            snackbar: null
         };
     }
     componentDidMount() {
@@ -46,7 +47,7 @@ class MastersCard extends React.Component {
                             <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                                 <Icon16LikeOutline width={30} height={30} fill="red"/>
                             </Div>
-                            <Button onClick={this.sendMessage}>Связаться</Button>
+                            <Button onClick={() => this.getPhone()}>Связаться</Button>
                         </Cell>
             )
         } else {
@@ -55,7 +56,7 @@ class MastersCard extends React.Component {
                     <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                         <Icon16Like width={30} height={30} fill="red"/>
                     </Div>
-                    <Button onClick={this.sendMessage}>Связаться</Button>
+                    <Button onClick={() => this.getPhone()}>Связаться</Button>
                 </Cell>
             )
         }
@@ -66,8 +67,6 @@ class MastersCard extends React.Component {
                 <Snackbar
                     layout="vertical"
                     onClose={() => this.setState({ snackbar: null })}
-                    //action="Отменить"
-                    //onActionClick={() => this.setState({ text: 'Сообщение Ивану было отменено.' })}
                     after={<Avatar src={avatarLink} size={32} />}
                 >
                     {text}
@@ -125,16 +124,45 @@ class MastersCard extends React.Component {
 
     };
     sendMessage = () => {
+        let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться к тебе! Информация для связи: Телефон - '+this.state.phone+', страница VK - http://vk.com/id'+this.props.user.vkUid;
         let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
-        let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться к тебе! Информация для связи: Телефон - +7-999-999-99-99, страница VK - http://vk.com/id'+this.props.user.vkUid;
         bridge.send("VKWebAppCallAPIMethod", {
             "method": "messages.send",
             "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.state.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
             .then(result => {
                 console.log(result);
-
+                this.setState({ snackbar: null })
             })
             .catch(e => console.log(e))
+    };
+    getPhone = () => {
+        bridge.send("VKWebAppGetPhoneNumber", {"group_id": 193179174, "key": "dBuBKe1kFcdemzB"})
+            .then(result => {
+                console.log(result);
+                this.setState({phone: result.phone_number});
+                this.sendMessage();
+            })
+            .catch(e => {
+                console.log(e);
+                if (e.error_data.error_reason==='User denied') {
+                    this.enterNumber()
+                }
+            })
+    }
+    enterNumber = () => {
+        if (this.state.snackbar) return;
+        this.setState({ snackbar:
+                <Snackbar
+                    duration='99999999999999'
+                    layout="vertical"
+                    onClose={() => this.setState({ snackbar: null })}
+                >
+                    <h2>Укажите номер телефона</h2>
+                    <Input name={'phone'} type="text" defaultValue="Введите номер" align="center" value={this.state.phone}/>
+                    <p>Укажите номер телефона. Если мастер не сможет ответить прямо сейчас, он свяжется с вами.</p>
+                    <Button onClick={this.sendMessage}>Отправить</Button>
+                </Snackbar>
+        });
     };
     postData(url = '', data = {}, method) {
         // Значения по умолчанию обозначены знаком *

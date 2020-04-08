@@ -173,16 +173,16 @@ class App extends React.Component {
                         autoclose: true,
                         mode: 'cancel'
                     }]}
-                    onClose={this.closeAlert}
+                    onClose={()=>this.setState({ popout: null })}
                 >
                     <h2>{title || 'Изменения сохранены'}</h2>
                     <p>{body || 'Изменения вступят в силу в течении 2-х минут'}</p>
                 </Alert>
         });
     };
-    closeAlert = () => {
-        this.setState({ popout: null });
-    };
+    // closeAlert = () => {
+    //     this.setState({ popout: null });
+    // };
     closeReg = (master) => {
        console.log(master);
         this.postData(BACKEND.masters.all, master);
