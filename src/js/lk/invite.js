@@ -1,6 +1,7 @@
 import React from 'react';
 import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar, Input} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
+import bridge from "@vkontakte/vk-bridge";
 
 class Invite extends React.Component {
     constructor(props) {
@@ -8,11 +9,14 @@ class Invite extends React.Component {
         this.state = {
             count: {},
             activeMaster: {},
-            categories: []
+            categories: [],
+            statusPhoto: false,
+            statusMessage: false
         };
         this.handleChange = this.handleChange.bind(this);
     }
     componentDidMount() {
+        this.permMessage();
         fetch(BACKEND.category.getAll)//ловим обьявления по городу юзера
             .then(res => res.json())
             .then(categories => {
@@ -51,16 +55,28 @@ class Invite extends React.Component {
             type: this.state.type,
             avatarLink: this.props.user.avatarLink,
             sex: this.props.user.sex,
-            location: {
-                country: this.props.user.country,
-                city: this.props.user.city
-            },
+            location: this.props.user.location,
             categories: this.state.categories,
             brand: this.state.brand
         };
         this.props.closeReg(master);
     };
-
+    // permPhoto = () => {
+    //     bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
+    //         .then(data => {
+    //             console.log(data);
+    //             this.setState({statusPhoto: data.result})
+    //         })
+    //         .catch(error => console.log(error))
+    // };
+    permMessage = () => {
+            bridge.send("VKWebAppAllowMessagesFromGroup", {"group_id": 193179174, "key": "dBuBKe1kFcdemzB"})
+                .then(result => {
+                    console.log(result);
+                    this.setState({statusMessage: result.result})
+                })
+                .catch(e => console.log(e))
+    };
     checkSubcat = event => {
         const target = event.target;
         const indexCat = target.name;
@@ -97,6 +113,21 @@ class Invite extends React.Component {
                             >
                                 {this.props.user.firstname + ' ' + this.props.user.lastname}
                             </Cell>
+                            {/*<Cell*/}
+                            {/*    expandable*/}
+                            {/*    multiline*/}
+                            {/*    onClick={this.permPhoto}*/}
+                            {/*    description="Для загрузки фото в портфолио"*/}
+                            {/*    bottom={this.state.statusPhoto === false && 'Доступ обязателен для регистрации'}*/}
+                            {/*>Доступ к загрузке фотографий в альбом приложения - {this.state.statusPhoto === true ? 'Разрешен' : 'Не разрешен'}</Cell>*/}
+                            <Cell
+                                expandable
+                                multiline
+                                onClick={this.permMessage}
+                                description="Для получения уведомлений о заявках"
+                                status={this.state.statusMessage === true ? 'valid' : 'error'}
+                                bottom={this.state.statusMessage === false && 'Доступ обязателен для регистрации'}
+                            >Доступ на получение личных сообщений от приложения - {this.state.statusMessage=== true ? 'Разрешен' : 'Не разрешен'}</Cell>
                             <Textarea
                                 name={'description'}
                                 status={this.state.description ? 'valid' : 'error'}
@@ -162,7 +193,7 @@ class Invite extends React.Component {
                             }
                             <Checkbox onChange={() => this.setState({checkLicense: !this.state.checkLicense})}>Согласен
                                 c <Link>условиями использования приложения</Link></Checkbox>
-                            {this.state.checkLicense && this.state.description && this.state.type &&
+                            {this.state.checkLicense && this.state.statusMessage && this.state.description && this.state.type &&
                             <Button size="xl" onClick={this.regMaster}>Зарегистрироваться как мастер</Button>
                             }
                         </FormLayout>

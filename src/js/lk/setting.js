@@ -8,7 +8,7 @@ import {
     Textarea,
     Switch,
     FormLayoutGroup,
-    List, Button, CellButton, Input, Spinner,Snackbar
+    List, Button, CellButton, Input, Spinner,Snackbar, Tooltip
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from '../func/func';
@@ -180,7 +180,7 @@ class Lk extends React.Component {
                                 name={'visible'}
                                 onChange={this.visible}
                                 checked={this.state.activeMaster.visible}/>}>
-                            Показывать мой профиль в поиске
+                            Показывать профиль в поиске
                         </Cell>
                     </Group>
                     <Group title={'Прайс-лист'}>

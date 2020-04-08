@@ -7,6 +7,7 @@ import Icon24Users from '@vkontakte/icons/dist/24/users';
 import Icon24Like from '@vkontakte/icons/dist/24/like';
 import Icon24Recent from '@vkontakte/icons/dist/24/recent';
 import Icon24Search from '@vkontakte/icons/dist/24/search';
+import bridge from "@vkontakte/vk-bridge";
 
 class Lk extends React.Component {
     constructor(props) {
@@ -59,7 +60,7 @@ class Lk extends React.Component {
                             //expandable
                             onClick={() => this.setState({ activePanel: 'nothing' })}
                             user={this.state.user}
-                            indicator={this.state.user.city.title}
+                            indicator={this.state.user.location.city.title}
                         >Ваш город</Cell>
                         <Separator style={{ margin: '12px 0' }} />
                         <List>

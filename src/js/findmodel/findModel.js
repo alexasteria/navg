@@ -23,7 +23,7 @@ class FindModel extends React.Component {
     }
     componentDidMount() {
         console.log(this.props.user);
-        fetch(BACKEND.findModel.onCity+this.props.user.city.id)//ловим обьявления по городу юзера
+        fetch(BACKEND.findModel.onCity+this.props.user.location.city.id)//ловим обьявления по городу юзера
             .then(res => res.json())
             .then(find => {
                 console.log(find);
@@ -41,7 +41,7 @@ class FindModel extends React.Component {
                     header="Не расстраивайтесь"
                     action={<Button size="l">Поделиться</Button>}
                 >
-                    В данный момент в городе {this.props.user.city.title} нет поиска моледей. Мы расширяем базу мастеров, и скоро - предложения появятся.
+                    В данный момент в городе {this.props.user.location.city.title} нет поиска моледей. Мы расширяем базу мастеров, и скоро - предложения появятся.
                     Поделитесь приложением с мастерами, которых Вы знаете.
                 </Placeholder>
             )
@@ -78,7 +78,7 @@ class FindModel extends React.Component {
                     <Cell
                         //expandable
                         onClick={() => this.setState({ activePanel: 'nothing' })}
-                        indicator={this.props.user.city.title}>Ваш город</Cell>
+                        indicator={this.props.user.location.city.title}>Ваш город</Cell>
                     {this.findList()}
                 </Div>
             );

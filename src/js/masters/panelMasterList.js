@@ -11,7 +11,7 @@ import {
     Header,
     CardGrid,
     Card,
-    Placeholder
+    Placeholder, Counter
 } from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 import Icon24Favorite from '@vkontakte/icons/dist/24/favorite';
@@ -39,6 +39,7 @@ class MasterList extends React.Component {
                             this.setState({isLoad: true});
                     });
             } else {
+                console.log(BACKEND.masters.category+this.props.category.id+'/'+this.props.city.id);
                 fetch(BACKEND.masters.category+this.props.category.id+'/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
@@ -115,7 +116,7 @@ class MasterList extends React.Component {
         if (length > 0) {
             return (
                 <Div style={{margin: 0, padding: 0, fontSize: 12, color: "#a9a9a9"}}>
-                    Рейтинг - {rating} (На основе {length} отзывов)
+                    Оценка {rating} из {length} отзывов
                 </Div>
             )
         } else {

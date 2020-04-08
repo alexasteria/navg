@@ -10,11 +10,12 @@ import {
     Gallery,
     Snackbar,
     UsersStack,
-    Spinner, Header, Card, CardGrid, CardScroll
+    Spinner, Header, Card, CardGrid, CardScroll, Button
 } from "@vkontakte/vkui"
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from '../func/func';
+import bridge from "@vkontakte/vk-bridge";
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -41,23 +42,21 @@ class MastersCard extends React.Component {
     favStatus = () => {
         if(this.state.isFavourite.status === false) {
             return (
-                        <Cell
-                            onClick={this.checkFavs}
-                            before={<Icon16LikeOutline width={20} height={20} fill="red"/>}
-                           // description="на обновления"
-                        >
-                            Подписаться
+                        <Cell>
+                            <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
+                                <Icon16LikeOutline width={30} height={30} fill="red"/>
+                            </Div>
+                            <Button onClick={this.sendMessage}>Связаться</Button>
                         </Cell>
             )
         } else {
             return (
-                <CardGrid style={{padding: 0}}>
-                    <Card size="l">
-                        <Cell
-                            before={<Icon16Like width={20} height={20} fill="red"/>}
-                        >В избранных</Cell>
-                    </Card>
-                </CardGrid>
+                <Cell>
+                    <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
+                        <Icon16Like width={30} height={30} fill="red"/>
+                    </Div>
+                    <Button onClick={this.sendMessage}>Связаться</Button>
+                </Cell>
             )
         }
     }
@@ -125,6 +124,18 @@ class MastersCard extends React.Component {
         }
 
     };
+    sendMessage = () => {
+        let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
+        let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться к тебе! Информация для связи: Телефон - +7-999-999-99-99, страница VK - http://vk.com/id'+this.props.user.vkUid;
+        bridge.send("VKWebAppCallAPIMethod", {
+            "method": "messages.send",
+            "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.state.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
+            .then(result => {
+                console.log(result);
+
+            })
+            .catch(e => console.log(e))
+    };
     postData(url = '', data = {}, method) {
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -149,7 +160,7 @@ class MastersCard extends React.Component {
             )
         } else {
             return (
-                <Div>
+                <Div style={{padding: 0}}>
                     <Group title="">
                         <Cell
                             photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"

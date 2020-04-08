@@ -15,6 +15,7 @@ import {
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
 import Pop from "../func/alert";
+import bridge from "@vkontakte/vk-bridge";
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -84,8 +85,21 @@ class MastersCard extends React.Component {
                 data.date = "Только что";
                 arr.push(data);
                 this.setState({commentsArr: arr});
+                this.sendMessage(data.body);
             }); // парсит JSON ответ в Javascript объект
     }
+    sendMessage = (bodyComment) => {
+        let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
+        let message = "Привет! У тебя новый комментарий: "+bodyComment;
+        bridge.send("VKWebAppCallAPIMethod", {
+            "method": "messages.send",
+            "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.props.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
+            .then(result => {
+                console.log(result);
+
+            })
+            .catch(e => console.log(e))
+    };
     commentList() {
         if (this.state.isLoad === false) {
             return (

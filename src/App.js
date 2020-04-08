@@ -67,7 +67,9 @@ class App extends React.Component {
                 avatarLink: '???',
                 vkUid: '???',
                 status: '???',
-                city: {id:1, title: '???'},
+                location: {
+                    city: {id:1, title: '???'}
+                },
                 isMaster: false
             },
             categories: [
@@ -108,7 +110,7 @@ class App extends React.Component {
     }
     regNewUser = () => {
         bridge.send('VKWebAppGetUserInfo', {}).then(data => {
-            console.log('Данные с моста '+data);
+            console.log('Данные с моста',data);
             const user = {
                 vkUid: data.id,
                 firstname: data.first_name,
@@ -118,7 +120,8 @@ class App extends React.Component {
                 location: {
                     country: data.country,
                     city: data.city
-                }
+                },
+                isMaster: false
             };
             this.setState({user: user});
             this.postData(BACKEND.users, user); //регитрируем
@@ -323,7 +326,7 @@ class App extends React.Component {
                                 <Cell
                                     //expandable
                                     onClick={() => this.setState({ activePanel: 'nothing' })}
-                                        indicator={this.state.user.city.title}>Ваш город</Cell>
+                                    indicator={this.state.user.location.city.title}>Ваш город</Cell>
                                 <SelectMimicry
                                     top="Выберите категорию"
                                     placeholder="Показаны мастера всех категорий"
@@ -331,7 +334,7 @@ class App extends React.Component {
                                 >{this.state.targetCategory.label}</SelectMimicry>
                             </FormLayout>
                             <PanelHeader>Мастера</PanelHeader>
-                            <PanelMasterList category={this.state.targetCategory} city={this.state.user.city} openPanelMaster={this.openPanelMaster}/>
+                            <PanelMasterList category={this.state.targetCategory} city={this.state.user.location.city} openPanelMaster={this.openPanelMaster}/>
                         </Panel>
                         <Panel id="masterInfo">
                             <PanelHeader
