@@ -79,7 +79,7 @@ class MasterList extends React.Component {
                 } else {
                     return this.state.mastersList.map(master => {
                         let ratingArr = master.comments.map(comment =>{
-                            return comment.rating
+                            return Number(comment.rating)
                         });
                         let sum = ratingArr.reduce((a, b) => a + b, 0);
                         let rating = sum/ratingArr.length;
@@ -116,7 +116,7 @@ class MasterList extends React.Component {
         if (length > 0) {
             return (
                 <Div style={{margin: 0, padding: 0, fontSize: 12, color: "#a9a9a9"}}>
-                    Оценка {rating} из {length} отзывов
+                    Рейтинг {rating} из {length} отзывов
                 </Div>
             )
         } else {

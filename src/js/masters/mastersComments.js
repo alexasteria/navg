@@ -109,10 +109,21 @@ class MastersCard extends React.Component {
             )
         } else {
             return this.state.commentsArr.map(comment => {
+                let date = new Date(comment.date);
+                let hours = date.getHours();
+                if (hours < 10) hours = '0'+hours;
+                let minutes = date.getMinutes();
+                if (minutes < 10) minutes = '0'+minutes;
+                let date1 = date.getDate();
+                if (date1 < 10) date1 = '0'+date1;
+                let month = date.getMonth();
+                if (month < 10) month = '0'+month;
                 return (
                     <Group key={comment._id} separator={'hide'}>
                         <Cell
-                            description={comment.date}
+                            description={
+                                date1+'.'+month+'.'+date.getFullYear()+' в '+hours+':'+minutes
+                            }
                             before={ <Avatar size={40} src={comment.user.avatarLink} /> }
                         >
                             {comment.user.firstname+' '+comment.user.lastname}

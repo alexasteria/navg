@@ -37,8 +37,8 @@ class Favourite extends React.Component {
                                 mastersArr.push(master);
                                 this.setState({mastersArr: mastersArr});
                             });
+                        this.setState({isLoaded: true});
                     });
-                    this.setState({isLoaded: true});
                 }
             });
     };
@@ -62,9 +62,10 @@ class Favourite extends React.Component {
                         </CardGrid>
                 )
             } else {
+                console.log(this.state.mastersArr);
                 return (
                     this.state.mastersArr.map(master => {
-                        if (master._id !== undefined) { //если мастер не удален
+                        if (master !== null) { //если мастер не удален
                             return (
                                 <CardGrid key={master._id}>
                                     <Card size="l" mode="shadow">

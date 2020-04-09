@@ -137,6 +137,7 @@ class MastersCard extends React.Component {
             .then(result => {
                 console.log(result);
                 this.setState({ snackbar: null })
+                this.openSnackAvatar('Мы уведомили мастера, что вы хотите с ним связаться. Ожидайте.', this.state.activeMaster.avatarLink);
             })
             .catch(e => console.log(e))
     };

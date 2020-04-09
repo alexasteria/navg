@@ -1,7 +1,13 @@
 import React from 'react';
 import {
-    View, Panel, PanelHeader, Tabbar, TabbarItem,
-    Epic, SelectMimicry, FormLayout,
+    View,
+    Panel,
+    PanelHeader,
+    Tabbar,
+    TabbarItem,
+    Epic,
+    SelectMimicry,
+    FormLayout,
     Group, List, Cell, Root, PanelHeaderButton, platform, IOS, Alert
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
@@ -26,7 +32,7 @@ import Favourite from './js/lk/favourite.js';
 import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
-import {BACKEND, postData} from "./js/func/func";
+import {BACKEND} from "./js/func/func";
 //import bridge from "@vkontakte/vk-bridge-mock";
 import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
@@ -118,7 +124,7 @@ class App extends React.Component {
                 isMaster: false
             };
             this.setState({user: user});
-            postData(BACKEND.users, user).then(response => console.log(response.json()));; //регитрируем
+            this.postData(BACKEND.users, user); //регитрируем
         });
     }
     verifiedUser = (vkUserId) => {
@@ -139,25 +145,25 @@ class App extends React.Component {
                 console.log(error); // Error: Not Found
             });
     };
-    // postData(url = '', data = {}) {
-    //     // Значения по умолчанию обозначены знаком *
-    //     fetch(url, {
-    //         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    //         mode: 'cors', // no-cors, cors, *same-origin
-    //         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    //         credentials: 'same-origin', // include, *same-origin, omit
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             // 'Content-Type': 'application/x-www-form-urlencoded',
-    //         },
-    //         redirect: 'follow', // manual, *follow, error
-    //         referrer: 'no-referrer', // no-referrer, *client
-    //         body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
-    //     })
-    //         .then(data)
-    //         .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
-    //
-    // }
+    postData(url = '', data = {}) {
+        // Значения по умолчанию обозначены знаком *
+        fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+        })
+            .then(data)
+            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+
+    }
     openAlert = (title, body, action) => {
         this.setState({ popout:
                 <Alert
@@ -179,7 +185,7 @@ class App extends React.Component {
     // };
     closeReg = (master) => {
        console.log(master);
-        postData(BACKEND.masters.all, master).then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект;
+        this.postData(BACKEND.masters.all, master);
         let user = this.state.user;
         user.isMaster = true;
         this.setState({ user: user, activeViewLk: 'lk' });
