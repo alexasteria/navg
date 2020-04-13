@@ -88,6 +88,22 @@ class MastersCard extends React.Component {
                 this.sendMessage(data.body);
             }); // парсит JSON ответ в Javascript объект
     }
+    getDate(comDate) {
+        if (comDate === 'Только что') {
+            return comDate;
+        } else {
+            let date = new Date(comDate);
+            let hours = date.getHours();
+            if (hours < 10) hours = '0'+hours;
+            let minutes = date.getMinutes();
+            if (minutes < 10) minutes = '0'+minutes;
+            let date1 = date.getDate();
+            if (date1 < 10) date1 = '0'+date1;
+            let month = date.getMonth();
+            if (month < 10) month = '0'+month;
+            return date1+'.'+month+'.'+date.getFullYear()+' в '+hours+':'+minutes;
+        }
+    }
     sendMessage = (bodyComment) => {
         let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
         let message = "Привет! У тебя новый комментарий: "+bodyComment;
@@ -109,21 +125,10 @@ class MastersCard extends React.Component {
             )
         } else {
             return this.state.commentsArr.map(comment => {
-                let date = new Date(comment.date);
-                let hours = date.getHours();
-                if (hours < 10) hours = '0'+hours;
-                let minutes = date.getMinutes();
-                if (minutes < 10) minutes = '0'+minutes;
-                let date1 = date.getDate();
-                if (date1 < 10) date1 = '0'+date1;
-                let month = date.getMonth();
-                if (month < 10) month = '0'+month;
                 return (
                     <Group key={comment._id} separator={'hide'}>
                         <Cell
-                            description={
-                                date1+'.'+month+'.'+date.getFullYear()+' в '+hours+':'+minutes
-                            }
+                            description={this.getDate(comment.date)}
                             before={ <Avatar size={40} src={comment.user.avatarLink} /> }
                         >
                             {comment.user.firstname+' '+comment.user.lastname}

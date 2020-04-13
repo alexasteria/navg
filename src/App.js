@@ -8,7 +8,7 @@ import {
     Epic,
     SelectMimicry,
     FormLayout,
-    Group, List, Cell, Root, PanelHeaderButton, platform, IOS, Alert
+    Group, List, Cell, Root, PanelHeaderButton, platform, IOS, Alert, Div, Spinner
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
@@ -33,8 +33,8 @@ import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-//import bridge from "@vkontakte/vk-bridge-mock";
-import bridge from '@vkontakte/vk-bridge';
+import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
 
 
@@ -61,17 +61,7 @@ class App extends React.Component {
                 Hairstyles: 'Уход за волосами'
             },
             mastersList: null,
-            user: {
-                firstname: '???',
-                lastname: '???',
-                avatarLink: '???',
-                vkUid: '???',
-                status: '???',
-                location: {
-                    city: {id:1, title: '???'}
-                },
-                isMaster: false
-            },
+            user: '',
             categories: [
                 {id: '5e37537a58b85c13bcffb8b4', label: 'Маникюр'},
                 {id: '5e3753be58b85c13bcffb8b5', label: 'Педикюр'},
@@ -245,112 +235,185 @@ class App extends React.Component {
     };
     openStory = (storyName) => {
         this.setState({ activeStory: storyName })
-    }
+    };
     onStoryChange (e) {
         this.setState({ activeStory: e.currentTarget.dataset.story })
     }
     render () {
-        return (
-            <Epic activeStory={this.state.activeStory} tabbar={
-                <Tabbar>
-                    {
-                        /*<TabbarItem
-                            onClick={this.onStoryChange}
-                            selected={this.state.activeStory === 'sale'}
-                            data-story="sale"
-                            text="Акции"
-                        ><Icon28FireOutline /></TabbarItem>*/
-                    }
-                    <TabbarItem
-                        onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'news'}
-                        data-story="news"
-                        text="News"
-                    ><Icon28FireOutline /></TabbarItem>
-                    <TabbarItem
-                        onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'masters'}
-                        data-story="masters"
-                        text="Мастера"
-                    ><Icon28ServicesOutline /></TabbarItem>
-                    <TabbarItem
-                        onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'findmodel'}
-                        data-story="findmodel"
-                        text="Ищу модель"
-                    ><Icon28Notifications /></TabbarItem>
-                    {/*<TabbarItem*/}
-                    {/*    onClick={this.onStoryChange}*/}
-                    {/*    selected={this.state.activeStory === 'idea'}*/}
-                    {/*    data-story="idea"*/}
-                    {/*    text="Идеи"*/}
-                    {/*><Icon28HelpOutline /></TabbarItem>*/}
-                    {
-                        /*
+        if (this.state.user === '') {
+            return (
+                <Div>
+                    <Cell>Информация загружается</Cell>
+                    <Spinner size="large" style={{ marginTop: 20 }} />
+                </Div>
+            )
+        } else {
+            return (
+                <Epic activeStory={this.state.activeStory} tabbar={
+                    <Tabbar>
+                        {
+                            /*<TabbarItem
+                                onClick={this.onStoryChange}
+                                selected={this.state.activeStory === 'sale'}
+                                data-story="sale"
+                                text="Акции"
+                            ><Icon28FireOutline /></TabbarItem>*/
+                        }
                         <TabbarItem
-                        onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'notifications'}
-                        data-story="notifications"
-                        text="Уведомлен."
-                        label="1"
-                    ><Icon28Notifications /></TabbarItem>
-                        * */
+                            onClick={this.onStoryChange}
+                            selected={this.state.activeStory === 'news'}
+                            data-story="news"
+                            text="News"
+                        ><Icon28FireOutline /></TabbarItem>
+                        <TabbarItem
+                            onClick={this.onStoryChange}
+                            selected={this.state.activeStory === 'masters'}
+                            data-story="masters"
+                            text="Мастера"
+                        ><Icon28ServicesOutline /></TabbarItem>
+                        <TabbarItem
+                            onClick={this.onStoryChange}
+                            selected={this.state.activeStory === 'findmodel'}
+                            data-story="findmodel"
+                            text="Ищу модель"
+                        ><Icon28Notifications /></TabbarItem>
+                        {/*<TabbarItem*/}
+                        {/*    onClick={this.onStoryChange}*/}
+                        {/*    selected={this.state.activeStory === 'idea'}*/}
+                        {/*    data-story="idea"*/}
+                        {/*    text="Идеи"*/}
+                        {/*><Icon28HelpOutline /></TabbarItem>*/}
+                        {
+                            /*
+                            <TabbarItem
+                            onClick={this.onStoryChange}
+                            selected={this.state.activeStory === 'notifications'}
+                            data-story="notifications"
+                            text="Уведомлен."
+                            label="1"
+                        ><Icon28Notifications /></TabbarItem>
+                            * */
+                        }
+                        <TabbarItem
+                            onClick={this.onStoryChange}
+                            selected={this.state.activeStory === 'lk'}
+                            data-story="lk"
+                            text="Кабинет"
+                        ><Icon28More /></TabbarItem>
+                    </Tabbar>
+                }>
+                    {
+                        /*<View id="sale" activePanel="sale">
+                        <Panel id="sale">
+                            <PanelHeader>Акции</PanelHeader>
+                            <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator={this.state.user.city.title}>Выбранный город</Cell>
+                            <Sale />
+                        </Panel>
+                    </View>*/
                     }
-                    <TabbarItem
-                        onClick={this.onStoryChange}
-                        selected={this.state.activeStory === 'lk'}
-                        data-story="lk"
-                        text="Кабинет"
-                    ><Icon28More /></TabbarItem>
-                </Tabbar>
-            }>
-                {
-                    /*<View id="sale" activePanel="sale">
-                    <Panel id="sale">
-                        <PanelHeader>Акции</PanelHeader>
-                        <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator={this.state.user.city.title}>Выбранный город</Cell>
-                        <Sale />
-                    </Panel>
-                </View>*/
-                }
-                <View id="news" activePanel="news">
-                    <Panel id="news">
-                        <PanelHeader>Горячие новости</PanelHeader>
-                        <News openReg={() => this.setState({ activeViewLk: 'masterReg',activeStory:'lk' })} user={this.state.user} openStory={this.openStory}/>
-                    </Panel>
-                </View>
-                <Root id="masters" activeView={this.state.activeViewMasters}>
-                    <View id="mastersList" activePanel={this.state.activePanelMasters}>
-                        <Panel id="mastersList">
-                            <FormLayout>
-                                <Cell
-                                    //expandable
-                                    onClick={() => this.setState({ activePanel: 'nothing' })}
-                                    indicator={this.state.user.location.city.title}>Ваш город</Cell>
-                                <SelectMimicry
-                                    top="Выберите категорию"
-                                    placeholder="Показаны мастера всех категорий"
-                                    onClick={() => this.setState({ activeViewMasters: 'masterCat' })}
-                                >{this.state.targetCategory.label}</SelectMimicry>
-                            </FormLayout>
-                            <PanelHeader>Мастера</PanelHeader>
-                            <PanelMasterList category={this.state.targetCategory} city={this.state.user.location.city} openPanelMaster={this.openPanelMaster}/>
+                    <View id="news" activePanel="news">
+                        <Panel id="news">
+                            <PanelHeader>Горячие новости</PanelHeader>
+                            <News openReg={() => this.setState({ activeViewLk: 'masterReg',activeStory:'lk' })} user={this.state.user} openStory={this.openStory}/>
+                        </Panel>
+                    </View>
+                    <Root id="masters" activeView={this.state.activeViewMasters}>
+                        <View id="mastersList" activePanel={this.state.activePanelMasters}>
+                            <Panel id="mastersList">
+                                <FormLayout>
+                                    <Cell
+                                        //expandable
+                                        onClick={() => this.setState({ activePanel: 'nothing' })}
+                                        indicator={this.state.user.location.city.title}>Ваш город</Cell>
+                                    <SelectMimicry
+                                        top="Выберите категорию"
+                                        placeholder="Показаны мастера всех категорий"
+                                        onClick={() => this.setState({ activeViewMasters: 'masterCat' })}
+                                    >{this.state.targetCategory.label}</SelectMimicry>
+                                </FormLayout>
+                                <PanelHeader>Мастера</PanelHeader>
+                                <PanelMasterList category={this.state.targetCategory} city={this.state.user.location.city} openPanelMaster={this.openPanelMaster}/>
+                            </Panel>
+                            <Panel id="masterInfo">
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>Назад</PanelHeaderButton>}
+                                >
+                                    О мастере
+                                </PanelHeader>
+                                <MasterCard openPhoto={() => this.setState({ activePanelMasters: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelMasters: 'masterComments' })}/>
+                            </Panel>
+                            <Panel id="masterPhoto">
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</PanelHeaderButton>}
+                                >
+                                    Портфолио
+                                </PanelHeader>
+                                <MasterPhoto activeMaster={this.state.activeMaster} />
+                            </Panel>
+                            <Panel id="masterComments">
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</PanelHeaderButton>}
+                                >
+                                    Отзывы
+                                </PanelHeader>
+                                <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
+                            </Panel>
+                        </View>
+                        <View activePanel="masterCat" id="masterCat">
+                            <Panel id="masterCat">
+                                <PanelHeader>Выбор категории</PanelHeader>
+                                <Group>
+                                    <List>
+                                        {
+                                            this.state.categories.map(category => {
+                                                //console.log(category);
+                                                return (
+                                                    <Cell
+                                                        key={category.id}
+                                                        onClick={() => this.setState({ targetCategory: category, activeViewMasters: 'mastersList' })}
+                                                        asideContent={this.state.targetCategory === category ? <Icon24Done fill="var(--accent)" /> : null}
+                                                    >
+                                                        {category.label}
+                                                    </Cell>
+                                                )
+                                            })
+                                        }
+                                    </List>
+                                </Group>
+                            </Panel>
+                        </View>
+                    </Root>
+                    {/*<View id="idea" activePanel="idea">*/}
+                    {/*    <Panel id="idea">*/}
+                    {/*        <Idea />*/}
+                    {/*    </Panel>*/}
+                    {/*</View>*/}
+                    <View id="findmodel" activePanel={this.state.activePanelFindModels}>
+                        <Panel id="findmodel">
+                            <PanelHeader>Мастер ищет модель</PanelHeader>
+                            <FindModel openMasterOnId={this.openMasterOnId} user={this.state.user}/>
                         </Panel>
                         <Panel id="masterInfo">
                             <PanelHeader
                                 theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>Назад</PanelHeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>Назад</PanelHeaderButton>}
                             >
                                 О мастере
                             </PanelHeader>
-                            <MasterCard openPhoto={() => this.setState({ activePanelMasters: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelMasters: 'masterComments' })}/>
+                            <MasterCard openPhoto={() => this.setState({ activePanelFindModels: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelFindModels: 'masterComments' })}/>
                         </Panel>
                         <Panel id="masterPhoto">
                             <PanelHeader
                                 theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</PanelHeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</PanelHeaderButton>}
                             >
                                 Портфолио
                             </PanelHeader>
@@ -359,172 +422,108 @@ class App extends React.Component {
                         <Panel id="masterComments">
                             <PanelHeader
                                 theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</PanelHeaderButton>}
+                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</PanelHeaderButton>}
                             >
                                 Отзывы
                             </PanelHeader>
                             <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
                         </Panel>
                     </View>
-                    <View activePanel="masterCat" id="masterCat">
-                        <Panel id="masterCat">
-                            <PanelHeader>Выбор категории</PanelHeader>
+                    <View id="notifications" activePanel="notifications">
+                        <Panel id="notifications">
+                            <PanelHeader>Уведомления</PanelHeader>
                             <Group>
-                                <List>
-                                    {
-                                        this.state.categories.map(category => {
-                                            //console.log(category);
-                                            return (
-                                                <Cell
-                                                    key={category.id}
-                                                    onClick={() => this.setState({ targetCategory: category, activeViewMasters: 'mastersList' })}
-                                                    asideContent={this.state.targetCategory === category ? <Icon24Done fill="var(--accent)" /> : null}
-                                                >
-                                                    {category.label}
-                                                </Cell>
-                                            )
-                                        })
-                                    }
-                                </List>
+                                <Cell
+                                    expandable
+                                    onClick={() => this.setState({ activePanel: 'nothing' })}
+                                    indicator={'В разработке'}
+                                >Этот раздел</Cell>
                             </Group>
                         </Panel>
                     </View>
-                </Root>
-                {/*<View id="idea" activePanel="idea">*/}
-                {/*    <Panel id="idea">*/}
-                {/*        <Idea />*/}
-                {/*    </Panel>*/}
-                {/*</View>*/}
-                <View id="findmodel" activePanel={this.state.activePanelFindModels}>
-                    <Panel id="findmodel">
-                        <PanelHeader>Мастер ищет модель</PanelHeader>
-                        <FindModel openMasterOnId={this.openMasterOnId} user={this.state.user}/>
-                    </Panel>
-                    <Panel id="masterInfo">
-                        <PanelHeader
-                            theme="light"
-                            left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                            addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>Назад</PanelHeaderButton>}
-                        >
-                            О мастере
-                        </PanelHeader>
-                        <MasterCard openPhoto={() => this.setState({ activePanelFindModels: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelFindModels: 'masterComments' })}/>
-                    </Panel>
-                    <Panel id="masterPhoto">
-                        <PanelHeader
-                            theme="light"
-                            left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                            addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</PanelHeaderButton>}
-                        >
-                            Портфолио
-                        </PanelHeader>
-                        <MasterPhoto activeMaster={this.state.activeMaster} />
-                    </Panel>
-                    <Panel id="masterComments">
-                        <PanelHeader
-                            theme="light"
-                            left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                            addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</PanelHeaderButton>}
-                        >
-                            Отзывы
-                        </PanelHeader>
-                        <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
-                    </Panel>
-                </View>
-                <View id="notifications" activePanel="notifications">
-                    <Panel id="notifications">
-                        <PanelHeader>Уведомления</PanelHeader>
-                        <Group>
-                            <Cell
-                                expandable
-                                onClick={() => this.setState({ activePanel: 'nothing' })}
-                                indicator={'В разработке'}
-                            >Этот раздел</Cell>
-                        </Group>
-                    </Panel>
-                </View>
-                <Root id="lk" activeView={this.state.activeViewLk}>
-                    <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout}>
-                        <Panel id="lk">
-                            <PanelHeader>Личный кабинет</PanelHeader>
-                            <Lk
-                                user={this.state.user}
-                                openSetting={() => this.setState({ activePanelLk: 'setting' })}
-                                openFavourite={() => this.setState({ activePanelLk: 'favourite' })}
-                                openFindModel={() => this.setState({ activePanelLk: 'findModel' })}
-                                openMasterPhoto={() => this.setState({ activePanelLk: 'masterPhoto' })}
-                            />
-                        </Panel>
-                        <Panel id='favourite'>
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
-                            >Избранное</PanelHeader>
-                            <Favourite user={this.state.user} openFavMasterOnId={this.openFavMasterOnId}/>
-                        </Panel>
-                        <Panel id="masterInfo">
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>Назад</PanelHeaderButton>}
-                            >
-                                О мастере
-                            </PanelHeader>
-                            <MasterCard openPhoto={() => this.setState({ activePanelLk: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelLk: 'masterComments' })}/>
-                        </Panel>
-                        <Panel id="masterPhoto">
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
-                            >
-                                Портфолио
-                            </PanelHeader>
-                            <Portfolio user={this.state.user}/>
-                        </Panel>
-                        <Panel id="masterComments">
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</PanelHeaderButton>}
-                            >
-                                Отзывы
-                            </PanelHeader>
-                            <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
-                        </Panel>
-                        <Panel id='findModel'>
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
-                            >Мастер ищет модель</PanelHeader>
-                            <FindModelMaster user={this.state.user} popout={this.openAlert}/>
-                        </Panel>
-                        <Panel id='setting'>
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
-                            >Настройки</PanelHeader>
-                            <Setting user={this.state.user} popout={this.openAlert}/>
-                        </Panel>
-                    </View>
-                    <View activePanel="masterReg" id="masterReg">
-                        <Panel id="masterReg">
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>Назад</PanelHeaderButton>}
-                            >Регистрация мастера
-                            </PanelHeader>
-                            <Invite user={this.state.user} closeReg={this.closeReg}/>
-                        </Panel>
-                    </View>
-                </Root>
-            </Epic>
-        )
+                    <Root id="lk" activeView={this.state.activeViewLk}>
+                        <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout}>
+                            <Panel id="lk">
+                                <PanelHeader>Личный кабинет</PanelHeader>
+                                <Lk
+                                    user={this.state.user}
+                                    openSetting={() => this.setState({ activePanelLk: 'setting' })}
+                                    openFavourite={() => this.setState({ activePanelLk: 'favourite' })}
+                                    openFindModel={() => this.setState({ activePanelLk: 'findModel' })}
+                                    openMasterPhoto={() => this.setState({ activePanelLk: 'masterPhoto' })}
+                                />
+                            </Panel>
+                            <Panel id='favourite'>
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
+                                >Избранное</PanelHeader>
+                                <Favourite user={this.state.user} openFavMasterOnId={this.openFavMasterOnId}/>
+                            </Panel>
+                            <Panel id="masterInfo">
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>Назад</PanelHeaderButton>}
+                                >
+                                    О мастере
+                                </PanelHeader>
+                                <MasterCard openPhoto={() => this.setState({ activePanelLk: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelLk: 'masterComments' })}/>
+                            </Panel>
+                            <Panel id="masterPhoto">
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
+                                >
+                                    Портфолио
+                                </PanelHeader>
+                                <Portfolio user={this.state.user}/>
+                            </Panel>
+                            <Panel id="masterComments">
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</PanelHeaderButton>}
+                                >
+                                    Отзывы
+                                </PanelHeader>
+                                <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
+                            </Panel>
+                            <Panel id='findModel'>
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
+                                >Мастер ищет модель</PanelHeader>
+                                <FindModelMaster user={this.state.user} popout={this.openAlert}/>
+                            </Panel>
+                            <Panel id='setting'>
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
+                                >Настройки</PanelHeader>
+                                <Setting user={this.state.user} popout={this.openAlert}/>
+                            </Panel>
+                        </View>
+                        <View activePanel="masterReg" id="masterReg">
+                            <Panel id="masterReg">
+                                <PanelHeader
+                                    theme="light"
+                                    left={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
+                                    addon={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>Назад</PanelHeaderButton>}
+                                >Регистрация мастера
+                                </PanelHeader>
+                                <Invite user={this.state.user} closeReg={this.closeReg}/>
+                            </Panel>
+                        </View>
+                    </Root>
+                </Epic>
+            )
+        }
     }
 }
 
