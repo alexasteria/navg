@@ -8,7 +8,7 @@ import {
     Textarea,
     Switch,
     FormLayoutGroup,
-    List, Button, CellButton, Input, Spinner,Snackbar, Tooltip
+    List, Button, CellButton, Input, Spinner,Snackbar, Tooltip, CardGrid, Card
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from '../func/func';
@@ -36,22 +36,32 @@ class Lk extends React.Component {
                 hairStatus: 0,
                 cosmeticStatus: 0
             },
-            hairVisible: false,
-            manicureVisible: false,
-            pedicureVisible: false,
-            eyelashesVisible: false,
-            eyebrowsVisible: false,
-            shugaringVisible: false,
-            cosmeticVisible: false
+            category: []
         };
     }
 
     componentDidMount() {
-        fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
+        fetch(BACKEND.category.getAll)//ловим обьявления по городу юзера
             .then(res => res.json())
-            .then(activeMaster => {
-                this.setState({activeMaster: activeMaster[0], description: activeMaster[0].description});
+            .then(categories => {
+                fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
+                    .then(res => res.json())
+                    .then(activeMaster => {
+                        this.setState({activeMaster: activeMaster[0], description: activeMaster[0].description, categories: categories});
+                        this.setActive(categories)
+                    });
             });
+    }
+
+    setActive(categories){
+        categories.map(category => {
+            this.setState({[category._id]: false});
+            category.subcat.map(subcat => {
+                if (this.state.activeMaster.categories.subcat.includes(subcat._id)){
+                    subcat.active = true;
+                }
+            })
+        });
     }
 
     handleChange = (event) => {
@@ -59,9 +69,22 @@ class Lk extends React.Component {
     };
 
     patchData(url = '', activeMaster = {}) {
-        //console.log(activeMaster);
         activeMaster.description = this.state.description;
-
+        activeMaster.categories = {
+            subcat: [],
+            category: []
+        };
+            this.state.categories.map(category => {
+                if (category.active === true) {
+                    activeMaster.categories.category.push({id: category._id, label: category.label})
+                }
+                category.subcat.map(subcat=> {
+                    if (subcat.active === true) {
+                        activeMaster.categories.subcat.push(subcat._id);
+                    }
+                })
+        });
+            console.log(activeMaster.categories);
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
             method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
@@ -131,7 +154,7 @@ class Lk extends React.Component {
     }
 
     counter = (index) => {
-        let countMass = this.state.activeMaster.categories[index].subcat.filter(
+        let countMass = this.state.categories[index].subcat.filter(
             function(item){
                 if (item.active === true){
                     return item.active;
@@ -147,14 +170,14 @@ class Lk extends React.Component {
         const target = event.target;
         const indexCat = target.name;
         const indexSubcat = target.id;
-        let activeMaster = this.state.activeMaster;
-        activeMaster.categories[indexCat].subcat[indexSubcat].active = !this.state.activeMaster.categories[indexCat].subcat[indexSubcat].active;
+        let categories = this.state.categories;
+        categories[indexCat].subcat[indexSubcat].active = !this.state.categories[indexCat].subcat[indexSubcat].active;
         if (this.counter(indexCat) > 0) {
-            activeMaster.categories[indexCat].active = true;
+            this.state.categories[indexCat].active = true;
         } else {
-            activeMaster.categories[indexCat].active = false;
+            this.state.categories[indexCat].active = false;
         }
-        this.setState({activeMaster: activeMaster});
+        this.setState({categories: categories})
     };
 
     render() {
@@ -187,25 +210,27 @@ class Lk extends React.Component {
                     {this.state.activeMaster.priceList.length === 0 &&
                     <Cell multiline>Вы еще не указали ни одной процедуры</Cell>
                     }
+                        <CardGrid>
                     {this.state.activeMaster.priceList.map((item, index) => (
-                        <List key={index}>
-                            <Cell
-                                key={item}
-                                multiline
-                                //onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
-                                removable
-                                onRemove={() => {
-                                    this.onRemove(index)
-                                }}>
+                            <Card size="l" mode="shadow">
                                 <Cell
-                                    description="Название процедуры">{this.state.activeMaster.priceList[index].title}</Cell>
-                                <Cell description="Краткое описание процедуры"
-                                      multiline>{this.state.activeMaster.priceList[index].body}</Cell>
-                                <Cell
-                                    description="Минимальная цена за работу">{this.state.activeMaster.priceList[index].price}</Cell>
-                            </Cell>
-                        </List>
+                                    key={item}
+                                    multiline
+                                    //onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
+                                    removable
+                                    onRemove={() => {
+                                        this.onRemove(index)
+                                    }}>
+                                    <Cell
+                                        description="Название процедуры">{this.state.activeMaster.priceList[index].title}</Cell>
+                                    <Cell description="Краткое описание процедуры"
+                                          multiline>{this.state.activeMaster.priceList[index].body}</Cell>
+                                    <Cell
+                                        description="Минимальная цена за работу">{this.state.activeMaster.priceList[index].price}</Cell>
+                                </Cell>
+                            </Card>
                     ))}
+                        </CardGrid>
                     {this.state.add &&
                     <Div>
                         <Cell description="Добавления нового элемента" multiline>
@@ -258,7 +283,7 @@ class Lk extends React.Component {
                                          bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."
                                          id={'category'}>
                             {
-                                this.state.activeMaster.categories.map((category, i) => {
+                                this.state.categories.map((category, i) => {
                                     return (
                                         <Group key={category._id}>
                                             <Cell expandable name={category._id}

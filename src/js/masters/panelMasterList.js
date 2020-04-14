@@ -90,10 +90,8 @@ class MasterList extends React.Component {
                                         <Cell expandable
                                                       photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
                                                       description={
-                                                          master.categories.map(category => {
-                                                              if(category.active === true) {
-                                                                  return category.label+" "
-                                                              }
+                                                          master.categories.category.map(category => {
+                                                              return category.label+" "
                                                           })
                                                       }
                                                       bottomContent={

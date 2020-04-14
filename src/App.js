@@ -8,7 +8,7 @@ import {
     Epic,
     SelectMimicry,
     FormLayout,
-    Group, List, Cell, Root, PanelHeaderButton, platform, IOS, Alert, Div, Spinner
+    Group, List, Cell, Root, PanelHeaderButton, platform, IOS, Alert, Div, Spinner, Avatar, Placeholder
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
@@ -33,8 +33,8 @@ import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-import bridge from "@vkontakte/vk-bridge-mock";
-//import bridge from '@vkontakte/vk-bridge';
+//import bridge from "@vkontakte/vk-bridge-mock";
+import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
 
 
@@ -78,6 +78,7 @@ class App extends React.Component {
     componentDidMount() {
         bridge.send('VKWebAppGetUserInfo', {})
             .then(data=> {
+                this.setState({vkuser: data})
                 console.log(data);
                 this.verifiedUser(data.id);
             });
@@ -242,10 +243,9 @@ class App extends React.Component {
     render () {
         if (this.state.user === '') {
             return (
-                <Div>
-                    <Cell>Информация загружается</Cell>
-                    <Spinner size="large" style={{ marginTop: 20 }} />
-                </Div>
+                    <Placeholder icon={<Spinner size="large" style={{ marginTop: 20 }} />}>
+                        Выполняется вход...
+                    </Placeholder>
             )
         } else {
             return (

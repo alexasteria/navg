@@ -67,7 +67,7 @@ class FindModelMaster extends React.Component {
         let find = {
             masterId: this.state.master._id,
             body: this.state.body,
-            city: this.state.master.city,
+            location: this.state.master.location,
             firstname: this.state.master.firstname,
             lastname: this.state.master.lastname,
             avatarLink: this.state.master.avatarLink

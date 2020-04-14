@@ -35,9 +35,9 @@ class Favourite extends React.Component {
                             .then(master => {
                                 let mastersArr = this.state.mastersArr;
                                 mastersArr.push(master);
-                                this.setState({mastersArr: mastersArr});
+                                this.setState({mastersArr: mastersArr, isLoaded: true});
                             });
-                        this.setState({isLoaded: true});
+                        //this.setState({isLoaded: true});
                     });
                 }
             });
@@ -65,7 +65,7 @@ class Favourite extends React.Component {
                 console.log(this.state.mastersArr);
                 return (
                     this.state.mastersArr.map(master => {
-                        if (master !== null) { //если мастер не удален
+                        if ((master !== null) && (master.visible === true)) { //если мастер не удален
                             return (
                                 <CardGrid key={master._id}>
                                     <Card size="l" mode="shadow">

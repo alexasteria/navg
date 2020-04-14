@@ -30,23 +30,30 @@ class Invite extends React.Component {
     }
 
     regMaster = () => {
+        let cat = {
+            subcat: [],
+            category: []
+        };
         let categories = this.state.categories;
         categories.map((category, index) => {
             let countCat = category.subcat.filter(
-                function(item){
-                    if (item.active === true){
-                        return item.active;
+                function(subcat){
+                    if (subcat.active === true){
+                        cat.subcat.push(subcat._id);
+                        return subcat.active;
                     } else {
                         return null
                     }
                 }
             );
             if (countCat.length > 0) {
+                cat.category.push({id: category._id, label: category.label});
                 category.active = true;
             } else {
                 category.active = false;
             }
         });
+
         let master = {
             firstname: this.props.user.firstname,
             lastname: this.props.user.lastname,
@@ -56,7 +63,8 @@ class Invite extends React.Component {
             avatarLink: this.props.user.avatarLink,
             sex: this.props.user.sex,
             location: this.props.user.location,
-            categories: this.state.categories,
+            //categories: this.state.categories,
+            categories: cat,
             brand: this.state.brand
         };
         this.props.closeReg(master);

@@ -10,7 +10,7 @@ import {
     Spinner,
     Separator,
     Slider,
-    Counter, FormLayout
+    Counter, FormLayout, Snackbar
 } from "@vkontakte/vkui"
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
@@ -30,7 +30,8 @@ class MastersCard extends React.Component {
             body: '',
             commentsArr: [],
             isLoad: false,
-            rating: 3
+            rating: 3,
+            snackbar: null
         };
     }
     componentDidMount() {
@@ -45,6 +46,16 @@ class MastersCard extends React.Component {
         this.setState({countComments: count, isLoad: true});
     }
     sendComment = () => {
+        if (this.state.body.length < 50) {
+            this.setState({ snackbar:
+                    <Snackbar
+                        layout="vertical"
+                        onClose={() => this.setState({ snackbar: null })}
+                    >
+                        Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.
+                    </Snackbar>
+            });
+        } else {
             let comment = {
                 user: {
                     userId: this.props.user._id,
@@ -62,7 +73,8 @@ class MastersCard extends React.Component {
                 alert(e);
                 console.log(e.message);
             }
-    }
+        }
+    };
     postData(url = '', data = {}, method) {
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -187,6 +199,7 @@ class MastersCard extends React.Component {
                 <Div>
                     {this.commentList()}
                     <Footer>{this.validate()}</Footer>
+                    {this.state.snackbar}
                 </Div>
         );
     }
