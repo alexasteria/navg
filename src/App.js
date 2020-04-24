@@ -17,6 +17,7 @@ import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
 import Icon28ServicesOutline from '@vkontakte/icons/dist/28/services_outline';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
+import Head from './js/elements/panelHeader';
 //import Sale from './js/sale/sale.js';
 import PanelMasterList from './js/masters/panelMasterList.js';
 import MasterCard from './js/masters/mastersCard.js';
@@ -377,33 +378,15 @@ class App extends React.Component {
                                 <PanelMasterList category={this.state.targetCategory} city={this.state.user.location.city} openPanelMaster={this.openPanelMaster}/>
                             </Panel>
                             <Panel id="masterInfo">
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'mastersList' })}>Назад</PanelHeaderButton>}
-                                >
-                                    О мастере
-                                </PanelHeader>
+                                <Head title={'О мастере'} goBack={() => this.setState({ activePanelMasters: 'mastersList' })}/>
                                 <MasterCard openPhoto={() => this.setState({ activePanelMasters: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelMasters: 'masterComments' })}/>
                             </Panel>
                             <Panel id="masterPhoto">
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</PanelHeaderButton>}
-                                >
-                                    Портфолио
-                                </PanelHeader>
+                                <Head title={'Портфолио'} goBack={() => this.setState({ activePanelMasters: 'masterInfo' })}/>
                                 <MasterPhoto activeMaster={this.state.activeMaster} />
                             </Panel>
                             <Panel id="masterComments">
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelMasters: 'masterInfo' })}>Назад</PanelHeaderButton>}
-                                >
-                                    Отзывы
-                                </PanelHeader>
+                                <Head title={'Отзывы'} goBack={() => this.setState({ activePanelMasters: 'masterInfo' })}/>
                                 <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
                             </Panel>
                         </View>
@@ -442,48 +425,30 @@ class App extends React.Component {
                             <FindModel openMasterOnId={this.openMasterOnId} user={this.state.user}/>
                         </Panel>
                         <Panel id="masterInfo">
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'findmodel' })}>Назад</PanelHeaderButton>}
-                            >
-                                О мастере
-                            </PanelHeader>
+                            <Head title={'О мастере'} goBack={() => this.setState({ activePanelFindModels: 'findmodel' })}/>
                             <MasterCard openPhoto={() => this.setState({ activePanelFindModels: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelFindModels: 'masterComments' })}/>
                         </Panel>
                         <Panel id="masterPhoto">
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</PanelHeaderButton>}
-                            >
-                                Портфолио
-                            </PanelHeader>
+                            <Head title={'Портфолио'} goBack={() => this.setState({ activePanelFindModels: 'masterInfo' })}/>
                             <MasterPhoto activeMaster={this.state.activeMaster} />
                         </Panel>
                         <Panel id="masterComments">
-                            <PanelHeader
-                                theme="light"
-                                left={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                addon={<PanelHeaderButton onClick={() => this.setState({ activePanelFindModels: 'masterInfo' })}>Назад</PanelHeaderButton>}
-                            >
-                                Отзывы
-                            </PanelHeader>
+                            <Head title={'Отзывы'} goBack={() => this.setState({ activePanelFindModels: 'masterInfo' })}/>
                             <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
                         </Panel>
                     </View>
-                    <View id="notifications" activePanel="notifications">
-                        <Panel id="notifications">
-                            <PanelHeader>Уведомления</PanelHeader>
-                            <Group>
-                                <Cell
-                                    expandable
-                                    onClick={() => this.setState({ activePanel: 'nothing' })}
-                                    indicator={'В разработке'}
-                                >Этот раздел</Cell>
-                            </Group>
-                        </Panel>
-                    </View>
+                    {/*<View id="notifications" activePanel="notifications">*/}
+                    {/*    <Panel id="notifications">*/}
+                    {/*        <PanelHeader>Уведомления</PanelHeader>*/}
+                    {/*        <Group>*/}
+                    {/*            <Cell*/}
+                    {/*                expandable*/}
+                    {/*                onClick={() => this.setState({ activePanel: 'nothing' })}*/}
+                    {/*                indicator={'В разработке'}*/}
+                    {/*            >Этот раздел</Cell>*/}
+                    {/*        </Group>*/}
+                    {/*    </Panel>*/}
+                    {/*</View>*/}
                     <Root id="lk" activeView={this.state.activeViewLk}>
                         <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout}>
                             <Panel id="lk">
@@ -497,68 +462,33 @@ class App extends React.Component {
                                 />
                             </Panel>
                             <Panel id='favourite'>
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
-                                >Избранное</PanelHeader>
+                                <Head title={'Избранное'} goBack={() => this.setState({ activePanelLk: 'lk' })}/>
                                 <Favourite user={this.state.user} openFavMasterOnId={this.openFavMasterOnId}/>
                             </Panel>
                             <Panel id="masterInfo">
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'favourite' })}>Назад</PanelHeaderButton>}
-                                >
-                                    О мастере
-                                </PanelHeader>
+                                <Head title={'О мастере'} goBack={() => this.setState({ activePanelLk: 'favourite' })}/>
                                 <MasterCard openPhoto={() => this.setState({ activePanelLk: 'masterPhoto' })} user={this.state.user} activeMaster={this.state.activeMaster} openComments={() => this.setState({ activePanelLk: 'masterComments' })}/>
                             </Panel>
                             <Panel id="masterPhoto">
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
-                                >
-                                    Портфолио
-                                </PanelHeader>
+                                <Head title={'Портфолио'} goBack={() => this.setState({ activePanelLk: 'masterInfo' })}/>
                                 <Portfolio user={this.state.user}/>
                             </Panel>
                             <Panel id="masterComments">
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'masterInfo' })}>Назад</PanelHeaderButton>}
-                                >
-                                    Отзывы
-                                </PanelHeader>
+                                <Head title={'Отзывы'} goBack={() => this.setState({ activePanelLk: 'masterInfo' })}/>
                                 <MasterComments user={this.state.user} activeMaster={this.state.activeMaster} />
                             </Panel>
                             <Panel id='findModel'>
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
-                                >Мастер ищет модель</PanelHeader>
+                                <Head title={'Мастер ищет модель'} goBack={() => this.setState({ activePanelLk: 'lk' })}/>
                                 <FindModelMaster user={this.state.user} popout={this.openAlert}/>
                             </Panel>
                             <Panel id='setting'>
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activePanelLk: 'lk' })}>Назад</PanelHeaderButton>}
-                                >Настройки</PanelHeader>
+                                <Head title={'Настройки'} goBack={() => this.setState({ activePanelLk: 'lk' })}/>
                                 <Setting user={this.state.user} popout={this.openAlert}/>
                             </Panel>
                         </View>
                         <View activePanel={this.state.activePanelReg} id="masterReg">
                             <Panel id='masterReg'>
-                                <PanelHeader
-                                    theme="light"
-                                    left={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
-                                    addon={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>Назад</PanelHeaderButton>}
-                                >Регистрация мастера
-                                </PanelHeader>
+                                <Head title={'Регистрация'} goBack={() => this.setState({ activeViewLk: 'lk' })}/>
                                 <Cell
                                     expandable
                                     onClick={() => this.setState({ activePanelReg: 'changeCity' })}
@@ -566,13 +496,11 @@ class App extends React.Component {
                                 <Invite user={this.state.user} closeReg={this.closeReg}/>
                             </Panel>
                             <Panel id='changeCity'>
-                                <PanelHeader left={<PanelHeaderBack onClick={() => this.setState({ activePanelReg: 'masterReg' })} />}>
-                                    Выбор города
-                                </PanelHeader>
+                                <Head title={'Выбор города'} goBack={() => this.setState({ activePanelReg: 'masterReg' })}/>
                                 <Search value={this.state.searchCity} onChange={this.changeCity} after={null}/>
                                 {this.cities.length > 0 &&
                                 <List>
-                                {this.cities.map(city => <Cell key={city.id}>{city.title}</Cell>)}
+                                {this.cities.map(city => <Cell onClick={() => this.setState({ activePanelReg: 'masterReg', baseCities: city })} key={city.id}>{city.title}</Cell>)}
                                 </List>
                             }
                             
