@@ -48,26 +48,29 @@ class MastersCard extends React.Component {
     favStatus = () => {
         if(this.state.isFavourite.status === false) {
             return (
-                        <Cell>
                             <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                                 <Icon16LikeOutline width={30} height={30} fill="red"/>
                             </Div>
-                            <Button onClick={() => this.getPhone()}>Записаться</Button>
-                        </Cell>
             )
         } else {
             return (
-                <Cell>
                     <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                         <Icon16Like width={30} height={30} fill="red"/>
                     </Div>
-                    <Button onClick={() => this.getPhone()}>Записаться</Button>
-                </Cell>
             )
         }
-    }
+    };
+    connectStatus = (title) => {
+        return (
+            <Button onClick={() => this.getPhone(title)}>Записаться</Button>
+        )
+    };
+    share = () => {
+        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866#masterid='+this.state.activeMaster._id})
+            .then(result => this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink))
+    };
     openSnackAvatar (text, avatarLink) {
-        if (this.state.snackbar) return;
+        if (this.state.snackbar) this.setState({snackbar: null});
         this.setState({ snackbar:
                 <Snackbar
                     layout="vertical"
@@ -129,19 +132,27 @@ class MastersCard extends React.Component {
 
     };
     sendMessage = () => {
-        let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться к тебе! Информация для связи: Телефон - +'+this.state.phone+', страница VK - http://vk.com/id'+this.props.user.vkUid;
+        let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться на '+this.state.sendtitle+'! Информация для связи: Телефон - +'+this.state.phone+', страница VK - http://vk.com/id'+this.props.user.vkUid;
         let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
         bridge.send("VKWebAppCallAPIMethod", {
             "method": "messages.send",
             "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.state.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
             .then(result => {
                 console.log(result);
-                this.setState({ snackbar: null })
+                this.setState({ snackbar: null });
+                let mess = {
+                    userId: this.props.user._id,
+                    userVkUid: this.props.user.vkUid,
+                    masterId: this.state.activeMaster._id,
+                    masterVkUid: this.state.activeMaster.vkUid
+                };
+                this.postData(BACKEND.message, mess, 'POST');
                 this.openSnackAvatar('Мы уведомили мастера, что вы хотите с ним связаться. Ожидайте.', this.state.activeMaster.avatarLink);
             })
             .catch(e => console.log(e))
     };
-    getPhone = () => {
+    getPhone = (title) => {
+        this.setState({sendtitle: title});
         bridge.send("VKWebAppGetPhoneNumber", {"group_id": 193179174, "key": "dBuBKe1kFcdemzB"})
             .then(result => {
                 console.log(result);
@@ -155,7 +166,7 @@ class MastersCard extends React.Component {
                     this.enterNumber()
                 }
             })
-    }
+    };
     enterNumber = (number) => {
         if (this.state.snackbar) return;
         this.setState({ snackbar:
@@ -227,7 +238,10 @@ class MastersCard extends React.Component {
                                 this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type
                             }
                             bottomContent={
-                                this.favStatus()
+                                <Cell>
+                                    {this.favStatus()}
+                                    <Button onClick={() => this.share()}>Поделиться</Button>
+                                </Cell>
                             }
                             before={<Avatar src={this.state.activeMaster.avatarLink} size={90}/>}
                             size="l"
@@ -291,7 +305,9 @@ class MastersCard extends React.Component {
                                                 {
                                                     this.state[index] &&
                                                     <Cell description="Краткое описание процедуры"
-                                                          multiline>{this.state.activeMaster.priceList[index].body}</Cell>
+                                                          multiline>{this.state.activeMaster.priceList[index].body}
+                                                    <Cell>{this.connectStatus(this.state.activeMaster.priceList[index].title)}</Cell>
+                                                    </Cell>
                                                 }
                                                 <Separator></Separator>
                                             </Card>

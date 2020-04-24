@@ -7,8 +7,8 @@ import {
     TabbarItem,
     Epic,
     SelectMimicry,
-    FormLayout,
-    Group, List, Cell, Root, PanelHeaderButton, platform, IOS, Alert, Div, Spinner, Avatar, Placeholder
+    FormLayout, PanelHeaderBack,
+    Group, List, Cell, Root, PanelHeaderButton, platform, IOS, Alert, Div, Spinner, Avatar, Placeholder,Search
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
@@ -33,10 +33,9 @@ import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-//import bridge from "@vkontakte/vk-bridge-mock";
-import bridge from '@vkontakte/vk-bridge';
+import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from '@vkontakte/vk-bridge';
 const osname = platform();
-
 
 class App extends React.Component {
     constructor (props) {
@@ -70,14 +69,39 @@ class App extends React.Component {
                 {id: '5e3753cd58b85c13bcffb8b8', label: 'Шугаринг'},
                 {id: '5e3753d558b85c13bcffb8b9', label: 'Уход за волосами'},
                 {id: '5e3753dc58b85c13bcffb8ba', label: 'Косметология'},
-            ]
+            ],
+            activePanelReg: 'masterReg',
+            baseCities: '',
+            searchCity: '',
+            cities: [{
+                "id": 621,
+                "title": "Дзержинск",
+                "important": 1
+            }, {
+                "id": 1,
+                "title": "Москва",
+                "important": 1
+            }, {
+                "id": 2,
+                "title": "Санкт-Петербург",
+                "important": 1
+            }]
+
         };
         this.onStoryChange = this.onStoryChange.bind(this);
 
     }
     componentDidMount() {
+        if (this.props.params) {
+            this.postData(BACKEND.logs.params, this.props.params);
+        }
+        if (this.props.linkParams.masterid){
+            console.log('В параметры пришел мастер');
+            this.openMasterOnLink(this.props.linkParams.masterid)
+        }
         bridge.send('VKWebAppGetUserInfo', {})
             .then(data=> {
+                console.log(data);
                 this.setState({vkuser: data})
                 console.log(data);
                 this.verifiedUser(data.id);
@@ -99,6 +123,9 @@ class App extends React.Component {
                 console.log(error); // Error: Not Found
             });
     }
+    changeCity = (e) => {
+        this.setState({ searchCity: e.target.value });
+    };
     regNewUser = () => {
         bridge.send('VKWebAppGetUserInfo', {}).then(data => {
             console.log('Данные с моста',data);
@@ -109,8 +136,8 @@ class App extends React.Component {
                 avatarLink: data.photo_200,
                 sex: data.sex,
                 location: {
-                    country: data.country,
-                    city: data.city
+                    country: data.country || 'Не определен',
+                    city: data.city || 'Не определен'
                 },
                 isMaster: false
             };
@@ -118,6 +145,10 @@ class App extends React.Component {
             this.postData(BACKEND.users, user); //регитрируем
         });
     }
+    get cities () {
+        const search = this.state.searchCity.toLowerCase();
+        return this.state.cities.filter(({title}) => title.toLowerCase().indexOf(search) > -1);
+    };
     verifiedUser = (vkUserId) => {
         //on mock
         //vkUserId = 2314852;
@@ -220,6 +251,17 @@ class App extends React.Component {
                 this.setState({ activePanelFindModels: 'masterInfo' });
             });
     };
+    openMasterOnLink = (masterId) => {
+        fetch(BACKEND.masters.onID+masterId)
+            .then(res => res.json())
+            .then(master => {
+                console.log(master);
+                this.setState({ activeMaster: master });
+                this.setState({ activeStory: 'masters' });
+                this.setState({ activeViewMasters: 'mastersList' });
+                this.setState({ activePanelMasters: 'masterInfo' });
+            });
+    };
     openFavMasterOnId = (masterId) => {
         fetch(BACKEND.masters.onID+masterId)
             .then(res => res.json())
@@ -313,7 +355,7 @@ class App extends React.Component {
                     }
                     <View id="news" activePanel="news">
                         <Panel id="news">
-                            <PanelHeader>Горячие новости</PanelHeader>
+                            <PanelHeader>Навигатор красоты</PanelHeader>
                             <News openReg={() => this.setState({ activeViewLk: 'masterReg',activeStory:'lk' })} user={this.state.user} openStory={this.openStory}/>
                         </Panel>
                     </View>
@@ -509,15 +551,32 @@ class App extends React.Component {
                                 <Setting user={this.state.user} popout={this.openAlert}/>
                             </Panel>
                         </View>
-                        <View activePanel="masterReg" id="masterReg">
-                            <Panel id="masterReg">
+                        <View activePanel={this.state.activePanelReg} id="masterReg">
+                            <Panel id='masterReg'>
                                 <PanelHeader
                                     theme="light"
                                     left={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>{osname === IOS ? <Icon28ChevronBack /> : <Icon24Back />}</PanelHeaderButton>}
                                     addon={<PanelHeaderButton onClick={() => this.setState({ activeViewLk: 'lk' })}>Назад</PanelHeaderButton>}
                                 >Регистрация мастера
                                 </PanelHeader>
+                                <Cell
+                                    expandable
+                                    onClick={() => this.setState({ activePanelReg: 'changeCity' })}
+                                    indicator={this.state.baseCities.title || 'Не выбран'}>Ваш город</Cell>
                                 <Invite user={this.state.user} closeReg={this.closeReg}/>
+                            </Panel>
+                            <Panel id='changeCity'>
+                                <PanelHeader left={<PanelHeaderBack onClick={() => this.setState({ activePanelReg: 'masterReg' })} />}>
+                                    Выбор города
+                                </PanelHeader>
+                                <Search value={this.state.searchCity} onChange={this.changeCity} after={null}/>
+                                {this.cities.length > 0 &&
+                                <List>
+                                {this.cities.map(city => <Cell key={city.id}>{city.title}</Cell>)}
+                                </List>
+                            }
+                            
+
                             </Panel>
                         </View>
                     </Root>

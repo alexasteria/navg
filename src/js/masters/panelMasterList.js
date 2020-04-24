@@ -18,6 +18,7 @@ import Icon24Favorite from '@vkontakte/icons/dist/24/favorite';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from "../func/func";
+import bridge from "@vkontakte/vk-bridge";
 
 class MasterList extends React.Component {
     constructor(props) {
@@ -48,7 +49,10 @@ class MasterList extends React.Component {
                     });
             }
         }
-
+    share = () => {
+        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866#masterid='+this.state.activeMaster._id})
+            .then(result => this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink))
+    };
     setTitle(count) {
         if (count===undefined){
             this.setState({title: 'Мы никого не нашли :( пока не нашли...'});
@@ -70,7 +74,7 @@ class MasterList extends React.Component {
                         <Placeholder
                             icon={<Icon56UsersOutline />}
                             header="Не расстраивайтесь"
-                            action={<Button size="l">Поделиться</Button>}
+                            action={<Button onClick={this.share} size="l">Поделиться</Button>}
                         >
                             В данный момент у нас нет данных о специалистах этого профиля в Вашем городе. Мы расширяем базу мастеров, и скоро - предложения появятся.
                             Поделитесь приложением с мастерами, которых Вы знаете.

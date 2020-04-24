@@ -2,6 +2,7 @@ import React from 'react';
 import {Avatar, Cell, Div, Group, Separator, Spinner, Placeholder, Button} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
+import bridge from "@vkontakte/vk-bridge";
 
 
 class FindModel extends React.Component {
@@ -32,16 +33,19 @@ class FindModel extends React.Component {
                 this.setState({isLoad: true})
             });
     }
-
+    share = () => {
+        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866'})
+            .then(result => this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink))
+    };
     findList = () => {
         if (this.state.findArr.length === 0) {
             return (
                 <Placeholder
                     icon={<Icon56UsersOutline />}
                     header="Не расстраивайтесь"
-                    action={<Button size="l">Поделиться</Button>}
+                    action={<Button onClick={this.share} size="l">Поделиться</Button>}
                 >
-                    В данный момент в городе {this.props.user.location.city.title} нет поиска моледей. Мы расширяем базу мастеров, и скоро - предложения появятся.
+                    В данный момент в городе {this.props.user.location.city.title} нет поиска моделей. Мы расширяем базу мастеров, и скоро - предложения появятся.
                     Поделитесь приложением с мастерами, которых Вы знаете.
                 </Placeholder>
             )

@@ -3,6 +3,7 @@ const BACK_LINK = 'https://mysterious-garden-57052.herokuapp.com/';
 
 export const BACKEND = {
     users: BACK_LINK+'users',
+    message: BACK_LINK+'users/message/',
     masters: {
         all: BACK_LINK+'masters/',
         onID: BACK_LINK+'masters/',
@@ -29,5 +30,8 @@ export const BACKEND = {
     },
     category: {
         getAll: BACK_LINK+'category/'
+    },
+    logs: {
+        params: BACK_LINK+'logs/params/'
     }
 };

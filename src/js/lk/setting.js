@@ -165,6 +165,23 @@ class Lk extends React.Component {
         );
         return countMass.length;
     };
+    checkBan = () => {
+        if (this.state.activeMaster.banned.status === true) {
+            return (
+                <Cell multiline>Ваш профиль сейчас не выводится в поиске, так-как обнаружены нарушения. Для возобновления доступа - исправьте их. Информация отправлена в личные сообщения.</Cell>
+            )
+        } else {
+            return (
+                <Cell
+                    asideContent={<Switch
+                        name={'visible'}
+                        onChange={this.visible}
+                        checked={this.state.activeMaster.visible}/>}>
+                    Показывать профиль в поиске
+                </Cell>
+            )
+        }
+    };
 
     checkSubcat = event => {
         const target = event.target;
@@ -198,17 +215,11 @@ class Lk extends React.Component {
                         {this.state.activeMaster.firstname + ' ' + this.state.activeMaster.lastname}
                     </Cell>
                     <Group>
-                        <Cell
-                            asideContent={<Switch
-                                name={'visible'}
-                                onChange={this.visible}
-                                checked={this.state.activeMaster.visible}/>}>
-                            Показывать профиль в поиске
-                        </Cell>
+                        {this.checkBan()}
                     </Group>
                     <Group title={'Прайс-лист'}>
                     {this.state.activeMaster.priceList.length === 0 &&
-                    <Cell multiline>Вы еще не указали ни одной процедуры</Cell>
+                    <Cell multiline>Вы еще не указали ни одной процедуры. Пока они не указаны, пользователи не смогут связаться с Вами.</Cell>
                     }
                         <CardGrid>
                     {this.state.activeMaster.priceList.map((item, index) => (
