@@ -67,6 +67,7 @@ class Invite extends React.Component {
             categories: cat,
             brand: this.state.brand
         };
+        master.location.city = this.props.targetCity;
         this.props.closeReg(master);
     };
     // permPhoto = () => {
@@ -128,6 +129,10 @@ class Invite extends React.Component {
                             {/*    description="Для загрузки фото в портфолио"*/}
                             {/*    bottom={this.state.statusPhoto === false && 'Доступ обязателен для регистрации'}*/}
                             {/*>Доступ к загрузке фотографий в альбом приложения - {this.state.statusPhoto === true ? 'Разрешен' : 'Не разрешен'}</Cell>*/}
+                            <Cell
+                                expandable
+                                onClick={this.props.changeCity}
+                                indicator={this.props.targetCity.title || 'Не выбран'}>Ваш город</Cell>
                             <Cell
                                 expandable
                                 multiline

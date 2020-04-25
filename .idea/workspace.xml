@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Панель с городами + фильтр поиска">
-      <change afterPath="$PROJECT_DIR$/src/js/elements/panelHeader.js" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="хедеры">
+      <change afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/garage/addcar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/garage/addcar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +76,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.completion" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PhpStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
@@ -315,14 +321,14 @@
       <workItem from="1587738324273" duration="1931000" />
       <workItem from="1587740267949" duration="1849000" />
       <workItem from="1587742171649" duration="1795000" />
-      <workItem from="1587743978746" duration="1702000" />
-    </task>
-    <task id="LOCAL-00009" summary="Счетчик выбранных типов услуг при регистрации">
-      <created>1580766787817</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1580766787817</updated>
+      <workItem from="1587743978746" duration="2123000" />
+      <workItem from="1587746118649" duration="1799000" />
+      <workItem from="1587747930967" duration="685000" />
+      <workItem from="1587841034632" duration="743000" />
+      <workItem from="1587846680806" duration="1255000" />
+      <workItem from="1587847946210" duration="1797000" />
+      <workItem from="1587849755015" duration="1796000" />
+      <workItem from="1587851561588" duration="1026000" />
     </task>
     <task id="LOCAL-00010" summary="Меню мастера, ЛК">
       <created>1580774196529</created>
@@ -660,7 +666,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587744241954</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="хедеры">
+      <created>1587745710736</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1587745710737</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -681,7 +694,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Дизайн карточки мастер листа" />
     <MESSAGE value="Фикс лайков" />
     <MESSAGE value="Обновлены зависимости пакетов" />
     <MESSAGE value="CSS портфолио" />
@@ -706,17 +718,22 @@
     <MESSAGE value="Фикс даты комментария" />
     <MESSAGE value="Карточки под прайслист в настройках" />
     <MESSAGE value="Панель с городами + фильтр поиска" />
-    <option name="LAST_COMMIT_MESSAGE" value="Панель с городами + фильтр поиска" />
+    <MESSAGE value="хедеры" />
+    <option name="LAST_COMMIT_MESSAGE" value="хедеры" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="207" key="#ESLint/0.0.1920.1040@0.0.1920.1040" timestamp="1581014908172" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1587744241567">
+    <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1587851460059">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1587744241567" />
+    <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1587745710418">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1587745710418" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

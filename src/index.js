@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import bridge from '@vkontakte/vk-bridge-mock';
-//import bridge from '@vkontakte/vk-bridge';
+//import bridge from '@vkontakte/vk-bridge-mock';
+import bridge from '@vkontakte/vk-bridge';
 
 bridge.send("VKWebAppInit", {})
     .then(data => console.log('Инициализировали апи вк? '+data.result));
