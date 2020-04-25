@@ -132,7 +132,12 @@ class Invite extends React.Component {
                             <Cell
                                 expandable
                                 onClick={this.props.changeCity}
-                                indicator={this.props.targetCity.title || 'Не выбран'}>Ваш город</Cell>
+                                indicator={this.props.targetCity.title || 'Не выбран'}
+                                status={this.props.targetCity.title ? 'valid' : 'error'}
+                                bottom={this.props.targetCity.title ? '' : 'Пожалуйста, укажите тип оказания услуг'}
+                            >
+                                Ваш город
+                            </Cell>
                             <Cell
                                 expandable
                                 multiline

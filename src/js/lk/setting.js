@@ -41,12 +41,16 @@ class Lk extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         fetch(BACKEND.category.getAll)//ловим обьявления по городу юзера
             .then(res => res.json())
             .then(categories => {
                 fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
                     .then(res => res.json())
                     .then(activeMaster => {
+                        if (this.props.targetCity === typeof Object) {
+                            activeMaster.location.city = this.props.targetCity;
+                        }
                         this.setState({activeMaster: activeMaster[0], description: activeMaster[0].description, categories: categories});
                         this.setActive(categories)
                     });
@@ -213,6 +217,13 @@ class Lk extends React.Component {
                         before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
                     >
                         {this.state.activeMaster.firstname + ' ' + this.state.activeMaster.lastname}
+                    </Cell>
+                    <Cell
+                        expandable
+                        onClick={this.props.changeCity}
+                        indicator={this.state.activeMaster.location.city.title}
+                    >
+                        Ваш город
                     </Cell>
                     <Group>
                         {this.checkBan()}

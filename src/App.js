@@ -499,13 +499,24 @@ class App extends React.Component {
                             </Panel>
                             <Panel id='setting'>
                                 <Head title={'Настройки'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <Setting user={this.state.user} popout={this.openAlert}/>
+                                <Setting
+                                    targetCity={this.state.targetCity}
+                                    user={this.state.user}
+                                    popout={this.openAlert}
+                                    changeCity={() => this.setState({activePanelLk: 'changeCity'})}
+                                />
+                            </Panel>
+                            <Panel id='changeCity'>
+                                <Head title={'Выбор города'}
+                                      goBack={() => this.setState({activePanelLk: 'setting'})}/>
+                                <CityList changeTargetCity={(city)=> this.setState({targetCity: city,activePanelLk: 'setting'})}/>
                             </Panel>
                         </View>
                         <View activePanel={this.state.activePanelReg} id="registration">
                             <Panel id='registration'>
                                 <Head title={'Регистрация'} goBack={() => this.setState({activeViewLk: 'lk'})}/>
-                                <Invite targetCity={this.state.targetCity} user={this.state.user}
+                                <Invite targetCity={this.state.targetCity}
+                                        user={this.state.user}
                                         closeReg={this.closeReg}
                                         changeCity={() => this.setState({activePanelReg: 'changeCity'})}/>
                             </Panel>
