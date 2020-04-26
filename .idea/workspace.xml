@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="выбор города класс">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="город в настройках">
+      <change afterPath="$PROJECT_DIR$/src/js/elements/cityListModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -61,7 +62,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js.linters.configure.manually.selectedeslint" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/js/lk" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/js/elements" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -77,16 +78,16 @@
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PhpStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
+      <recent name="D:\automaster\src\js\sale" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js\elements" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\lk" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\news" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\masters" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\func" />
-      <recent name="C:\Users\repla\Desktop\navg\src\js\idea" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
-      <recent name="D:\automaster\src\js\sale" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -325,14 +326,14 @@
       <workItem from="1587847946210" duration="1797000" />
       <workItem from="1587849755015" duration="1796000" />
       <workItem from="1587851561588" duration="1796000" />
-      <workItem from="1587853370034" duration="891000" />
-    </task>
-    <task id="LOCAL-00011" summary="Починили мастер лист">
-      <created>1580938838848</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1580938838848</updated>
+      <workItem from="1587853370034" duration="1317000" />
+      <workItem from="1587910191649" duration="1793000" />
+      <workItem from="1587912015295" duration="1816000" />
+      <workItem from="1587913895903" duration="1796000" />
+      <workItem from="1587915703112" duration="1796000" />
+      <workItem from="1587917515892" duration="2068000" />
+      <workItem from="1587924693604" duration="1806000" />
+      <workItem from="1587926513259" duration="844000" />
     </task>
     <task id="LOCAL-00012" summary="Работает поиск по категориям">
       <created>1580945764596</created>
@@ -670,7 +671,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587852793413</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="город в настройках">
+      <created>1587854273562</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1587854273563</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -691,7 +699,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Обновлены зависимости пакетов" />
     <MESSAGE value="CSS портфолио" />
     <MESSAGE value="Передали фото в бэк" />
     <MESSAGE value="Добавляются фотки локально" />
@@ -716,7 +723,8 @@
     <MESSAGE value="Панель с городами + фильтр поиска" />
     <MESSAGE value="хедеры" />
     <MESSAGE value="выбор города класс" />
-    <option name="LAST_COMMIT_MESSAGE" value="выбор города класс" />
+    <MESSAGE value="город в настройках" />
+    <option name="LAST_COMMIT_MESSAGE" value="город в настройках" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -727,10 +735,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1587852793000">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1587854273160">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1587852793000" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1587854273160" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

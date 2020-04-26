@@ -8,12 +8,28 @@ import {
     Textarea,
     Switch,
     FormLayoutGroup,
-    List, Button, CellButton, Input, Spinner,Snackbar, Tooltip, CardGrid, Card
+    List,
+    Button,
+    CellButton,
+    Input,
+    Spinner,
+    Snackbar,
+    Tooltip,
+    CardGrid,
+    Card,
+    ModalPage,
+    ModalPageHeader,
+    ANDROID,
+    PanelHeaderButton, IOS, ModalRoot, platform, withModalRootContext
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from '../func/func';
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import Icon16Done from '@vkontakte/icons/dist/16/done';
+import Icon24Done from '@vkontakte/icons/dist/24/done';
+import CityListModal from "../elements/cityListModal";
+
+const osname = platform();
 
 class Lk extends React.Component {
     constructor(props) {
@@ -57,6 +73,12 @@ class Lk extends React.Component {
             });
     }
 
+    saveChanges = () => {
+        console.log('saving');
+        this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster);
+        this.props.snackbar('Изменения сохранены');
+    };
+
     setActive(categories){
         categories.map(category => {
             this.setState({[category._id]: false});
@@ -88,7 +110,8 @@ class Lk extends React.Component {
                     }
                 })
         });
-            console.log(activeMaster.categories);
+        activeMaster.location.city = this.props.targetCity;
+        console.log(activeMaster);
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
             method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
@@ -105,27 +128,28 @@ class Lk extends React.Component {
         })
             .then(response => {
                 console.log(response.json());
-                this.openSnack("Изменения сохранены");
+                this.props.modalBack();
+                this.props.snackbar('Изменения сохранены');
                 //this.props.popout();
-                console.log(activeMaster);
+                //console.log(activeMaster);
             }); // парсит JSON ответ в Javascript объект
     }
 
-    openSnack (text) {
-        const blueBackground = {
-            backgroundColor: 'var(--accent)'
-        };
-        if (this.state.snackbar) return;
-        this.setState({ snackbar:
-                <Snackbar
-                    layout="vertical"
-                    onClose={() => this.setState({ snackbar: null })}
-                    before={<Avatar size={24} style={blueBackground}><Icon16Done fill="#fff" width={14} height={14} /></Avatar>}
-                >
-                    {text}
-                </Snackbar>
-        });
-    }
+    // openSnack (text) {
+    //     const blueBackground = {
+    //         backgroundColor: 'var(--accent)'
+    //     };
+    //     if (this.state.snackbar) return;
+    //     this.setState({ snackbar:
+    //             <Snackbar
+    //                 layout="vertical"
+    //                 onClose={() => this.setState({ snackbar: null })}
+    //                 before={<Avatar size={24} style={blueBackground}><Icon16Done fill="#fff" width={14} height={14} /></Avatar>}
+    //             >
+    //                 {text}
+    //             </Snackbar>
+    //     });
+    // }
     visible = event => {
         const target = event.target;
         const name = target.name;
@@ -203,11 +227,31 @@ class Lk extends React.Component {
 
     render() {
         if (!this.state.activeMaster._id) {
-            return (<div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+            return (
+                <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Spinner size="large" style={{marginTop: 120}}/>
-            </div>)
+            </div>
+            )
         } else {
             return (
+                <ModalRoot
+                    activeModal={this.props.activeModal}
+                    onClose={this.saveChanges}
+                >
+                    <ModalPage dynamicContentHeight
+                        id={'setting'}
+                        onClose={this.saveChanges}
+                        header={
+                            <ModalPageHeader
+                                left={osname === ANDROID &&
+                                <PanelHeaderButton onClick={this.saveChanges}>{'Сохранить'}</PanelHeaderButton>}
+                                right={<PanelHeaderButton onClick={this.saveChanges}>{osname === IOS ? 'Сохранить' :
+                                    <Icon24Done/>}</PanelHeaderButton>}
+                            >
+                                Настройки
+                            </ModalPageHeader>
+                        }
+                    >
                 <Div>
                     <Cell
                         size="l"
@@ -220,8 +264,9 @@ class Lk extends React.Component {
                     </Cell>
                     <Cell
                         expandable
-                        onClick={this.props.changeCity}
-                        indicator={this.state.activeMaster.location.city.title}
+                        onClick={() => this.props.changeModal('changeCity')}
+                        indicator={this.props.targetCity==='Не определен' ? this.state.activeMaster.location.city.title : this.props.targetCity.title}
+                        bottom={this.props.targetCity==='Не определен' ? '' : 'Не забудьте сохранить изменения нажав на кнопку внизу страницы'}
                     >
                         Ваш город
                     </Cell>
@@ -341,14 +386,30 @@ class Lk extends React.Component {
                                 })
                             }
                         </FormLayoutGroup>
-                        <Button size="xl"
-                                onClick={() => this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)}>Сохранить
-                            изменения</Button>
                     </Group>
-                    {this.state.snackbar}
                 </Div>
+                    </ModalPage>
+                    <ModalPage dynamicContentHeight
+                        id={'changeCity'}
+                        onClose={() => this.props.changeModal('setting')}
+                        header={
+                            <ModalPageHeader
+                                left={osname === ANDROID &&
+                                <PanelHeaderButton onClick={() => this.props.changeModal('setting')}>{'Назад'}</PanelHeaderButton>}
+                                right={<PanelHeaderButton onClick={() => this.props.changeModal('setting')}>{osname === IOS ? 'Назад' :
+                                    <Icon24Done/>}</PanelHeaderButton>}
+                            >
+                                Выбор города
+                            </ModalPageHeader>
+                        }
+                    >
+                        <CityListModal dynamicContentHeight
+                            changeTargetCity={(city) => this.props.changeCity(city)}
+                        />
+                    </ModalPage>
+                </ModalRoot>
             );
         }
     }
 }
-export default Lk;
+export default withModalRootContext (Lk);

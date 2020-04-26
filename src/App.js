@@ -15,13 +15,15 @@ import {
     Spinner,
     Tabbar,
     TabbarItem,
-    View
+    View, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, IOS, ANDROID, platform, Snackbar, Avatar,ModalCard
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
+import Icon24Filter from '@vkontakte/icons/dist/24/filter';
 import '@vkontakte/vkui/dist/vkui.css';
 import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
 import Icon28ServicesOutline from '@vkontakte/icons/dist/28/services_outline';
+import Icon16Done from '@vkontakte/icons/dist/16/done';
 import Head from './js/elements/panelHeader';
 //import Sale from './js/sale/sale.js';
 import PanelMasterList from './js/masters/panelMasterList.js';
@@ -39,9 +41,12 @@ import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
-//import bridge from "@vkontakte/vk-bridge-mock";
 import CityList from './js/elements/cityList'
+//import bridge from "@vkontakte/vk-bridge-mock";
 import bridge from '@vkontakte/vk-bridge';
+import CityListModal from "./js/elements/cityListModal";
+
+const osname = platform();
 
 //const osname = platform();
 
@@ -93,10 +98,15 @@ class App extends React.Component {
                 "id": 2,
                 "title": "Санкт-Петербург",
                 "important": 1
-            }]
+            }],
+            activeModal: null,
+            modalHistory: []
 
         };
         this.onStoryChange = this.onStoryChange.bind(this);
+        this.modalBack = () => {
+            this.setActiveModal(this.state.modalHistory[this.state.modalHistory.length - 2]);
+        };
 
     }
 
@@ -111,11 +121,47 @@ class App extends React.Component {
         bridge.send('VKWebAppGetUserInfo', {})
             .then(data => {
                 console.log(data);
-                this.setState({vkuser: data})
+                this.setState({vkuser: data, targetCity: data.city});
                 console.log(data);
                 this.verifiedUser(data.id);
             });
         this.loadCategories();
+    }
+
+    setActiveModal(activeModal) {
+        activeModal = activeModal || null;
+        let modalHistory = this.state.modalHistory ? [...this.state.modalHistory] : [];
+
+        if (activeModal === null) {
+            modalHistory = [];
+        } else if (modalHistory.indexOf(activeModal) !== -1) {
+            modalHistory = modalHistory.splice(0, modalHistory.indexOf(activeModal) + 1);
+        } else {
+            modalHistory.push(activeModal);
+        }
+
+        this.setState({
+            activeModal,
+            modalHistory
+        });
+    };
+
+    openSnack(text) {
+        const blueBackground = {
+            backgroundColor: 'var(--accent)'
+        };
+        if (this.state.snackbar) return;
+        this.setState({
+            snackbar:
+                <Snackbar
+                    layout="vertical"
+                    onClose={() => this.setState({snackbar: null})}
+                    before={<Avatar size={24} style={blueBackground}><Icon16Done fill="#fff" width={14}
+                                                                                 height={14}/></Avatar>}
+                >
+                    {text}
+                </Snackbar>
+        });
     }
 
     loadCategories = () => {
@@ -282,6 +328,56 @@ class App extends React.Component {
     }
 
     render() {
+        const setting = (
+            <Setting
+                snackbar={(message) => this.openSnack(message)}
+                modalBack={this.modalBack}
+                activeModal={this.state.activeModal}
+                targetCity={this.state.targetCity}
+                user={this.state.user}
+                //popout={this.openAlert}
+                changeCity={(city) => this.setState({targetCity: city}, () => this.setActiveModal('setting'))}
+                changeModal={(name) => this.setActiveModal(name)}
+            />
+        );
+        const searchFilter = (
+            <ModalRoot
+                activeModal={this.state.activeModal}
+                onClose={()=>this.setActiveModal(null)}
+            >
+                <ModalPage dynamicContentHeight
+                           id={'cityChange'}
+                           onClose={()=>this.setActiveModal(null)}
+                           header={
+                               <ModalPageHeader
+                                   left={osname === ANDROID &&
+                                   <PanelHeaderButton onClick={this.saveChanges}>{'Сохранить'}</PanelHeaderButton>}
+                                   right={<PanelHeaderButton onClick={this.saveChanges}>{osname === IOS ? 'Сохранить' :
+                                       <Icon24Done/>}</PanelHeaderButton>}
+                               >
+                                   Выберите город
+                               </ModalPageHeader>
+                           }
+                >
+                    <CityListModal changeTargetCity={(city) => this.setState({targetCity: city}, () => this.setActiveModal(null))}/>
+                </ModalPage>
+                <ModalCard
+                    id={'filter'}
+                    onClose={() => this.setActiveModal(null)}
+                    //icon={<Icon56NotificationOutline />}
+                    header="Фильтры1"
+                    actions={[{
+                        title: 'Запретить',
+                        mode: 'secondary',
+                        action: () => this.setActiveModal(null)
+                    }, {
+                        title: 'Разрешить',
+                        mode: 'primary',
+                        action: () => this.setActiveModal(null)
+                    }]}
+                />
+            </ModalRoot>
+        );
         if (this.state.user === '') {
             return (
                 <Placeholder icon={<Spinner size="large" style={{marginTop: 20}}/>}>
@@ -359,18 +455,19 @@ class App extends React.Component {
                                   user={this.state.user} openStory={this.openStory}/>
                         </Panel>
                     </View>
-                    <Root id="masters" activeView={this.state.activeViewMasters}>
+                    <Root id="masters" activeView={this.state.activeViewMasters} modal={searchFilter}>
                         <View id="mastersList" activePanel={this.state.activePanelMasters}>
                             <Panel id="mastersList">
                                 <FormLayout>
                                     <Cell
                                         //expandable
-                                        onClick={() => this.setState({activePanel: 'nothing'})}
-                                        indicator={this.state.user.location.city.title}>Ваш город</Cell>
+                                        onClick={()=>this.setActiveModal('cityChange')}
+                                        indicator={this.state.targetCity.title==='' ? 'Не выбрано' : this.state.targetCity.title}>Ваш город</Cell>
                                     <SelectMimicry
                                         top="Выберите категорию"
                                         placeholder="Показаны мастера всех категорий"
                                         onClick={() => this.setState({activeViewMasters: 'masterCat'})}
+                                        //after={<Icon24Filter />}
                                     >{this.state.targetCategory.label}</SelectMimicry>
                                 </FormLayout>
                                 <PanelHeader>Мастера</PanelHeader>
@@ -464,16 +561,18 @@ class App extends React.Component {
                     {/*    </Panel>*/}
                     {/*</View>*/}
                     <Root id="lk" activeView={this.state.activeViewLk}>
-                        <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout}>
+                        <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout} modal={setting}>
                             <Panel id="lk">
                                 <PanelHeader>Личный кабинет</PanelHeader>
                                 <Lk
                                     user={this.state.user}
-                                    openSetting={() => this.setState({activePanelLk: 'setting'})}
+                                    openSetting={() => this.setActiveModal('setting')}
+                                    //openSetting={() => this.setState({activePanelLk: 'setting'})}
                                     openFavourite={() => this.setState({activePanelLk: 'favourite'})}
                                     openFindModel={() => this.setState({activePanelLk: 'findModel'})}
                                     openMasterPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
                                 />
+                                {this.state.snackbar}
                             </Panel>
                             <Panel id='favourite'>
                                 <Head title={'Избранное'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
@@ -509,7 +608,10 @@ class App extends React.Component {
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}
                                       goBack={() => this.setState({activePanelLk: 'setting'})}/>
-                                <CityList changeTargetCity={(city)=> this.setState({targetCity: city,activePanelLk: 'setting'})}/>
+                                <CityList changeTargetCity={(city) => this.setState({
+                                    targetCity: city,
+                                    activePanelLk: 'setting'
+                                })}/>
                             </Panel>
                         </View>
                         <View activePanel={this.state.activePanelReg} id="registration">
@@ -523,7 +625,10 @@ class App extends React.Component {
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}
                                       goBack={() => this.setState({activePanelReg: 'registration'})}/>
-                                <CityList changeTargetCity={(city)=> this.setState({targetCity: city,activePanelReg: 'registration'})}/>
+                                <CityList changeTargetCity={(city) => this.setState({
+                                    targetCity: city,
+                                    activePanelReg: 'registration'
+                                })}/>
                             </Panel>
                         </View>
                     </Root>

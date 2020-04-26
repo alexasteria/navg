@@ -3,7 +3,7 @@ import {Cell, List, Search, withModalRootContext } from '@vkontakte/vkui';
 import bridge from '@vkontakte/vk-bridge';
 import PropTypes from 'prop-types'
 
-class CityList extends React.Component {
+class CityListModal extends React.Component {
 
     constructor(props) {
         super(props);
@@ -67,4 +67,4 @@ class CityList extends React.Component {
         );
     }
 }
-export default withModalRootContext (CityList)
+export default withModalRootContext (CityListModal)
