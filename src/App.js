@@ -298,6 +298,7 @@ class App extends React.Component {
         this.setState({targetCity: city}, () => this.setActiveModal(null));
         let user = this.state.user;
         user.location.city = city;
+        this.setState({user:user});
         patchData(BACKEND.users+'/'+user._id, user).then(result=>console.log(result));
     }
 
@@ -429,10 +430,10 @@ class App extends React.Component {
                                         onClick={()=>this.setActiveModal('cityChange')}
                                         indicator={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city.title}>Ваш город</Cell>
                                     <SelectMimicry
-                                        disabled={this.state.targetCity === 'Не выбрано' ? true : false}
+                                        //disabled={this.state.user.location.city === 'Не определено' ? true : false}
                                         top="Выберите категорию"
                                         placeholder="Показаны мастера всех категорий"
-                                        onClick={this.state.targetCity === 'Не выбрано' ?
+                                        onClick={this.state.user.location.city === 'Не определено' ?
                                             () => this.openSnack('Сначала выберите город') :
                                             () => this.setState({activeViewMasters: 'masterCat'})
                                         }
@@ -556,11 +557,11 @@ class App extends React.Component {
                                             openComments={() => this.setState({activePanelLk: 'masterComments'})}/>
                             </Panel>
                             <Panel id="masterPhoto">
-                                <Head title={'Портфолио'} goBack={() => this.setState({activePanelLk: 'masterInfo'})}/>
+                                <Head title={'Портфолио'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
                                 <Portfolio user={this.state.user}/>
                             </Panel>
                             <Panel id="masterComments">
-                                <Head title={'Отзывы'} goBack={() => this.setState({activePanelLk: 'masterInfo'})}/>
+                                <Head title={'Отзывы'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
                                 <MasterComments user={this.state.user} activeMaster={this.state.activeMaster}/>
                             </Panel>
                             <Panel id='findModel'>

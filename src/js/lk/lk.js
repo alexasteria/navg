@@ -7,6 +7,7 @@ import Icon24Users from '@vkontakte/icons/dist/24/users';
 import Icon24Like from '@vkontakte/icons/dist/24/like';
 import Icon24Recent from '@vkontakte/icons/dist/24/recent';
 import Icon24Search from '@vkontakte/icons/dist/24/search';
+import Icon24Write from '@vkontakte/icons/dist/24/write';
 import bridge from "@vkontakte/vk-bridge";
 
 class Lk extends React.Component {
@@ -51,6 +52,10 @@ class Lk extends React.Component {
                 <Cell
                     size="l"
                     description={this.state.user.status}
+                    bottomContent={this.state.user.isMaster && <CellButton
+                        onClick={this.props.openSetting}
+                        before={<Icon24Write />}
+                    >Редактировать</CellButton>}
                     before={<Avatar src={this.state.user.avatarLink} size={80}/>}
                 >
                     {this.state.user.firstname+' '+this.state.user.lastname}
@@ -103,11 +108,6 @@ class Lk extends React.Component {
                             before={<Icon24Search />}
                             onClick={this.props.openFindModel}
                         >Поиск модели</Cell>
-                    <Cell
-                        expandable
-                        onClick={this.props.openSetting}
-                        before={<Icon24Settings />}
-                    >Настройки</Cell>
                     </List>
                     </Group>
                 }
