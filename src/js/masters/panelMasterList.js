@@ -31,24 +31,38 @@ class MasterList extends React.Component {
     }
 
     componentDidMount() {
+        this.loadList()
+        }
+
+        componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log(prevProps, this.props);
+            if (prevProps.city !== this.props.city || prevProps.category !== this.props.category) {
+                this.loadList()
+            }
+        }
+
+    loadList = () => {
             if(this.props.category === '') {
-                fetch(BACKEND.masters.all)
+                console.log(BACKEND.masters.category+'all/'+this.props.city.id);
+                fetch(BACKEND.masters.category+'all/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
-                            this.setState({mastersList: mastersList});
-                            this.setTitle(this.state.mastersList.length);
-                            this.setState({isLoad: true});
+                        console.log(mastersList);
+                        this.setState({mastersList: mastersList, isLoad: true});
+                        this.setTitle(this.state.mastersList.length);
                     });
             } else {
                 console.log(BACKEND.masters.category+this.props.category.id+'/'+this.props.city.id);
                 fetch(BACKEND.masters.category+this.props.category.id+'/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
-                            this.setState({mastersList: mastersList, isLoad: true});
-                            this.setTitle(this.state.mastersList.length);
+                        console.log(mastersList);
+                        this.setState({mastersList: mastersList, isLoad: true});
+                        this.setTitle(this.state.mastersList.length);
                     });
             }
         }
+
     share = () => {
         bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866#masterid='+this.state.activeMaster._id})
             .then(result => this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink))
@@ -69,7 +83,16 @@ class MasterList extends React.Component {
                     </div>
                 )
             } else {
-                if (this.state.mastersList.length === 0) {
+                if (this.props.city==='Не выбрано') {
+                    return (
+                        <Placeholder
+                            icon={<Icon56UsersOutline />}
+                            header="Где вы?"
+                        >
+                            Нам не удалось определить Ваш город, укажите его вручную.
+                        </Placeholder>
+                    )
+                } else if (this.state.mastersList.length === 0) {
                     return (
                         <Placeholder
                             icon={<Icon56UsersOutline />}

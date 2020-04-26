@@ -45,10 +45,9 @@ import CityList from './js/elements/cityList'
 //import bridge from "@vkontakte/vk-bridge-mock";
 import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
+import {postData, patchData} from './js/elements/functions'
 
 const osname = platform();
-
-//const osname = platform();
 
 class App extends React.Component {
     constructor(props) {
@@ -72,8 +71,8 @@ class App extends React.Component {
                 Shugaring: 'Шугаринг',
                 Hairstyles: 'Уход за волосами'
             },
-            mastersList: null,
             user: '',
+            mastersList: null,
             categories: [
                 {id: '5e37537a58b85c13bcffb8b4', label: 'Маникюр'},
                 {id: '5e3753be58b85c13bcffb8b5', label: 'Педикюр'},
@@ -86,21 +85,9 @@ class App extends React.Component {
             activePanelReg: 'registration',
             baseCities: '',
             searchCity: '',
-            cities: [{
-                "id": 621,
-                "title": "Дзержинск",
-                "important": 1
-            }, {
-                "id": 1,
-                "title": "Москва",
-                "important": 1
-            }, {
-                "id": 2,
-                "title": "Санкт-Петербург",
-                "important": 1
-            }],
             activeModal: null,
-            modalHistory: []
+            modalHistory: [],
+            targetCity: 'Не выбрано'
 
         };
         this.onStoryChange = this.onStoryChange.bind(this);
@@ -111,21 +98,39 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        bridge.send('VKWebAppGetUserInfo', {})
+            .then(data => {
+                //console.log(data);
+                //this.setState({vkuser: data});
+                this.verifiedUser(data);
+            });
         if (this.props.params) {
-            this.postData(BACKEND.logs.params, this.props.params);
+            postData(BACKEND.logs.params, this.props.params);
         }
         if (this.props.linkParams.masterid) {
             console.log('В параметры пришел мастер');
             this.openMasterOnLink(this.props.linkParams.masterid)
         }
-        bridge.send('VKWebAppGetUserInfo', {})
-            .then(data => {
-                console.log(data);
-                this.setState({vkuser: data, targetCity: data.city});
-                console.log(data);
-                this.verifiedUser(data.id);
-            });
         this.loadCategories();
+    }
+
+    verifiedUser = (vkUser) => {
+        return fetch(BACKEND.users + '/vkuid/' + vkUser.id)
+            .then(res => res.json())
+            .then(usersArr => {
+                if (usersArr.length === 0) {
+                    console.log('Пользователь зашел впервые');
+                    this.regNewUser();
+                } else {
+                    console.log('Пользователь уже заходил в приложение');
+                    let targetCity = usersArr[0].city !== typeof Object ? 'Не выбрано' : usersArr[0].city;
+                    this.setState({user: usersArr[0], targetCity: targetCity});
+                    console.log('Таргет город '+this.state.targetCity)
+                }
+            })
+            .catch(error => {
+                console.log(error); // Error: Not Found
+            });
     }
 
     setActiveModal(activeModal) {
@@ -179,9 +184,9 @@ class App extends React.Component {
                 console.log(error); // Error: Not Found
             });
     }
-    changeCity = (e) => {
-        this.setState({searchCity: e.target.value});
-    };
+    // changeCity = (e) => {
+    //     this.setState({searchCity: e.target.value});
+    // };
     regNewUser = () => {
         bridge.send('VKWebAppGetUserInfo', {}).then(data => {
             console.log('Данные с моста', data);
@@ -198,47 +203,9 @@ class App extends React.Component {
                 isMaster: false
             };
             this.setState({user: user});
-            this.postData(BACKEND.users, user); //регитрируем
+            postData(BACKEND.users, user); //регитрируем
         });
     };
-
-    verifiedUser = (vkUserId) => {
-        fetch(BACKEND.users + '/vkuid/' + vkUserId)
-            .then(res => res.json())
-            .then(usersArr => {
-                if (usersArr.length === 0) {
-                    console.log('Пользователь зашел впервые');
-                    this.regNewUser();
-                } else {
-                    console.log('Пользователь уже заходил в приложение');
-                    this.setState({user: usersArr[0], targetCity: usersArr[0].location.city});
-                }
-            })
-            .catch(error => {
-                console.log(error); // Error: Not Found
-                console.log('Сервер лежит :(')
-            });
-    };
-
-    postData(url = '', data = {}) {
-        // Значения по умолчанию обозначены знаком *
-        fetch(url, {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, cors, *same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrer: 'no-referrer', // no-referrer, *client
-            body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
-        })
-            .then(data)
-            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
-
-    }
 
     openAlert = (title, body, action) => {
         this.setState({
@@ -262,7 +229,7 @@ class App extends React.Component {
     // };
     closeReg = (master) => {
         console.log(master);
-        this.postData(BACKEND.masters.all, master);
+        postData(BACKEND.masters.all, master);
         let user = this.state.user;
         user.isMaster = true;
         this.setState({user: user, activeViewLk: 'lk'});
@@ -327,6 +294,13 @@ class App extends React.Component {
         this.setState({activeStory: e.currentTarget.dataset.story})
     }
 
+    changeTargetCity(city){
+        this.setState({targetCity: city}, () => this.setActiveModal(null));
+        let user = this.state.user;
+        user.location.city = city;
+        patchData(BACKEND.users+'/'+user._id, user).then(result=>console.log(result));
+    }
+
     render() {
         const setting = (
             <Setting
@@ -348,18 +322,9 @@ class App extends React.Component {
                 <ModalPage dynamicContentHeight
                            id={'cityChange'}
                            onClose={()=>this.setActiveModal(null)}
-                           header={
-                               <ModalPageHeader
-                                   left={osname === ANDROID &&
-                                   <PanelHeaderButton onClick={this.saveChanges}>{'Сохранить'}</PanelHeaderButton>}
-                                   right={<PanelHeaderButton onClick={this.saveChanges}>{osname === IOS ? 'Сохранить' :
-                                       <Icon24Done/>}</PanelHeaderButton>}
-                               >
-                                   Выберите город
-                               </ModalPageHeader>
-                           }
+                           header={<ModalPageHeader>Выберите город</ModalPageHeader>}
                 >
-                    <CityListModal changeTargetCity={(city) => this.setState({targetCity: city}, () => this.setActiveModal(null))}/>
+                    <CityListModal changeTargetCity={(city)=>this.changeTargetCity(city)}/>
                 </ModalPage>
                 <ModalCard
                     id={'filter'}
@@ -460,20 +425,26 @@ class App extends React.Component {
                             <Panel id="mastersList">
                                 <FormLayout>
                                     <Cell
-                                        //expandable
+                                        expandable
                                         onClick={()=>this.setActiveModal('cityChange')}
-                                        indicator={this.state.targetCity.title==='' ? 'Не выбрано' : this.state.targetCity.title}>Ваш город</Cell>
+                                        indicator={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city.title}>Ваш город</Cell>
                                     <SelectMimicry
+                                        disabled={this.state.targetCity === 'Не выбрано' ? true : false}
                                         top="Выберите категорию"
                                         placeholder="Показаны мастера всех категорий"
-                                        onClick={() => this.setState({activeViewMasters: 'masterCat'})}
+                                        onClick={this.state.targetCity === 'Не выбрано' ?
+                                            () => this.openSnack('Сначала выберите город') :
+                                            () => this.setState({activeViewMasters: 'masterCat'})
+                                        }
                                         //after={<Icon24Filter />}
                                     >{this.state.targetCategory.label}</SelectMimicry>
                                 </FormLayout>
                                 <PanelHeader>Мастера</PanelHeader>
                                 <PanelMasterList category={this.state.targetCategory}
-                                                 city={this.state.user.location.city}
+                                                 //city={this.state.targetCity === 'Не выбрано' ? this.state.targetCity : this.user.location.city}
+                                                 city={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city}
                                                  openPanelMaster={this.openPanelMaster}/>
+                                {this.state.snackbar}
                             </Panel>
                             <Panel id="masterInfo">
                                 <Head title={'О мастере'}
