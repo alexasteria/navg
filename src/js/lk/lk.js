@@ -61,12 +61,12 @@ class Lk extends React.Component {
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
                     <Group title="Основное" separator={'hide'}>
-                        <Cell
-                            //expandable
-                            onClick={() => this.setState({ activePanel: 'nothing' })}
-                            user={this.state.user}
-                            indicator={this.state.user.location.city.title}
-                        >Ваш город</Cell>
+                        {/*<Cell*/}
+                        {/*    //expandable*/}
+                        {/*    onClick={() => this.setState({ activePanel: 'nothing' })}*/}
+                        {/*    user={this.state.user}*/}
+                        {/*    indicator={this.state.user.location.city.title}*/}
+                        {/*>Ваш город</Cell>*/}
                         <Separator style={{ margin: '12px 0' }} />
                         <List>
                             <Cell

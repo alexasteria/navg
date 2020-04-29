@@ -1,4 +1,6 @@
 import {BACKEND} from "../func/func";
+import {Snackbar} from "@vkontakte/vkui";
+import React from "react";
 
 function postData(url = '', data = {}) {
     // Значения по умолчанию обозначены знаком *
@@ -37,4 +39,7 @@ function patchData(url = '', data = {}) {
             console.log(response.json());
         }); // парсит JSON ответ в Javascript объект
 }
+
+
+
 export {postData, patchData}

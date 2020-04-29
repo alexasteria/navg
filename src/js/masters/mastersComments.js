@@ -46,16 +46,9 @@ class MastersCard extends React.Component {
         this.setState({countComments: count, isLoad: true});
     }
     sendComment = () => {
-        if (this.state.body.length < 50) {
-            this.setState({ snackbar:
-                    <Snackbar
-                        layout="vertical"
-                        onClose={() => this.setState({ snackbar: null })}
-                    >
-                        Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.
-                    </Snackbar>
-            });
-        } else {
+        try {
+            if (this.state.body.length < 20) throw 'Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.';
+            if (this.state.body.length > 200) throw 'Длина отзыва ограничена 200 символами.';
             let comment = {
                 user: {
                     userId: this.props.user._id,
@@ -66,14 +59,42 @@ class MastersCard extends React.Component {
                 rating: Number(this.state.rating),
                 body: this.state.body
             };
-            try {
-                this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
-                this.setState({isCommended: true});
-            } catch (e) {
-                alert(e);
-                console.log(e.message);
-            }
+            this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
+            this.setState({isCommended: true});
+        } catch (e) {
+            console.log(e)
+            this.setState({ snackbar:
+                    <Snackbar
+                        layout="vertical"
+                        onClose={() => this.setState({ snackbar: null })}
+                    >
+                        {e}
+                    </Snackbar>
+            });
         }
+        // if (this.state.body.length < 50) {
+        //     this.setState({ snackbar:
+        //             <Snackbar
+        //                 layout="vertical"
+        //                 onClose={() => this.setState({ snackbar: null })}
+        //             >
+        //                 Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.
+        //             </Snackbar>
+        //     });
+        // } else {
+        //     let comment = {
+        //         user: {
+        //             userId: this.props.user._id,
+        //             firstname: this.props.user.firstname,
+        //             lastname: this.props.user.lastname,
+        //             avatarLink: this.props.user.avatarLink
+        //         },
+        //         rating: Number(this.state.rating),
+        //         body: this.state.body
+        //     };
+        //         this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
+        //         this.setState({isCommended: true});
+        // }
     };
     postData(url = '', data = {}, method) {
         // Значения по умолчанию обозначены знаком *
@@ -179,8 +200,8 @@ class MastersCard extends React.Component {
                     <Textarea
                         name={'body'}
                         value={this.state.body}
-                        status={this.state.body.length > 50 ? 'valid' : 'error'}
-                        bottom={this.state.body.length > 50 ? '' : 'Опишите подробнее. Символов: '+this.state.body.replace(/ /g, "").length+' из 50' }
+                        status={this.state.body.length > 20 ? 'valid' : 'error'}
+                        bottom={this.state.body.length > 20 ? '' : 'Опишите подробнее. Символов: '+this.state.body.replace(/ /g, "").length+' из 50' }
                         top={"Добавление отзыва"}
                         placeholder="Опишите, что вам понравилось или не понравилось в работе мастера"
                         onChange={this.handleChange}
