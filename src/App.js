@@ -42,8 +42,8 @@ import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
-import bridge from "@vkontakte/vk-bridge-mock";
-//import bridge from '@vkontakte/vk-bridge';
+//import bridge from "@vkontakte/vk-bridge-mock";
+import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
 
@@ -308,10 +308,10 @@ class App extends React.Component {
                 snackbar={(message) => this.openSnack(message)}
                 modalBack={this.modalBack}
                 activeModal={this.state.activeModal}
-                targetCity={this.state.targetCity}
+                //targetCity={this.state.targetCity}
                 user={this.state.user}
                 //popout={this.openAlert}
-                changeCity={(city) => this.setState({targetCity: city}, () => this.setActiveModal('setting'))}
+                //changeCity={(city) => this.setState({targetCity: city}, () => this.setActiveModal('setting'))}
                 changeModal={(name) => this.setActiveModal(name)}
             />
         );
@@ -592,7 +592,10 @@ class App extends React.Component {
                                 <Invite targetCity={this.state.targetCity}
                                         user={this.state.user}
                                         closeReg={this.closeReg}
-                                        changeCity={() => this.setState({activePanelReg: 'changeCity'})}/>
+                                        changeCity={() => this.setState({activePanelReg: 'changeCity'})}
+                                        snackbar={(message) => this.openSnack(message)}
+                                />
+                                {this.state.snackbar}
                             </Panel>
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}

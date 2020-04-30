@@ -39,10 +39,6 @@ class Lk extends React.Component {
             tooltip: true,
             popout: null,
             vkuid: '',
-            activeMaster: {
-                priceList: [],
-                showProfile: false
-            },
             count: {
                 manicureStatus: 0,
                 pedicureStatus: 0,
@@ -52,7 +48,9 @@ class Lk extends React.Component {
                 hairStatus: 0,
                 cosmeticStatus: 0
             },
-            category: []
+            category: [],
+            isLoad: false,
+            isMaster: false
         };
     }
 
@@ -61,16 +59,32 @@ class Lk extends React.Component {
         fetch(BACKEND.category.getAll)//ловим обьявления по городу юзера
             .then(res => res.json())
             .then(categories => {
+                this.setState({categories: categories});
                 fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
                     .then(res => res.json())
                     .then(activeMaster => {
-                        if (this.props.targetCity === typeof Object) {
-                            activeMaster.location.city = this.props.targetCity;
+                        console.log(activeMaster);
+                        if (activeMaster.length !== 0) {
+                            this.setState({
+                                activeMaster: activeMaster[0],
+                                description: activeMaster[0].description,
+                                isMaster: true,
+                                isLoad: true
+                            }, () =>this.setActive());
+                        } else {
+                            this.setState({isLoad: true})
                         }
-                        this.setState({activeMaster: activeMaster[0], description: activeMaster[0].description, categories: categories});
-                        this.setActive(categories)
                     });
             });
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.targetCity !== this.props.targetCity){
+            console.log('город был изменен');
+            let activeMaster = this.state.activeMaster;
+            activeMaster.location.city = this.props.targetCity
+            this.setState({activeMaster: activeMaster})
+        }
     }
 
     saveChanges = () => {
@@ -79,8 +93,8 @@ class Lk extends React.Component {
         this.props.snackbar('Изменения сохранены');
     };
 
-    setActive(categories){
-        categories.map(category => {
+    setActive(){
+        this.state.categories.map(category => {
             this.setState({[category._id]: false});
             category.subcat.map(subcat => {
                 if (this.state.activeMaster.categories.subcat.includes(subcat._id)){
@@ -110,7 +124,7 @@ class Lk extends React.Component {
                     }
                 })
         });
-        activeMaster.location.city = this.props.targetCity;
+        //activeMaster.location.city = this.props.targetCity;
         console.log(activeMaster);
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -177,7 +191,7 @@ class Lk extends React.Component {
         });
         this.setState({activeMaster: activeMaster});
         this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
-        //console.log(this.state.activeMaster);
+        console.log('Active master ',this.state.activeMaster);
         this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)
     }
 
@@ -225,13 +239,22 @@ class Lk extends React.Component {
         this.setState({categories: categories})
     };
 
+    changeCity = (city) => {
+        let master = this.state.activeModal;
+        master.location.city = city;
+        this.setState({activeMaster: master});
+        this.props.changeModal('setting');
+    };
+
     render() {
-        if (!this.state.activeMaster._id) {
+        if (this.state.isLoad === false) {
             return (
                 <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                <Spinner size="large" style={{marginTop: 120}}/>
-            </div>
+                    <Spinner size="large" style={{marginTop: 120}}/>
+                </div>
             )
+        } else if (this.isMaster === false) {
+            return null
         } else {
             return (
                 <ModalRoot
@@ -265,8 +288,7 @@ class Lk extends React.Component {
                     <Cell
                         expandable
                         onClick={() => this.props.changeModal('changeCity')}
-                        indicator={this.props.targetCity==='Не определен' ? this.state.activeMaster.location.city.title : this.props.targetCity.title}
-                        bottom={this.props.targetCity==='Не определен' ? '' : 'Не забудьте сохранить изменения нажав на кнопку внизу страницы'}
+                        indicator={this.state.activeMaster.location.city === typeof String ? 'Не выбрано' : this.state.activeMaster.location.city.title}
                     >
                         Ваш город
                     </Cell>
@@ -404,7 +426,7 @@ class Lk extends React.Component {
                         }
                     >
                         <CityListModal dynamicContentHeight
-                            changeTargetCity={(city) => this.props.changeCity(city)}
+                            changeTargetCity={(city) => this.changeCity(city)}
                         />
                     </ModalPage>
                 </ModalRoot>

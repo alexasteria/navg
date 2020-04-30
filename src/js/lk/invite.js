@@ -11,7 +11,9 @@ class Invite extends React.Component {
             activeMaster: {},
             categories: [],
             statusPhoto: false,
-            statusMessage: false
+            statusMessage: false,
+            checkLicense: false,
+            description: ''
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -30,45 +32,58 @@ class Invite extends React.Component {
     }
 
     regMaster = () => {
-        let cat = {
-            subcat: [],
-            category: []
-        };
-        let categories = this.state.categories;
-        categories.map((category, index) => {
-            let countCat = category.subcat.filter(
-                function(subcat){
-                    if (subcat.active === true){
-                        cat.subcat.push(subcat._id);
-                        return subcat.active;
-                    } else {
-                        return null
+        console.log('click');
+        try {
+            if (this.props.targetCity=== 'Не выбрано') throw 'Город не выбран. Вас не смогут найти.';
+            if (this.state.checkLicense === false) throw 'Примите условия пользовательского соглашения, если желаете зарегистрироваться.';
+            if (this.state.statusMessage === false) throw 'Предоставьте доступ на получение сообщений, чтобы мы уведомили вас о заказе.';
+            if (this.state.description.length < 50) throw 'Блок "О себе" должен содержать более 50-ти символов.';
+            if (!this.state.type) throw 'Укажите тип исполнителя работ: Частное лицо или Организация.';
+            let cat = {
+                subcat: [],
+                category: []
+            };
+            let categories = this.state.categories;
+            categories.map((category, index) => {
+                let countCat = category.subcat.filter(
+                    function(subcat){
+                        if (subcat.active === true){
+                            cat.subcat.push(subcat._id);
+                            return subcat.active;
+                        } else {
+                            return null
+                        }
                     }
+                );
+                if (countCat.length > 0) {
+                    cat.category.push({id: category._id, label: category.label});
+                    category.active = true;
+                } else {
+                    category.active = false;
                 }
-            );
-            if (countCat.length > 0) {
-                cat.category.push({id: category._id, label: category.label});
-                category.active = true;
-            } else {
-                category.active = false;
-            }
-        });
-
-        let master = {
-            firstname: this.props.user.firstname,
-            lastname: this.props.user.lastname,
-            description: this.state.description,
-            vkUid: this.props.user.vkUid,
-            type: this.state.type,
-            avatarLink: this.props.user.avatarLink,
-            sex: this.props.user.sex,
-            location: this.props.user.location,
-            //categories: this.state.categories,
-            categories: cat,
-            brand: this.state.brand
-        };
-        master.location.city = this.props.targetCity;
-        this.props.closeReg(master);
+            });
+            let master = {
+                firstname: this.props.user.firstname,
+                lastname: this.props.user.lastname,
+                description: this.state.description,
+                vkUid: this.props.user.vkUid,
+                type: this.state.type,
+                avatarLink: this.props.user.avatarLink,
+                sex: this.props.user.sex,
+                location: {
+                    country: this.props.user.location.country,
+                    city: this.props.targetCity
+                },
+                //categories: this.state.categories,
+                categories: cat,
+                brand: this.state.brand
+            };
+            master.location.city = this.props.targetCity;
+            this.props.closeReg(master);
+        } catch (error) {
+            console.log(error);
+            this.props.snackbar(error)
+        }
     };
     // permPhoto = () => {
     //     bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
@@ -134,7 +149,7 @@ class Invite extends React.Component {
                                 onClick={this.props.changeCity}
                                 indicator={this.props.targetCity.title || 'Не выбран'}
                                 status={this.props.targetCity.title ? 'valid' : 'error'}
-                                bottom={this.props.targetCity.title ? '' : 'Пожалуйста, укажите тип оказания услуг'}
+                                bottom={this.props.targetCity.title ? '' : 'Пожалуйста, укажите город в котором вы работаете'}
                             >
                                 Ваш город
                             </Cell>
@@ -211,9 +226,7 @@ class Invite extends React.Component {
                             }
                             <Checkbox onChange={() => this.setState({checkLicense: !this.state.checkLicense})}>Согласен
                                 c <Link>условиями использования приложения</Link></Checkbox>
-                            {this.state.checkLicense && this.state.statusMessage && this.state.description && this.state.type &&
                             <Button size="xl" onClick={this.regMaster}>Зарегистрироваться как мастер</Button>
-                            }
                         </FormLayout>
                     </Group>
         );
