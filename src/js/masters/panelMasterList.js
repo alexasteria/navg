@@ -75,9 +75,15 @@ class MasterList extends React.Component {
             return this.state.mastersList
         } else {
             return this.state.mastersList.filter(master=> {
-                if (master.categories.subcat) {
-                   return master.categories.subcat.includes(this.state.filter[0])
-                } else return false
+                let i = 0;
+                this.state.filter.forEach(filter=>{
+                    if(master.categories.subcat){
+                        if(master.categories.subcat.includes(filter)) i++
+                    }else{
+                        return false
+                    }
+                });
+                if (i>0) return true
             })
         }
     }
