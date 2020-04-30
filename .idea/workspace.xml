@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Города мастера и из поиска не перебивают друг друга">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Кнопки фильтра субкатегорий без функции">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -351,14 +351,7 @@
       <workItem from="1588263185316" duration="2178000" />
       <workItem from="1588265379787" duration="1795000" />
       <workItem from="1588267187747" duration="1795000" />
-      <workItem from="1588268995462" duration="412000" />
-    </task>
-    <task id="LOCAL-00017" summary="Убраны логи в консоль">
-      <created>1581139113560</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1581139113560</updated>
+      <workItem from="1588268995462" duration="781000" />
     </task>
     <task id="LOCAL-00018" summary="Бэк добавлен на хироку">
       <created>1581144130555</created>
@@ -696,7 +689,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588258094501</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="Кнопки фильтра субкатегорий без функции">
+      <created>1588269437255</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1588269437256</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -717,7 +717,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="bugfix" />
     <MESSAGE value="Все работает. Коммит перед редактированием инвайта" />
     <MESSAGE value="Рендер категории, показ/скрытие, без счетчика" />
     <MESSAGE value="Вывел список категорий из БД" />
@@ -742,7 +741,8 @@
     <MESSAGE value="косяки пофикшены" />
     <MESSAGE value="ограничение длины коммента" />
     <MESSAGE value="Города мастера и из поиска не перебивают друг друга" />
-    <option name="LAST_COMMIT_MESSAGE" value="Города мастера и из поиска не перебивают друг друга" />
+    <MESSAGE value="Кнопки фильтра субкатегорий без функции" />
+    <option name="LAST_COMMIT_MESSAGE" value="Кнопки фильтра субкатегорий без функции" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -753,10 +753,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1588258094067">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1588269436864">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1588258094067" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1588269436864" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

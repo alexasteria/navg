@@ -8,13 +8,10 @@ import {
     Textarea,
     Switch,
     FormLayoutGroup,
-    List,
     Button,
     CellButton,
     Input,
     Spinner,
-    Snackbar,
-    Tooltip,
     CardGrid,
     Card,
     ModalPage,
@@ -25,7 +22,6 @@ import {
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from '../func/func';
 import Icon24Add from '@vkontakte/icons/dist/24/add';
-import Icon16Done from '@vkontakte/icons/dist/16/done';
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import CityListModal from "../elements/cityListModal";
 
@@ -240,7 +236,7 @@ class Lk extends React.Component {
     };
 
     changeCity = (city) => {
-        let master = this.state.activeModal;
+        let master = this.state.activeMaster;
         master.location.city = city;
         this.setState({activeMaster: master});
         this.props.changeModal('setting');
