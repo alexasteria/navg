@@ -15,7 +15,7 @@ import {
     Spinner,
     Tabbar,
     TabbarItem,
-    View, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, IOS, ANDROID, platform, Snackbar, Avatar,ModalCard
+    View, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, IOS, ANDROID, platform, Snackbar, Avatar,ModalCard,HorizontalScroll,Button,Counter
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
@@ -42,12 +42,13 @@ import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
-//import bridge from "@vkontakte/vk-bridge-mock";
-import bridge from '@vkontakte/vk-bridge';
+import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
 
 const osname = platform();
+
 
 class App extends React.Component {
     constructor(props) {
@@ -173,12 +174,12 @@ class App extends React.Component {
         fetch(BACKEND.category.getAll)
             .then(res => res.json())
             .then(categories => {
-                let catArr = categories.map(category => {
-                    return {id: category._id, label: category.label}
-                });
-                catArr.unshift({id: 'all', label: 'Мастера всех категорий'});
-                console.log(catArr);
-                this.setState({categories: catArr})
+                // let catArr = categories.map(category => {
+                //     return {id: category._id, label: category.label}
+                // });
+                categories.unshift({_id: 'all', label: 'Мастера всех категорий'});
+                console.log(categories);
+                this.setState({categories: categories})
             })
             .catch(error => {
                 console.log(error); // Error: Not Found
@@ -424,11 +425,11 @@ class App extends React.Component {
                     <Root id="masters" activeView={this.state.activeViewMasters} modal={searchFilter}>
                         <View id="mastersList" activePanel={this.state.activePanelMasters}>
                             <Panel id="mastersList">
-                                <FormLayout>
                                     <Cell
+                                        style={{fontSize: 12, padding: 0}}
                                         expandable
                                         onClick={()=>this.setActiveModal('cityChange')}
-                                        indicator={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city.title}>Ваш город</Cell>
+                                        indicator={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city.title}><span style={{fontSize: 12}}>Ваш город</span></Cell>
                                     <SelectMimicry
                                         //disabled={this.state.user.location.city === 'Не определено' ? true : false}
                                         top="Выберите категорию"
@@ -439,12 +440,12 @@ class App extends React.Component {
                                         }
                                         //after={<Icon24Filter />}
                                     >{this.state.targetCategory.label}</SelectMimicry>
-                                </FormLayout>
                                 <PanelHeader>Мастера</PanelHeader>
-                                <PanelMasterList category={this.state.targetCategory}
-                                                 //city={this.state.targetCity === 'Не выбрано' ? this.state.targetCity : this.user.location.city}
-                                                 city={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city}
-                                                 openPanelMaster={this.openPanelMaster}/>
+                                <PanelMasterList
+                                    category={this.state.targetCategory}
+                                    city={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city}
+                                    openPanelMaster={this.openPanelMaster}
+                                />
                                 {this.state.snackbar}
                             </Panel>
                             <Panel id="masterInfo">
@@ -475,7 +476,7 @@ class App extends React.Component {
                                                 //console.log(category);
                                                 return (
                                                     <Cell
-                                                        key={category.id}
+                                                        key={category._id}
                                                         onClick={() => this.setState({
                                                             targetCategory: category,
                                                             activeViewMasters: 'mastersList'

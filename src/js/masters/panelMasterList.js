@@ -11,7 +11,7 @@ import {
     Header,
     CardGrid,
     Card,
-    Placeholder, Counter
+    Placeholder, Counter, HorizontalScroll
 } from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 import Icon24Favorite from '@vkontakte/icons/dist/24/favorite';
@@ -19,6 +19,14 @@ import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from "../func/func";
 import bridge from "@vkontakte/vk-bridge";
+
+const subcatStyle = {
+    flexShrink: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    fontSize: 10
+};
 
 class MasterList extends React.Component {
     constructor(props) {
@@ -41,6 +49,15 @@ class MasterList extends React.Component {
             }
         }
 
+    checkSubcat(e) {
+        console.log(e.currentTarget.id);
+        let buttonSubcat = document.getElementById(e.currentTarget.id);
+        if(buttonSubcat.style.backgroundColor==='lavender'){
+            buttonSubcat.style.backgroundColor='#fff'
+        } else {
+            buttonSubcat.style.backgroundColor='lavender'
+        }
+    }
     loadList = () => {
             if(this.props.category === '') {
                 console.log(BACKEND.masters.category+'all/'+this.props.city.id);
@@ -52,8 +69,8 @@ class MasterList extends React.Component {
                         this.setTitle(this.state.mastersList.length);
                     });
             } else {
-                console.log(BACKEND.masters.category+this.props.category.id+'/'+this.props.city.id);
-                fetch(BACKEND.masters.category+this.props.category.id+'/'+this.props.city.id)
+                console.log(BACKEND.masters.category+this.props.category._id+'/'+this.props.city.id);
+                fetch(BACKEND.masters.category+this.props.category._id+'/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
                         console.log(mastersList);
@@ -62,7 +79,15 @@ class MasterList extends React.Component {
                     });
             }
         }
-
+    countSubcat = (id) => {
+        let count = 0;
+        this.state.mastersList.map((master,count)=>{
+            if (master.categories.subcat){
+                if(master.categories.subcat.includes(id)) count++
+            }
+        });
+        return count;
+    };
     share = () => {
         bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866#masterid='+this.state.activeMaster._id})
             .then(result => this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink))
@@ -79,7 +104,7 @@ class MasterList extends React.Component {
             if(this.state.isLoad === false) {
                 return (
                     <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                    <Spinner size="large" style={{ marginTop: 20 }} />
+                        <Spinner size="large" style={{ marginTop: 20 }} />
                     </div>
                 )
             } else {
@@ -158,11 +183,34 @@ class MasterList extends React.Component {
             return (<Spinner size="large" style={{ marginTop: 20 }} />)
         } else {
             return (
-                <Div>
+                <React.Fragment>
+                    <HorizontalScroll>
+                        <div style={{display: 'flex'}}>
+                            {
+                                this.props.category &&
+                                this.props.category._id !== 'all' ?
+                                    this.props.category.subcat.map(subcat=>{
+                                        return (
+                                            <div style={{subcatStyle}} key={subcat._id}>
+                                                <Button
+                                                    after={<Counter size='s'>{this.countSubcat(subcat._id)}</Counter>}
+                                                    id={subcat._id}
+                                                    onClick={this.checkSubcat}
+                                                    style={{margin: '4px 4px 0px 0px'}}
+                                                    mode="outline"
+                                                >
+                                                    {subcat.label}
+                                                </Button>
+                                            </div>
+                                        )
+                                    }) : null
+                            }
+                        </div>
+                    </HorizontalScroll>
                     <Group separator="hide" header={<Header mode="secondary">{this.state.title}</Header>}>
                         {this.renderMaster()}
                         </Group>
-                </Div>
+                </React.Fragment>
             )
         }
     }
