@@ -34,7 +34,8 @@ class MasterList extends React.Component {
         this.state = {
             mastersList: null,
             title: '',
-            isLoad: false
+            isLoad: false,
+            filter: []
         };
     }
 
@@ -43,19 +44,41 @@ class MasterList extends React.Component {
         }
 
         componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(prevProps, this.props);
             if (prevProps.city !== this.props.city || prevProps.category !== this.props.category) {
+                console.log(prevProps, this.props);
                 this.loadList()
             }
         }
 
-    checkSubcat(e) {
-        console.log(e.currentTarget.id);
+    checkSubcat = (e) => {
         let buttonSubcat = document.getElementById(e.currentTarget.id);
         if(buttonSubcat.style.backgroundColor==='lavender'){
-            buttonSubcat.style.backgroundColor='#fff'
+            buttonSubcat.style.backgroundColor='#fff';
+            let index = this.state.filter.indexOf(e.currentTarget.id);
+            let filter = this.state.filter;
+            if (index > -1) {
+                filter.splice(index, 1);
+            } else filter.splice(0, index);
+            console.log('filter: ', filter);
+            this.setState({filter: filter});
         } else {
-            buttonSubcat.style.backgroundColor='lavender'
+            buttonSubcat.style.backgroundColor='lavender';
+            let filter = this.state.filter;
+            filter.push(e.currentTarget.id);
+            console.log('filter: ', filter);
+            this.setState({filter: filter});
+
+        }
+    };
+    filter() {
+        if(this.state.filter.length === 0) {
+            return this.state.mastersList
+        } else {
+            return this.state.mastersList.filter(master=> {
+                if (master.categories.subcat) {
+                   return master.categories.subcat.includes(this.state.filter[0])
+                } else return false
+            })
         }
     }
     loadList = () => {
@@ -85,7 +108,7 @@ class MasterList extends React.Component {
             //console.log(master.categories.subcat, id);
             if (master.categories.subcat){
                 if(master.categories.subcat.includes(id)) {
-                    console.log('совпало');
+                    //console.log('совпало');
                     count++
                 }
             }
@@ -121,7 +144,7 @@ class MasterList extends React.Component {
                             Нам не удалось определить Ваш город, укажите его вручную.
                         </Placeholder>
                     )
-                } else if (this.state.mastersList.length === 0) {
+                } else if (this.filter().length === 0) {
                     return (
                         <Placeholder
                             icon={<Icon56UsersOutline />}
@@ -133,7 +156,7 @@ class MasterList extends React.Component {
                         </Placeholder>
                     );
                 } else {
-                    return this.state.mastersList.map(master => {
+                    return this.filter().map(master => {
                         let ratingArr = master.comments.map(comment =>{
                             return Number(comment.rating)
                         });
