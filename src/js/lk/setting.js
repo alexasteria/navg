@@ -105,6 +105,10 @@ class Lk extends React.Component {
     };
 
     patchData(url = '', activeMaster = {}) {
+        this.state.categories.map(category=>{
+            let count = category.subcat.filter(subcat => subcat.active === true).length;
+            category.active = count > 0;
+        });
         activeMaster.description = this.state.description;
         activeMaster.categories = {
             subcat: [],
@@ -227,12 +231,12 @@ class Lk extends React.Component {
         const indexSubcat = target.id;
         let categories = this.state.categories;
         categories[indexCat].subcat[indexSubcat].active = !this.state.categories[indexCat].subcat[indexSubcat].active;
-        if (this.counter(indexCat) > 0) {
-            this.state.categories[indexCat].active = true;
-        } else {
-            this.state.categories[indexCat].active = false;
-        }
-        this.setState({categories: categories})
+        // if (this.counter(indexCat) > 0) {
+        //     this.state.categories[indexCat].active = true;
+        // } else {
+        //     this.state.categories[indexCat].active = false;
+        // }
+        this.setState({categories: categories},()=>console.log(this.state))
     };
 
     changeCity = (city) => {
