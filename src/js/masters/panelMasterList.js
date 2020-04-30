@@ -81,12 +81,16 @@ class MasterList extends React.Component {
         }
     countSubcat = (id) => {
         let count = 0;
-        this.state.mastersList.map((master,count)=>{
+        this.state.mastersList.map((master)=>{
+            //console.log(master.categories.subcat, id);
             if (master.categories.subcat){
-                if(master.categories.subcat.includes(id)) count++
+                if(master.categories.subcat.includes(id)) {
+                    console.log('совпало');
+                    count++
+                }
             }
         });
-        return count;
+        return count
     };
     share = () => {
         bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866#masterid='+this.state.activeMaster._id})
