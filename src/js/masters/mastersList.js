@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Button, Card, CardGrid, Cell, Div, Placeholder, Spinner} from "@vkontakte/vkui";
+import {Avatar, Button, Card, CardGrid, Cell, Div, Placeholder} from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 import bridge from "@vkontakte/vk-bridge";
 

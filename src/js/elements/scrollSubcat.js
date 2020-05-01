@@ -19,27 +19,31 @@ export default function ScrollSubcat(props){
         alignItems: 'center',
         fontSize: 10
     };
-    return(
-        <HorizontalScroll>
-            <div style={{display: 'flex'}}>
-                {
-                    props.targetCategory.subcat.map(subcat=>{
-                        return (
-                            <div style={{subcatStyle}} key={subcat._id}>
-                                <Button
-                                    after={<Counter size='s'>{countSubcat(subcat._id, props)}</Counter>}
-                                    id={subcat._id}
-                                    onClick={props.checkSubcat}
-                                    style={{margin: '4px 4px 0px 0px'}}
-                                    mode="outline"
-                                >
-                                    {subcat.label}
-                                </Button>
-                            </div>
-                        )
-                    })
-                }
-            </div>
-        </HorizontalScroll>
-    )
+    if(props.targetCategory._id!=='all'){
+        return(
+            <HorizontalScroll>
+                <div style={{display: 'flex'}}>
+                    {
+                        props.targetCategory.subcat.map(subcat=>{
+                            return (
+                                <div style={{subcatStyle}} key={subcat._id}>
+                                    <Button
+                                        after={<Counter size='s'>{countSubcat(subcat._id, props)}</Counter>}
+                                        id={subcat._id}
+                                        onClick={props.checkSubcat}
+                                        style={{margin: '4px 4px 0px 0px'}}
+                                        mode="outline"
+                                    >
+                                        {subcat.label}
+                                    </Button>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            </HorizontalScroll>
+        )
+    } else {
+        return null
+    }
 }
