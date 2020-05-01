@@ -1,5 +1,5 @@
 import React from 'react';
-import {Cell, List, Search, withModalRootContext } from '@vkontakte/vkui';
+import {Cell, List, Search, Spinner, withModalRootContext} from '@vkontakte/vkui';
 import bridge from '@vkontakte/vk-bridge';
 import PropTypes from 'prop-types'
 
@@ -9,7 +9,7 @@ class CityList extends React.Component {
         super(props);
         this.state = {
             search: '',
-            cities: [{id:1, title: 'City'}]
+            isLoad: false
         };
         this.onChange = this.onChange.bind(this);
 
@@ -36,7 +36,7 @@ class CityList extends React.Component {
         })
             .then(result => {
                 console.log(result.response);
-                this.setState({cities: result.response.items}, () => this.props.updateModalHeight())
+                this.setState({cities: result.response.items, isLoad: true}, () => this.props.updateModalHeight())
             })
             .catch(e => console.log(e))
     }
@@ -47,24 +47,28 @@ class CityList extends React.Component {
     }
 
     render() {
-        return (
-            <React.Fragment>
-                <Search value={this.state.search} onChange={this.onChange} after={null}/>
-                {this.state.cities.length > 0 &&
-                <List>
-                    {this.state.cities.map(city =>
-                        <Cell
-                            description={city.region || ''}
-                            onClick={()=>this.props.changeTargetCity(city)}
-                            key={city.id}
-                        >
-                            {city.title}
-                        </Cell>
-                    )}
-                </List>
-                }
-            </React.Fragment>
-        );
+        if(this.state.isLoad === false) {
+            return (<Spinner size="large" style={{ marginTop: 20 }} />)
+        } else {
+            return (
+                <React.Fragment>
+                    <Search value={this.state.search} onChange={this.onChange} after={null}/>
+                    {this.state.cities.length > 0 &&
+                    <List>
+                        {this.state.cities.map(city =>
+                            <Cell
+                                description={city.region || ''}
+                                onClick={()=>this.props.changeCity(city)}
+                                key={city.id}
+                            >
+                                {city.title}
+                            </Cell>
+                        )}
+                    </List>
+                    }
+                </React.Fragment>
+            );
+        }
     }
 }
 export default withModalRootContext (CityList)

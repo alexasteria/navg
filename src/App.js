@@ -42,10 +42,13 @@ import FindModelMaster from "./js/lk/findModelMaster";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
-import bridge from "@vkontakte/vk-bridge-mock";
-//import bridge from '@vkontakte/vk-bridge';
+import Modal from './js/elements/modalPage'
+//import bridge from "@vkontakte/vk-bridge-mock";
+import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
+import HeadCity from "./js/elements/headCity";
+import Masters from './js/masters/masters';
 
 const osname = platform();
 
@@ -296,10 +299,9 @@ class App extends React.Component {
     }
 
     changeTargetCity(city){
-        this.setState({targetCity: city}, () => this.setActiveModal(null));
         let user = this.state.user;
         user.location.city = city;
-        this.setState({user:user});
+        this.setState({targetCity: city, user:user}, () => this.setActiveModal(null));
         patchData(BACKEND.users+'/'+user._id, user).then(result=>console.log(result));
     }
 
@@ -309,10 +311,7 @@ class App extends React.Component {
                 snackbar={(message) => this.openSnack(message)}
                 modalBack={this.modalBack}
                 activeModal={this.state.activeModal}
-                //targetCity={this.state.targetCity}
                 user={this.state.user}
-                //popout={this.openAlert}
-                //changeCity={(city) => this.setState({targetCity: city}, () => this.setActiveModal('setting'))}
                 changeModal={(name) => this.setActiveModal(name)}
             />
         );
@@ -422,30 +421,49 @@ class App extends React.Component {
                                   user={this.state.user} openStory={this.openStory}/>
                         </Panel>
                     </View>
-                    <Root id="masters" activeView={this.state.activeViewMasters} modal={searchFilter}>
+                    <Root
+                        id="masters"
+                        activeView={this.state.activeViewMasters}
+                        modal={
+                            <Modal
+                                header={'Выбор города'}
+                                activeModal={this.state.activeModal}
+                                pageId={'cityList'}
+                                onClose={()=>this.setActiveModal(null)}
+                                content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
+                            />
+                        }
+                    >
                         <View id="mastersList" activePanel={this.state.activePanelMasters}>
                             <Panel id="mastersList">
-                                    <Cell
-                                        style={{fontSize: 12, padding: 0}}
-                                        expandable
-                                        onClick={()=>this.setActiveModal('cityChange')}
-                                        indicator={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city.title}><span style={{fontSize: 12}}>Ваш город</span></Cell>
-                                    <SelectMimicry
-                                        //disabled={this.state.user.location.city === 'Не определено' ? true : false}
-                                        top="Выберите категорию"
-                                        placeholder="Показаны мастера всех категорий"
-                                        onClick={this.state.user.location.city === 'Не определено' ?
-                                            () => this.openSnack('Сначала выберите город') :
-                                            () => this.setState({activeViewMasters: 'masterCat'})
-                                        }
-                                        //after={<Icon24Filter />}
-                                    >{this.state.targetCategory.label}</SelectMimicry>
-                                <PanelHeader>Мастера</PanelHeader>
-                                <PanelMasterList
-                                    category={this.state.targetCategory}
-                                    city={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city}
+                                <Masters
+                                    user={this.state.user}
+                                    changeCity={() => this.setActiveModal('cityList')}
+                                    openSnack={(title)=>this.openSnack(title)}
+                                    changeCategory={()=>this.setState({activeViewMasters: 'masterCat'},()=>console.log('ok'))}
+                                    targetCategory={this.state.targetCategory}
                                     openPanelMaster={this.openPanelMaster}
                                 />
+                                {/*<HeadCity*/}
+                                {/*    userCity={this.state.user.location.city}*/}
+                                {/*    changeCity={()=>this.props.changeCity()}*/}
+                                {/*/>*/}
+                                {/*    <SelectMimicry*/}
+                                {/*        //disabled={this.state.user.location.city === 'Не определено' ? true : false}*/}
+                                {/*        top="Выберите категорию"*/}
+                                {/*        placeholder="Показаны мастера всех категорий"*/}
+                                {/*        onClick={this.state.user.location.city === 'Не определено' ?*/}
+                                {/*            () => this.openSnack('Сначала выберите город') :*/}
+                                {/*            () => this.setState({activeViewMasters: 'masterCat'})*/}
+                                {/*        }*/}
+                                {/*        //after={<Icon24Filter />}*/}
+                                {/*    >{this.state.targetCategory.label}</SelectMimicry>*/}
+                                {/*<PanelHeader>Мастера</PanelHeader>*/}
+                                {/*<PanelMasterList*/}
+                                {/*    category={this.state.targetCategory}*/}
+                                {/*    city={this.state.user.location.city === 'Не определено' ? this.state.targetCity : this.state.user.location.city}*/}
+                                {/*    openPanelMaster={this.openPanelMaster}*/}
+                                {/*/>*/}
                                 {this.state.snackbar}
                             </Panel>
                             <Panel id="masterInfo">
@@ -494,15 +512,26 @@ class App extends React.Component {
                             </Panel>
                         </View>
                     </Root>
-                    {/*<View id="idea" activePanel="idea">*/}
-                    {/*    <Panel id="idea">*/}
-                    {/*        <Idea />*/}
-                    {/*    </Panel>*/}
-                    {/*</View>*/}
-                    <View id="findmodel" activePanel={this.state.activePanelFindModels}>
+                    <View
+                        id="findmodel"
+                        activePanel={this.state.activePanelFindModels}
+                        modal={
+                            <Modal
+                                header={'Выбор города'}
+                                activeModal={this.state.activeModal}
+                                pageId={'cityList'}
+                                onClose={()=>this.setActiveModal(null)}
+                                content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
+                            />
+                        }
+                    >
                         <Panel id="findmodel">
                             <PanelHeader>Мастер ищет модель</PanelHeader>
-                            <FindModel openMasterOnId={this.openMasterOnId} user={this.state.user}/>
+                            <FindModel
+                                openMasterOnId={this.openMasterOnId}
+                                user={this.state.user}
+                                changeCity={() => this.setActiveModal('cityList')}
+                            />
                         </Panel>
                         <Panel id="masterInfo">
                             <Head title={'О мастере'}
@@ -521,18 +550,7 @@ class App extends React.Component {
                             <MasterComments user={this.state.user} activeMaster={this.state.activeMaster}/>
                         </Panel>
                     </View>
-                    {/*<View id="notifications" activePanel="notifications">*/}
-                    {/*    <Panel id="notifications">*/}
-                    {/*        <PanelHeader>Уведомления</PanelHeader>*/}
-                    {/*        <Group>*/}
-                    {/*            <Cell*/}
-                    {/*                expandable*/}
-                    {/*                onClick={() => this.setState({ activePanel: 'nothing' })}*/}
-                    {/*                indicator={'В разработке'}*/}
-                    {/*            >Этот раздел</Cell>*/}
-                    {/*        </Group>*/}
-                    {/*    </Panel>*/}
-                    {/*</View>*/}
+
                     <Root id="lk" activeView={this.state.activeViewLk}>
                         <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout} modal={setting}>
                             <Panel id="lk">

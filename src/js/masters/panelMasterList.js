@@ -67,7 +67,6 @@ class MasterList extends React.Component {
             filter.push(e.currentTarget.id);
             console.log('filter: ', filter);
             this.setState({filter: filter});
-
         }
     };
     filter() {

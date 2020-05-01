@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Управление фильтром субкатегорий. Берется первый элемент фильтра.">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Фильтры субкатегорий работают корректно">
+      <change afterPath="$PROJECT_DIR$/src/js/elements/headCity.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/elements/modalPage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/masters/mastersList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -354,14 +364,17 @@
       <workItem from="1588270806784" duration="1842000" />
       <workItem from="1588273227822" duration="1796000" />
       <workItem from="1588275034835" duration="1796000" />
-      <workItem from="1588276842348" duration="1481000" />
-    </task>
-    <task id="LOCAL-00022" summary="Переход в мастера из избранного">
-      <created>1581211889449</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1581211889449</updated>
+      <workItem from="1588276842348" duration="2143000" />
+      <workItem from="1588281387048" duration="1795000" />
+      <workItem from="1588283192518" duration="1799000" />
+      <workItem from="1588285001155" duration="433000" />
+      <workItem from="1588348757744" duration="1802000" />
+      <workItem from="1588350578019" duration="1794000" />
+      <workItem from="1588352383447" duration="1795000" />
+      <workItem from="1588354190142" duration="1796000" />
+      <workItem from="1588355998086" duration="1796000" />
+      <workItem from="1588357826354" duration="1795000" />
+      <workItem from="1588359633451" duration="1249000" />
     </task>
     <task id="LOCAL-00023" summary="Добавлены ссылки на приветственную страницу">
       <created>1581590540172</created>
@@ -699,7 +712,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588277444118</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="Фильтры субкатегорий работают корректно">
+      <created>1588278359159</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1588278359159</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -720,7 +740,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Фикс панелей" />
     <MESSAGE value="Подтягиваются категории в поиск из БД" />
     <MESSAGE value="Причесан дизайн" />
     <MESSAGE value="Тест" />
@@ -745,7 +764,8 @@
     <MESSAGE value="Исправлен баг в каунтере субкатегорий" />
     <MESSAGE value="Исправлен баг с настройкой категорий мастера" />
     <MESSAGE value="Управление фильтром субкатегорий. Берется первый элемент фильтра." />
-    <option name="LAST_COMMIT_MESSAGE" value="Управление фильтром субкатегорий. Берется первый элемент фильтра." />
+    <MESSAGE value="Фильтры субкатегорий работают корректно" />
+    <option name="LAST_COMMIT_MESSAGE" value="Фильтры субкатегорий работают корректно" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -756,10 +776,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1588277443701">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1588278358867">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1588277443701" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1588278358867" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -816,5 +836,21 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="993" y="244" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587741094345" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/App.js</url>
+          <line>514</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/App.js</url>
+          <line>553</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

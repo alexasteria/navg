@@ -19,7 +19,6 @@ class FindModelMaster extends React.Component {
         this.state = {
             master: '',
             body: '',
-            loadFind: '',
             isLoaded: false
         };
     }
@@ -72,26 +71,12 @@ class FindModelMaster extends React.Component {
             lastname: this.state.master.lastname,
             avatarLink: this.state.master.avatarLink
         };
-        console.log(BACKEND.findModel.new+this.state.loadFind._id);
+        console.log(this.state.loadFind);
         if (this.state.loadFind._id) {
+            let f =this.state.loadFind;
+            f.body = this.state.body;
+            this.setState({loadFind: f});
             this.patchData(BACKEND.findModel.new+this.state.loadFind._id, find);
-            let activeFind =
-                <Group>
-                    <Cell>Ваш активный поиск</Cell>
-                    <Separator style={{ margin: '12px 0' }} />
-                    <Cell expandable
-                          photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                          description={'desf'}
-                          before={<Avatar src={this.state.master.avatarLink} size={50}/>}
-                          size="l"
-                    >{this.state.master.firstname} {this.state.master.lastname}
-                    </Cell>
-                    <Cell multiline>
-                        {find.body}
-                    </Cell>
-                </Group>
-            ;
-            this.setState({activeFind: activeFind});
         } else {
             this.postData(BACKEND.findModel.new, find);
         }
@@ -110,10 +95,11 @@ class FindModelMaster extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
-            .then(response => {
-                console.log(response.json());
+            .then(response=>response.json()) // парсит JSON ответ в Javascript объект
+            .then(result=>{
+                console.log(result);
                 this.props.popout();
-            }); // парсит JSON ответ в Javascript объект
+            })
     }
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
@@ -130,8 +116,8 @@ class FindModelMaster extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
-            .then(data)
-            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+            .then(response=>response.json()) // парсит JSON ответ в Javascript объект
+            .then(result=>console.log(result),(result)=>this.setState({loadFind: result}))
 
     }
     render(){
@@ -145,12 +131,27 @@ class FindModelMaster extends React.Component {
                         <Textarea
                             name={'body'}
                             bottom={this.state.body ? '' : 'Пожалуйста, напишите пару слов о себе'}
-                            top="О себе"
                             value={this.state.body}
                             onChange={this.handleChange}/>
                     </FormLayoutGroup>
                     <Button size="xl" onClick={this.save}>Сохранить</Button>
-                    {this.state.activeFind}
+                    {
+                        this.state.loadFind &&
+                        <Group>
+                            <Cell>Ваш активный поиск</Cell>
+                            <Separator style={{ margin: '12px 0' }} />
+                            <Cell expandable
+                                  photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
+                                  description={'Так будет выглядеть запрос в ленте'}
+                                  before={<Avatar src={this.state.master.avatarLink} size={50}/>}
+                                  size="l"
+                            >{this.state.master.firstname} {this.state.master.lastname}
+                            </Cell>
+                            <Cell multiline>
+                                {this.state.loadFind.body}
+                            </Cell>
+                        </Group>
+                    }
                 </FormLayout>
             );
         }
