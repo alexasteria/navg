@@ -4,6 +4,7 @@ import {BACKEND} from '../func/func.js';
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 //import bridge from '@vkontakte/vk-bridge-mock';
 import bridge from '@vkontakte/vk-bridge';
+import Spin from '../elements/spinner'
 import fetchJsonp from "fetch-jsonp";
 
 class MastersCard extends React.Component {
@@ -162,7 +163,7 @@ class MastersCard extends React.Component {
     render(){
         if(this.state.isLoad===false){
             return (
-                <Spinner size="large" style={{ marginTop: 20 }} />
+                <Spin/>
             )
         } else {
             return (

@@ -16,23 +16,45 @@ class News extends React.Component {
         super(props);
 
         this.state = {
-            feed: [1,2,3,4,5,6,7,8,9]
+            feed: [1,2,3,4,5,6,7,8,9],
+            inGroup: true
         };
     }
+
+    componentDidMount() {
+        bridge.send("VKWebAppJoinGroup", {
+            group_id: 193179174
+        }).then(result=>this.setState({inGroup: result}));
+    }
+
     addFav = () => {
         bridge.send("VKWebAppJoinGroup", {
             group_id: 193179174
-        });
+        }).then(result=>this.setState({inGroup: result}));
     };
     feedList = () => {
-        return(
-            <Placeholder
-                icon={<Avatar src="https://sun1-28.userapi.com/O4KZM7zfdhZ-zHP-LtRj_xrYiNSRdraBcCQe6Q/PLqKmK-NWTY.jpg?ava=1" size={70}/>}
-                header="Привет!"
-                action={<Button onClick={this.addFav} size="l">Вступить в группу</Button>}
-            >
-            Сейчас мы расширяем базу мастеров в разных городах России. Вскоре, список станет более обширным. Вступайте в нашу группу Вконтакте, чтобы не пропустить важные обновления!
-            </Placeholder>
+        if(this.state.inGroup){
+            return(
+                <Placeholder
+                    icon={<Avatar src="https://sun1-28.userapi.com/O4KZM7zfdhZ-zHP-LtRj_xrYiNSRdraBcCQe6Q/PLqKmK-NWTY.jpg?ava=1" size={70}/>}
+                    header="Привет!"
+                >
+                    Сейчас мы расширяем базу мастеров в разных городах России. Вскоре, список станет более обширным.
+                </Placeholder>
+            )
+        } else {
+            return(
+                <Placeholder
+                    icon={<Avatar src="https://sun1-28.userapi.com/O4KZM7zfdhZ-zHP-LtRj_xrYiNSRdraBcCQe6Q/PLqKmK-NWTY.jpg?ava=1" size={70}/>}
+                    header="Привет!"
+                    action={<Button onClick={this.addFav} size="l">Вступить в группу</Button>}
+                >
+                    Сейчас мы расширяем базу мастеров в разных городах России. Вскоре, список станет более обширным. Вступайте в нашу группу Вконтакте, чтобы не пропустить важные обновления!
+                </Placeholder>
+            )
+        }
+
+
             // this.state.feed.map(feed=>{
             //     return (
             //         <CardGrid>
@@ -42,7 +64,6 @@ class News extends React.Component {
             //         </CardGrid>
             //     )
             // })
-        )
     };
     render(){
         return (

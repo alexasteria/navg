@@ -8,9 +8,10 @@ import {
     Textarea,
     Separator,
     Avatar,
-    Spinner
+    Spinner, CardGrid, Card
 } from "@vkontakte/vkui";
 import {BACKEND} from "../func/func";
+import Spin from '../elements/spinner'
 
 
 class FindModelMaster extends React.Component {
@@ -122,7 +123,7 @@ class FindModelMaster extends React.Component {
     }
     render(){
         if (this.state.isLoaded === false){
-            return (<Spinner size="large" style={{ marginTop: 20 }} />)
+            return (<Spin />)
         } else {
             return (
                 <FormLayout>
@@ -135,22 +136,24 @@ class FindModelMaster extends React.Component {
                             onChange={this.handleChange}/>
                     </FormLayoutGroup>
                     <Button size="xl" onClick={this.save}>Сохранить</Button>
+                    <Separator style={{ margin: '12px 0' }} />
                     {
                         this.state.loadFind &&
-                        <Group>
-                            <Cell>Ваш активный поиск</Cell>
-                            <Separator style={{ margin: '12px 0' }} />
-                            <Cell expandable
-                                  photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                                  description={'Так будет выглядеть запрос в ленте'}
-                                  before={<Avatar src={this.state.master.avatarLink} size={50}/>}
-                                  size="l"
-                            >{this.state.master.firstname} {this.state.master.lastname}
-                            </Cell>
-                            <Cell multiline>
-                                {this.state.loadFind.body}
-                            </Cell>
-                        </Group>
+                        <CardGrid>
+                            <Cell>Ваш активный поиск:</Cell>
+                            <Card size='l'>
+                                <Cell expandable
+                                      photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
+                                      description={'Так будет выглядеть запрос в ленте'}
+                                      before={<Avatar src={this.state.master.avatarLink} size={50}/>}
+                                      size="l"
+                                >{this.state.master.firstname} {this.state.master.lastname}
+                                </Cell>
+                                <Cell multiline>
+                                    {this.state.loadFind.body}
+                                </Cell>
+                            </Card>
+                        </CardGrid>
                     }
                 </FormLayout>
             );

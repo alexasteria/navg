@@ -9,7 +9,11 @@ class CityList extends React.Component {
         super(props);
         this.state = {
             search: '',
-            isLoad: false
+            isLoad: true,
+            cities: [
+                {id: 621, title: 'Дзержинск'},
+                {id: 1, title: 'Другой город'}
+            ]
         };
         this.onChange = this.onChange.bind(this);
 

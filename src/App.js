@@ -1,32 +1,23 @@
 import React from 'react';
 import {
     Alert,
-    Cell,
     Epic,
-    FormLayout,
     Group,
-    List,
     Panel,
     PanelHeader,
     Placeholder,
     Root,
-    Search,
-    SelectMimicry,
-    Spinner,
     Tabbar,
     TabbarItem,
-    View, ModalRoot, ModalPage, ModalPageHeader, PanelHeaderButton, IOS, ANDROID, platform, Snackbar, Avatar,ModalCard,HorizontalScroll,Button,Counter
+    View, ModalRoot, ModalPage, ModalPageHeader, platform, Snackbar, Avatar,ModalCard
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
-import Icon24Filter from '@vkontakte/icons/dist/24/filter';
 import '@vkontakte/vkui/dist/vkui.css';
 import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
 import Icon28ServicesOutline from '@vkontakte/icons/dist/28/services_outline';
 import Icon16Done from '@vkontakte/icons/dist/16/done';
 import Head from './js/elements/panelHeader';
-//import Sale from './js/sale/sale.js';
-import PanelMasterList from './js/masters/panelMasterList.js';
 import MasterCard from './js/masters/mastersCard.js';
 import MasterPhoto from './js/masters/mastersPhoto.js';
 import MasterComments from './js/masters/mastersComments.js';
@@ -39,7 +30,6 @@ import Setting from './js/lk/setting.js';
 import Favourite from './js/lk/favourite.js';
 import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
-import Icon24Done from '@vkontakte/icons/dist/24/done';
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
@@ -47,12 +37,9 @@ import bridge from "@vkontakte/vk-bridge-mock";
 //import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
-import HeadCity from "./js/elements/headCity";
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
-
-const osname = platform();
-
+import spinner from './js/elements/img/spinner.svg'
 
 class App extends React.Component {
     constructor(props) {
@@ -119,20 +106,18 @@ class App extends React.Component {
     }
 
     verifiedUser = (vkUser) => {
-        return fetch(BACKEND.users + '/vkuid/' + vkUser.id)
+         fetch(BACKEND.users + '/vkuid/' + vkUser.id)
             .then(res => res.json())
             .then(usersArr => {
                 if (usersArr.length === 0) {
-                    console.log('Пользователь зашел впервые');
                     this.regNewUser();
                 } else {
-                    console.log('Пользователь уже заходил в приложение');
                     let targetCity = usersArr[0].city !== typeof Object ? 'Не выбрано' : usersArr[0].city;
                     this.setState({user: usersArr[0], targetCity: targetCity});
-                    console.log('Таргет город '+this.state.targetCity)
                 }
             })
             .catch(error => {
+                this.openSnack('Отсутствует соединение с базой пользователей.');
                 console.log(error); // Error: Not Found
             });
     }
@@ -283,8 +268,9 @@ class App extends React.Component {
     changeTargetCity(city){
         let user = this.state.user;
         user.location.city = city;
+        console.log(city);
         this.setState({targetCity: city, user:user}, () => this.setActiveModal(null));
-        patchData(BACKEND.users+'/'+user._id, user).then(result=>console.log(result));
+        patchData(BACKEND.users+'/'+user._id, user);
     }
 
     render() {
@@ -328,22 +314,16 @@ class App extends React.Component {
         );
         if (this.state.user === '') {
             return (
-                <Placeholder icon={<Spinner size="large" style={{marginTop: 20}}/>}>
+                // <Placeholder icon={<Spinner size="large" style={{marginTop: 20}}/>}>
+                <Placeholder icon={<img src={spinner}/>}>
                     Выполняется вход...
+                    {this.state.snackbar}
                 </Placeholder>
             )
         } else {
             return (
                 <Epic activeStory={this.state.activeStory} tabbar={
                     <Tabbar>
-                        {
-                            /*<TabbarItem
-                                onClick={this.onStoryChange}
-                                selected={this.state.activeStory === 'sale'}
-                                data-story="sale"
-                                text="Акции"
-                            ><Icon28FireOutline /></TabbarItem>*/
-                        }
                         <TabbarItem
                             onClick={this.onStoryChange}
                             selected={this.state.activeStory === 'news'}
@@ -362,23 +342,6 @@ class App extends React.Component {
                             data-story="findmodel"
                             text="Ищу модель"
                         ><Icon28Notifications/></TabbarItem>
-                        {/*<TabbarItem*/}
-                        {/*    onClick={this.onStoryChange}*/}
-                        {/*    selected={this.state.activeStory === 'idea'}*/}
-                        {/*    data-story="idea"*/}
-                        {/*    text="Идеи"*/}
-                        {/*><Icon28HelpOutline /></TabbarItem>*/}
-                        {
-                            /*
-                            <TabbarItem
-                            onClick={this.onStoryChange}
-                            selected={this.state.activeStory === 'notifications'}
-                            data-story="notifications"
-                            text="Уведомлен."
-                            label="1"
-                        ><Icon28Notifications /></TabbarItem>
-                            * */
-                        }
                         <TabbarItem
                             onClick={this.onStoryChange}
                             selected={this.state.activeStory === 'lk'}
@@ -387,15 +350,6 @@ class App extends React.Component {
                         ><Icon28More/></TabbarItem>
                     </Tabbar>
                 }>
-                    {
-                        /*<View id="sale" activePanel="sale">
-                        <Panel id="sale">
-                            <PanelHeader>Акции</PanelHeader>
-                            <Cell expandable onClick={() => this.setState({ activePanel: 'nothing' })} indicator={this.state.user.city.title}>Выбранный город</Cell>
-                            <Sale />
-                        </Panel>
-                    </View>*/
-                    }
                     <View id="news" activePanel="news">
                         <Panel id="news">
                             <PanelHeader>Навигатор красоты</PanelHeader>
@@ -413,6 +367,8 @@ class App extends React.Component {
                                 pageId={'cityList'}
                                 onClose={()=>this.setActiveModal(null)}
                                 content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
+                                leftButton={false}
+                                rightButton={false}
                             />
                         }
                     >
@@ -471,6 +427,8 @@ class App extends React.Component {
                                 pageId={'cityList'}
                                 onClose={()=>this.setActiveModal(null)}
                                 content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
+                                leftButton={false}
+                                rightButton={false}
                             />
                         }
                     >

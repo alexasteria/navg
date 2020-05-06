@@ -1,9 +1,10 @@
 import React from 'react';
 import HeadCity from "../elements/headCity";
-import {Group, Header, PanelHeader, SelectMimicry} from "@vkontakte/vkui";
+import {Group, Header, PanelHeader, SelectMimicry, Cell, Spinner} from "@vkontakte/vkui";
 import MastersList from './mastersList';
 import ScrollSubcat from '../elements/scrollSubcat'
 import {BACKEND} from "../func/func";
+import Spin from '../elements/spinner'
 
 export default class Masters extends React.Component{
     constructor(props) {
@@ -15,13 +16,13 @@ export default class Masters extends React.Component{
     }
 
     componentDidMount() {
-        console.log(this.props)
+        console.log(this.props);
         this.loadList()
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.city !== this.props.city || prevProps.category !== this.props.category) {
-            this.loadList()
+        if(prevProps !== this.props) {
+            this.setState({isLoad: false},()=>this.loadList())
         }
     }
 
@@ -116,13 +117,15 @@ export default class Masters extends React.Component{
                 <PanelHeader>Мастера</PanelHeader>
                 <Group separator="hide" header={<Header mode="secondary">{this.state.title}</Header>}>
                     {
-                        this.state.isLoad &&
+                        this.state.isLoad ?
                         <MastersList
+                            openSnack={this.props.openSnack}
                             mastersList={this.state.filteredList}
                             category={this.props.targetCategory}
                             city={this.props.user.location.city}
                             openPanelMaster={this.props.openPanelMaster}
-                        />
+                        /> :
+                            <Spin/>
                     }
                 </Group>
             </React.Fragment>

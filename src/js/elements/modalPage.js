@@ -14,9 +14,9 @@ export default function Modal(props){
                        onClose={props.onClose}
                        header={
                            <ModalPageHeader
-                               left={osname === ANDROID &&
+                               left={osname === ANDROID && props.leftButton &&
                                <PanelHeaderButton onClick={props.onClose}>{'Сохранить'}</PanelHeaderButton>}
-                               right={<PanelHeaderButton onClick={props.onClose}>{osname === IOS ? 'Сохранить' :
+                               right={props.rightButton && <PanelHeaderButton onClick={props.onClose}>{osname === IOS  ? 'Сохранить' :
                                    <Icon24Done/>}</PanelHeaderButton>}
                            >
                                {props.header}

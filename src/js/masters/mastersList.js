@@ -79,8 +79,8 @@ export default class MastersList extends React.Component {
     };
 
     share = () => {
-        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866#masterid='+this.state.activeMaster._id})
-            .then(result => this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink))
+        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866'})
+            .then(result => this.props.openSnack('Спасибо, что помогаете сервису в развитии.'))
     };
 
     render() {
@@ -98,7 +98,7 @@ export default class MastersList extends React.Component {
                 <Placeholder
                     icon={<Icon56UsersOutline/>}
                     header="Не расстраивайтесь"
-                    action={<Button onClick={this.share} size="l">Поделиться</Button>}
+                    action={<Button onClick={() => this.share()} size="l">Поделиться</Button>}
                 >
                     В данный момент у нас нет данных о специалистах этого профиля в Вашем городе. Мы расширяем базу
                     мастеров, и скоро - предложения появятся.

@@ -5,6 +5,7 @@ import {
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from "../func/func";
+import Spin from '../elements/spinner'
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 
@@ -45,11 +46,7 @@ class Favourite extends React.Component {
 
     render() {
         if (this.state.isLoaded === false) {
-            return (
-                <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                    <Spinner size="large" style={{marginTop: 20}}/>
-                </div>
-            )
+            return (<Spin/>)
         } else {
             if(this.state.mastersArr.length === 0) {
                 return (
@@ -62,7 +59,6 @@ class Favourite extends React.Component {
                         </CardGrid>
                 )
             } else {
-                console.log(this.state.mastersArr);
                 return (
                     this.state.mastersArr.map(master => {
                         if ((master !== null) && (master.visible === true)) { //если мастер не удален

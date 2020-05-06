@@ -60,15 +60,17 @@ class Lk extends React.Component {
                     .then(res => res.json())
                     .then(activeMaster => {
                         console.log(activeMaster);
-                        if (activeMaster.length !== 0) {
+                        if (activeMaster.length === 0) {
+                            this.setState({isLoad: true});
+                            return null
+                        } else {
+                            console.log('activeMaster.length > 0');
                             this.setState({
                                 activeMaster: activeMaster[0],
                                 description: activeMaster[0].description,
                                 isMaster: true,
                                 isLoad: true
                             }, () =>this.setActive());
-                        } else {
-                            this.setState({isLoad: true})
                         }
                     });
             });
@@ -247,15 +249,7 @@ class Lk extends React.Component {
     };
 
     render() {
-        if (this.state.isLoad === false) {
-            return (
-                <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                    <Spinner size="large" style={{marginTop: 120}}/>
-                </div>
-            )
-        } else if (this.isMaster === false) {
-            return null
-        } else {
+        if  (this.isMaster === true){
             return (
                 <ModalRoot
                     activeModal={this.props.activeModal}
@@ -431,6 +425,8 @@ class Lk extends React.Component {
                     </ModalPage>
                 </ModalRoot>
             );
+        } else {
+            return null
         }
     }
 }

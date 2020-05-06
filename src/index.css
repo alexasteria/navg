@@ -16,10 +16,10 @@ code {
 /*  margin-left: 0px;*/
 /*  margin-right: 5px;*/
 /*}*/
-.CardGrid .Card--sz-s+.Card--sz-s:nth-child(1n) {
-  margin-left: 0px;
-  margin-right: 5px;
-}
-.Card--md-outline, .Card--md-shadow {
-  background: none;
-}
+/*.CardGrid .Card--sz-s+.Card--sz-s:nth-child(1n) {*/
+/*  margin-left: 0px;*/
+/*  margin-right: 5px;*/
+/*}*/
+/*.Card--md-outline, .Card--md-shadow {*/
+/*  background: none;*/
+/*}*/

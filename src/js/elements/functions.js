@@ -20,6 +20,7 @@ function postData(url = '', data = {}) {
         .then(data)
         .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
 }
+
 function patchData(url = '', data = {}) {
     // Значения по умолчанию обозначены знаком *
     return fetch(url, {
