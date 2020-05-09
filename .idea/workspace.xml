@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="categorylist is a component">
-      <change afterPath="$PROJECT_DIR$/src/js/elements/spinner.js" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Начало работы над сохранением стэйта при ререндере">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/modalPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/modalPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -390,14 +382,10 @@
       <workItem from="1588521972425" duration="1796000" />
       <workItem from="1588523779397" duration="2368000" />
       <workItem from="1588801254331" duration="1794000" />
-      <workItem from="1588803059651" duration="1549000" />
-    </task>
-    <task id="LOCAL-00025" summary="Полу рабочие категории">
-      <created>1582668759002</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1582668759002</updated>
+      <workItem from="1588803059651" duration="1795000" />
+      <workItem from="1588804865983" duration="719000" />
+      <workItem from="1589057353034" duration="1795000" />
+      <workItem from="1589059162541" duration="1583000" />
     </task>
     <task id="LOCAL-00026" summary="онтрольная точка перед редактированием мастер листа">
       <created>1583344233507</created>
@@ -735,7 +723,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588361964049</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Начало работы над сохранением стэйта при ререндере">
+      <created>1588804626035</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1588804626035</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -756,7 +751,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Тест" />
     <MESSAGE value="Фикс мелких ошибок" />
     <MESSAGE value="Комментарии, баг фикс интерфейса для 5s" />
     <MESSAGE value="Телефон" />
@@ -781,7 +775,8 @@
     <MESSAGE value="Фильтры субкатегорий работают корректно" />
     <MESSAGE value="Переписан мастерлист" />
     <MESSAGE value="categorylist is a component" />
-    <option name="LAST_COMMIT_MESSAGE" value="categorylist is a component" />
+    <MESSAGE value="Начало работы над сохранением стэйта при ререндере" />
+    <option name="LAST_COMMIT_MESSAGE" value="Начало работы над сохранением стэйта при ререндере" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -792,10 +787,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1588361963670">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1588804625629">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1588361963670" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1588804625629" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -824,10 +819,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="508" y="470" key="NewPhpFileDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1584903289205" />
-    <state x="794" y="232" key="RollbackChangesDialog" timestamp="1582669242921">
+    <state x="794" y="232" key="RollbackChangesDialog" timestamp="1589059211856">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="794" y="232" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582669242921" />
+    <state x="794" y="232" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589059211856" />
     <state x="0" y="167" key="SettingsEditor" timestamp="1583525819052">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -852,16 +847,5 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="993" y="244" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587741094345" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/App.js</url>
-          <line>460</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -3,7 +3,6 @@ import {Snackbar} from "@vkontakte/vkui";
 import React from "react";
 
 function postData(url = '', data = {}) {
-    // Значения по умолчанию обозначены знаком *
     fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, cors, *same-origin

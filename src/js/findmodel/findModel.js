@@ -1,5 +1,4 @@
 import React from 'react';
-import {Avatar, Cell, Div, Group, Separator, Spinner, Placeholder, Button} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
 import FindList from './components/findList';
 import HeadCity from '../elements/headCity'

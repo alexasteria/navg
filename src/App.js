@@ -274,44 +274,6 @@ class App extends React.Component {
     }
 
     render() {
-        const setting = (
-            <Setting
-                snackbar={(message) => this.openSnack(message)}
-                modalBack={this.modalBack}
-                activeModal={this.state.activeModal}
-                user={this.state.user}
-                changeModal={(name) => this.setActiveModal(name)}
-            />
-        );
-        const searchFilter = (
-            <ModalRoot
-                activeModal={this.state.activeModal}
-                onClose={()=>this.setActiveModal(null)}
-            >
-                <ModalPage dynamicContentHeight
-                           id={'cityChange'}
-                           onClose={()=>this.setActiveModal(null)}
-                           header={<ModalPageHeader>Выберите город</ModalPageHeader>}
-                >
-                    <CityListModal changeTargetCity={(city)=>this.changeTargetCity(city)}/>
-                </ModalPage>
-                <ModalCard
-                    id={'filter'}
-                    onClose={() => this.setActiveModal(null)}
-                    //icon={<Icon56NotificationOutline />}
-                    header="Фильтры1"
-                    actions={[{
-                        title: 'Запретить',
-                        mode: 'secondary',
-                        action: () => this.setActiveModal(null)
-                    }, {
-                        title: 'Разрешить',
-                        mode: 'primary',
-                        action: () => this.setActiveModal(null)
-                    }]}
-                />
-            </ModalRoot>
-        );
         if (this.state.user === '') {
             return (
                 // <Placeholder icon={<Spinner size="large" style={{marginTop: 20}}/>}>
@@ -459,7 +421,15 @@ class App extends React.Component {
                     </View>
 
                     <Root id="lk" activeView={this.state.activeViewLk}>
-                        <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout} modal={setting}>
+                        <View id="lk" activePanel={this.state.activePanelLk} popout={this.state.popout} modal={
+                            <Setting
+                                snackbar={(message) => this.openSnack(message)}
+                                modalBack={this.modalBack}
+                                activeModal={this.state.activeModal}
+                                user={this.state.user}
+                                changeModal={(name) => this.setActiveModal(name)}
+                            />
+                        }>
                             <Panel id="lk">
                                 <PanelHeader>Личный кабинет</PanelHeader>
                                 <Lk

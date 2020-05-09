@@ -16,7 +16,6 @@ export default class Masters extends React.Component{
     }
 
     componentDidMount() {
-        console.log(this.props);
         this.loadList()
     }
 
@@ -61,13 +60,11 @@ export default class Masters extends React.Component{
             if (index > -1) {
                 filter.splice(index, 1);
             } else filter.splice(0, index);
-            console.log('filter: ', filter);
             this.setState({filter: filter}, ()=> this.filter());
         } else {
             buttonSubcat.style.backgroundColor='lavender';
             let filter = this.state.filter;
             filter.push(e.currentTarget.id);
-            console.log('filter: ', filter);
             this.setState({filter: filter}, ()=> this.filter());
         }
     };

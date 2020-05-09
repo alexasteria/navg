@@ -26,7 +26,7 @@ class Lk extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.state.user);
+
     }
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *

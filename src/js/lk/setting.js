@@ -59,18 +59,20 @@ class Lk extends React.Component {
                 fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
                     .then(res => res.json())
                     .then(activeMaster => {
-                        console.log(activeMaster);
                         if (activeMaster.length === 0) {
                             this.setState({isLoad: true});
                             return null
                         } else {
-                            console.log('activeMaster.length > 0');
+                            console.log(activeMaster[0]);
                             this.setState({
                                 activeMaster: activeMaster[0],
                                 description: activeMaster[0].description,
                                 isMaster: true,
                                 isLoad: true
-                            }, () =>this.setActive());
+                            }, () =>{
+                                console.log(this.state);
+                                this.setActive();
+                            });
                         }
                     });
             });
@@ -80,7 +82,7 @@ class Lk extends React.Component {
         if (prevProps.targetCity !== this.props.targetCity){
             console.log('город был изменен');
             let activeMaster = this.state.activeMaster;
-            activeMaster.location.city = this.props.targetCity
+            activeMaster.location.city = this.props.targetCity;
             this.setState({activeMaster: activeMaster})
         }
     }
@@ -151,21 +153,6 @@ class Lk extends React.Component {
             }); // парсит JSON ответ в Javascript объект
     }
 
-    // openSnack (text) {
-    //     const blueBackground = {
-    //         backgroundColor: 'var(--accent)'
-    //     };
-    //     if (this.state.snackbar) return;
-    //     this.setState({ snackbar:
-    //             <Snackbar
-    //                 layout="vertical"
-    //                 onClose={() => this.setState({ snackbar: null })}
-    //                 before={<Avatar size={24} style={blueBackground}><Icon16Done fill="#fff" width={14} height={14} /></Avatar>}
-    //             >
-    //                 {text}
-    //             </Snackbar>
-    //     });
-    // }
     visible = event => {
         const target = event.target;
         const name = target.name;
@@ -249,185 +236,186 @@ class Lk extends React.Component {
     };
 
     render() {
-        if  (this.isMaster === true){
+        if (this.state.isLoad === false){
+            return ('Загрузка')
+        } else {
             return (
                 <ModalRoot
                     activeModal={this.props.activeModal}
                     onClose={this.saveChanges}
                 >
                     <ModalPage dynamicContentHeight
-                        id={'setting'}
-                        onClose={this.saveChanges}
-                        header={
-                            <ModalPageHeader
-                                left={osname === ANDROID &&
-                                <PanelHeaderButton onClick={this.saveChanges}>{'Сохранить'}</PanelHeaderButton>}
-                                right={<PanelHeaderButton onClick={this.saveChanges}>{osname === IOS ? 'Сохранить' :
-                                    <Icon24Done/>}</PanelHeaderButton>}
+                               id={'setting'}
+                               onClose={this.saveChanges}
+                               header={
+                                   <ModalPageHeader
+                                       left={osname === ANDROID &&
+                                       <PanelHeaderButton onClick={this.saveChanges}>{'Сохранить'}</PanelHeaderButton>}
+                                       right={<PanelHeaderButton onClick={this.saveChanges}>{osname === IOS ? 'Сохранить' :
+                                           <Icon24Done/>}</PanelHeaderButton>}
+                                   >
+                                       Настройки
+                                   </ModalPageHeader>
+                               }
+                    >
+                        <Div>
+                            <Cell
+                                size="l"
+                                description={
+                                    this.state.activeMaster.visible ? 'Ваш профиль доступен в поиске' : 'Ваш профиль не выводится в поиске'
+                                }
+                                before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
                             >
-                                Настройки
-                            </ModalPageHeader>
-                        }
-                    >
-                <Div>
-                    <Cell
-                        size="l"
-                        description={
-                            this.state.activeMaster.visible ? 'Ваш профиль доступен в поиске' : 'Ваш профиль не выводится в поиске'
-                        }
-                        before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
-                    >
-                        {this.state.activeMaster.firstname + ' ' + this.state.activeMaster.lastname}
-                    </Cell>
-                    <Cell
-                        expandable
-                        onClick={() => this.props.changeModal('changeCity')}
-                        indicator={this.state.activeMaster.location.city === typeof String ? 'Не выбрано' : this.state.activeMaster.location.city.title}
-                    >
-                        Ваш город
-                    </Cell>
-                    <Group>
-                        {this.checkBan()}
-                    </Group>
-                    <Group title={'Прайс-лист'}>
-                    {this.state.activeMaster.priceList.length === 0 &&
-                    <Cell multiline>Вы еще не указали ни одной процедуры. Пока они не указаны, пользователи не смогут связаться с Вами.</Cell>
-                    }
-                        <CardGrid>
-                    {this.state.activeMaster.priceList.map((item, index) => (
-                            <Card size="l" mode="shadow">
-                                <Cell
-                                    key={item}
-                                    multiline
-                                    //onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
-                                    removable
-                                    onRemove={() => {
-                                        this.onRemove(index)
-                                    }}>
-                                    <Cell
-                                        description="Название процедуры">{this.state.activeMaster.priceList[index].title}</Cell>
-                                    <Cell description="Краткое описание процедуры"
-                                          multiline>{this.state.activeMaster.priceList[index].body}</Cell>
-                                    <Cell
-                                        description="Минимальная цена за работу">{this.state.activeMaster.priceList[index].price}</Cell>
-                                </Cell>
-                            </Card>
-                    ))}
-                        </CardGrid>
-                    {this.state.add &&
-                    <Div>
-                        <Cell description="Добавления нового элемента" multiline>
-                            <Input
-                                require
-                                name="newProdTitle"
-                                type="text"
-                                value={this.state.newProdTitle}
-                                placeholder={'Введите название'}
-                                onChange={this.handleChange}/>
-                            <Textarea
-                                require
-                                name="newProdBody"
-                                value={this.state.newProdBody}
-                                placeholder={'Укажите описание'}
-                                onChange={this.handleChange}/>
-                            <Input
-                                require
-                                name="newProdPrice"
-                                type="number" value={this.state.newProdPrice}
-                                placeholder={'Укажите цену'}
-                                onChange={this.handleChange}/>
-                        </Cell>
-                        <Div style={{display: 'flex'}}>
-                            <Button size="l" stretched style={{marginRight: 8}}
-                                    onClick={() => this.saveProd()}>Сохранить</Button>
-                            <Button size="l" stretched mode="destructive"
-                                    onClick={() => this.addProd(false)}>Отменить</Button>
-                        </Div>
-                    </Div>
-                    }
-                    </Group>
-                    <Group>
-                        <CellButton
-                            onClick={() => this.addProd(true)}
-                            before={<Icon24Add/>}
-                        >Добавить процедуру</CellButton>
-                    </Group>
-                    <Group>
-                        <FormLayout onSubmit={this.handleSubmit}>
-                            <Textarea
-                                name={'description'}
-                                status={this.state.description ? 'valid' : 'error'}
-                                bottom={this.state.description ? '' : 'Пожалуйста, напишите пару слов о себе'}
-                                top="О себе"
-                                value={this.state.description}
-                                onChange={this.handleChange}/>
-                        </ FormLayout>
-                        <FormLayoutGroup top="Сфера деятельности"
-                                         bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."
-                                         id={'category'}>
-                            {
-                                this.state.categories.map((category, i) => {
-                                    return (
-                                        <Group key={category._id}>
-                                            <Cell expandable name={category._id}
-                                                  onClick={() => this.setState({[category._id]: !this.state[category._id]})}
-                                                  indicator={
-                                                      'Выбрано: ' + this.counter(i)
-                                                  }>
-                                                {category.label}
+                                {this.state.activeMaster.firstname + ' ' + this.state.activeMaster.lastname}
+                            </Cell>
+                            <Cell
+                                expandable
+                                onClick={() => this.props.changeModal('changeCity')}
+                                indicator={this.state.activeMaster.location.city === typeof String ? 'Не выбрано' : this.state.activeMaster.location.city.title}
+                            >
+                                Ваш город
+                            </Cell>
+                            <Group>
+                                {this.checkBan()}
+                            </Group>
+                            <Group title={'Прайс-лист'}>
+                                {this.state.activeMaster.priceList.length === 0 &&
+                                <Cell multiline>Вы еще не указали ни одной процедуры. Пока они не указаны, пользователи не смогут связаться с Вами.</Cell>
+                                }
+                                <CardGrid>
+                                    {this.state.activeMaster.priceList.map((item, index) => (
+                                        <Card size="l" mode="shadow">
+                                            <Cell
+                                                key={item}
+                                                multiline
+                                                //onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
+                                                removable
+                                                onRemove={() => {
+                                                    this.onRemove(index)
+                                                }}>
+                                                <Cell
+                                                    description="Название процедуры">{this.state.activeMaster.priceList[index].title}</Cell>
+                                                <Cell description="Краткое описание процедуры"
+                                                      multiline>{this.state.activeMaster.priceList[index].body}</Cell>
+                                                <Cell
+                                                    description="Минимальная цена за работу">{this.state.activeMaster.priceList[index].price}</Cell>
                                             </Cell>
-                                            {this.state[category._id] &&
-                                            <Div>
-                                                {
-                                                    category.subcat.map((subcategory, index, category)=>{
-                                                        return (
-                                                            <Cell
-                                                                key={index}
-                                                                asideContent={
-                                                                    <Switch
-                                                                        name={i}
-                                                                        id={index}
-                                                                        onChange={this.checkSubcat}
-                                                                        checked={subcategory.active}/>
-                                                                }>
-                                                                {subcategory.label}
-                                                            </Cell>
-                                                        )
-                                                    })
-                                                }
-                                            </Div>
-                                            }
-                                        </Group>
-                                    )
-                                })
-                            }
-                        </FormLayoutGroup>
-                    </Group>
-                </Div>
+                                        </Card>
+                                    ))}
+                                </CardGrid>
+                                {this.state.add &&
+                                <Div>
+                                    <Cell description="Добавления нового элемента" multiline>
+                                        <Input
+                                            require
+                                            name="newProdTitle"
+                                            type="text"
+                                            value={this.state.newProdTitle}
+                                            placeholder={'Введите название'}
+                                            onChange={this.handleChange}/>
+                                        <Textarea
+                                            require
+                                            name="newProdBody"
+                                            value={this.state.newProdBody}
+                                            placeholder={'Укажите описание'}
+                                            onChange={this.handleChange}/>
+                                        <Input
+                                            require
+                                            name="newProdPrice"
+                                            type="number" value={this.state.newProdPrice}
+                                            placeholder={'Укажите цену'}
+                                            onChange={this.handleChange}/>
+                                    </Cell>
+                                    <Div style={{display: 'flex'}}>
+                                        <Button size="l" stretched style={{marginRight: 8}}
+                                                onClick={() => this.saveProd()}>Сохранить</Button>
+                                        <Button size="l" stretched mode="destructive"
+                                                onClick={() => this.addProd(false)}>Отменить</Button>
+                                    </Div>
+                                </Div>
+                                }
+                            </Group>
+                            <Group>
+                                <CellButton
+                                    onClick={() => this.addProd(true)}
+                                    before={<Icon24Add/>}
+                                >Добавить процедуру</CellButton>
+                            </Group>
+                            <Group>
+                                <FormLayout onSubmit={this.handleSubmit}>
+                                    <Textarea
+                                        name={'description'}
+                                        status={this.state.description ? 'valid' : 'error'}
+                                        bottom={this.state.description ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                                        top="О себе"
+                                        value={this.state.description}
+                                        onChange={this.handleChange}/>
+                                </ FormLayout>
+                                <FormLayoutGroup top="Сфера деятельности"
+                                                 bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."
+                                                 id={'category'}>
+                                    {
+                                        this.state.categories.map((category, i) => {
+                                            return (
+                                                <Group key={category._id}>
+                                                    <Cell expandable name={category._id}
+                                                          onClick={() => this.setState({[category._id]: !this.state[category._id]})}
+                                                          indicator={
+                                                              'Выбрано: ' + this.counter(i)
+                                                          }>
+                                                        {category.label}
+                                                    </Cell>
+                                                    {this.state[category._id] &&
+                                                    <Div>
+                                                        {
+                                                            category.subcat.map((subcategory, index, category)=>{
+                                                                return (
+                                                                    <Cell
+                                                                        key={index}
+                                                                        asideContent={
+                                                                            <Switch
+                                                                                name={i}
+                                                                                id={index}
+                                                                                onChange={this.checkSubcat}
+                                                                                checked={subcategory.active}/>
+                                                                        }>
+                                                                        {subcategory.label}
+                                                                    </Cell>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Div>
+                                                    }
+                                                </Group>
+                                            )
+                                        })
+                                    }
+                                </FormLayoutGroup>
+                            </Group>
+                        </Div>
                     </ModalPage>
                     <ModalPage dynamicContentHeight
-                        id={'changeCity'}
-                        onClose={() => this.props.changeModal('setting')}
-                        header={
-                            <ModalPageHeader
-                                left={osname === ANDROID &&
-                                <PanelHeaderButton onClick={() => this.props.changeModal('setting')}>{'Назад'}</PanelHeaderButton>}
-                                right={<PanelHeaderButton onClick={() => this.props.changeModal('setting')}>{osname === IOS ? 'Назад' :
-                                    <Icon24Done/>}</PanelHeaderButton>}
-                            >
-                                Выбор города
-                            </ModalPageHeader>
-                        }
+                               id={'changeCity'}
+                               onClose={() => this.props.changeModal('setting')}
+                               header={
+                                   <ModalPageHeader
+                                       left={osname === ANDROID &&
+                                       <PanelHeaderButton onClick={() => this.props.changeModal('setting')}>{'Назад'}</PanelHeaderButton>}
+                                       right={<PanelHeaderButton onClick={() => this.props.changeModal('setting')}>{osname === IOS ? 'Назад' :
+                                           <Icon24Done/>}</PanelHeaderButton>}
+                                   >
+                                       Выбор города
+                                   </ModalPageHeader>
+                               }
                     >
                         <CityListModal dynamicContentHeight
-                            changeTargetCity={(city) => this.changeCity(city)}
+                                       changeTargetCity={(city) => this.changeCity(city)}
                         />
                     </ModalPage>
                 </ModalRoot>
-            );
-        } else {
-            return null
+            )
         }
+
     }
 }
 export default withModalRootContext (Lk);
