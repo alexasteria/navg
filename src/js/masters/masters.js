@@ -91,6 +91,7 @@ export default class Masters extends React.Component{
     render() {
         return (
             <React.Fragment>
+                <PanelHeader>Мастера</PanelHeader>
                 <HeadCity
                     userCity={this.props.user.location.city}
                     changeCity={()=>this.props.changeCity()}
@@ -111,7 +112,6 @@ export default class Masters extends React.Component{
                         checkSubcat={(e)=>this.checkSubcat(e)}
                     />
                 }
-                <PanelHeader>Мастера</PanelHeader>
                 <Group separator="hide" header={<Header mode="secondary">{this.state.title}</Header>}>
                     {
                         this.state.isLoad ?
