@@ -1,5 +1,5 @@
 import React from 'react';
-import {Div, Separator, CellButton, Avatar, Cell, List, Group} from "@vkontakte/vkui"
+import {Div, Separator, CellButton, Avatar, Cell, List, Group, Banner, Button} from "@vkontakte/vkui"
 import Icon24Settings from '@vkontakte/icons/dist/24/settings';
 import Icon24Story from '@vkontakte/icons/dist/24/story';
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
@@ -82,6 +82,12 @@ class Lk extends React.Component {
                             >Мои записи</Cell>
                         </List>
                     </Group>
+                <Banner
+                    before={<Avatar size={96} mode="image" src="https://sun9-32.userapi.com/uFzLOK55iY7pC0DHjneEdP9G6gXcXi2Mxj9wVA/wnTmzh_blNM.jpg" />}
+                    header="Установите в ваше сообщество"
+                    subheader="Если вы являетесь владельцем сообщества со схожей тематикой нашего приложения, установите Навигатор красоты в свою группу. Ваши подписчики смогут получить удобный инструмент для поиска мастеров."
+                    actions={<Button>Установить в сообщество</Button>}
+                />
                 {this.state.user.isMaster &&
                     <Group title="Меню мастера">
                     <Separator style={{ margin: '12px 0' }} />

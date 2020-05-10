@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Починил модалки">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="баг фикс">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -384,14 +383,7 @@
       <workItem from="1589059162541" duration="1804000" />
       <workItem from="1589061219277" duration="80000" />
       <workItem from="1589061614703" duration="16000" />
-      <workItem from="1589139964855" duration="61000" />
-    </task>
-    <task id="LOCAL-00027" summary="КТ до смены роутинга">
-      <created>1583346389804</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1583346389804</updated>
+      <workItem from="1589139964855" duration="447000" />
     </task>
     <task id="LOCAL-00028" summary="Добавление комментариев. Вывод листа комментов. Ограничение на одну запись.">
       <created>1583357979847</created>
@@ -729,7 +721,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589060771255</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="баг фикс">
+      <created>1589140216575</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1589140216575</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -750,7 +749,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Комментарии, баг фикс интерфейса для 5s" />
     <MESSAGE value="Телефон" />
     <MESSAGE value="Отправка телефона работает корректно" />
     <MESSAGE value="bug fix" />
@@ -775,7 +773,8 @@
     <MESSAGE value="categorylist is a component" />
     <MESSAGE value="Начало работы над сохранением стэйта при ререндере" />
     <MESSAGE value="Починил модалки" />
-    <option name="LAST_COMMIT_MESSAGE" value="Починил модалки" />
+    <MESSAGE value="баг фикс" />
+    <option name="LAST_COMMIT_MESSAGE" value="баг фикс" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -786,10 +785,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589060770871">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589140216151">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589060770871" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589140216151" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
