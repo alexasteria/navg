@@ -237,7 +237,7 @@ class Lk extends React.Component {
 
     render() {
         if (this.state.isLoad === false){
-            return ('Загрузка')
+            return null
         } else {
             return (
                 <ModalRoot

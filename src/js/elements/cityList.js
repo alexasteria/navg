@@ -62,7 +62,7 @@ class CityList extends React.Component {
                         {this.state.cities.map(city =>
                             <Cell
                                 description={city.region || ''}
-                                onClick={()=>this.props.changeTargetCity(city)}
+                                onClick={()=>this.props.changeCity(city)}
                                 key={city.id}
                             >
                                 {city.title}

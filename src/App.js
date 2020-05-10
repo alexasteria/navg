@@ -33,8 +33,8 @@ import FindModelMaster from "./js/lk/findModelMaster";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
-import bridge from "@vkontakte/vk-bridge-mock";
-//import bridge from '@vkontakte/vk-bridge';
+//import bridge from "@vkontakte/vk-bridge-mock";
+import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
@@ -476,7 +476,7 @@ class App extends React.Component {
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}
                                       goBack={() => this.setState({activePanelLk: 'setting'})}/>
-                                <CityList changeTargetCity={(city) => this.setState({
+                                <CityList changeCity={(city) => this.setState({
                                     targetCity: city,
                                     activePanelLk: 'setting'
                                 })}/>
@@ -496,7 +496,7 @@ class App extends React.Component {
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}
                                       goBack={() => this.setState({activePanelReg: 'registration'})}/>
-                                <CityList changeTargetCity={(city) => this.setState({
+                                <CityList changeCity={(city) => this.setState({
                                     targetCity: city,
                                     activePanelReg: 'registration'
                                 })}/>
