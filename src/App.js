@@ -9,7 +9,7 @@ import {
     Root,
     Tabbar,
     TabbarItem,
-    View, ModalRoot, ModalPage, ModalPageHeader, platform, Snackbar, Avatar,ModalCard
+    View, Snackbar, Avatar, Tabs, TabsItem, Separator
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
@@ -20,8 +20,8 @@ import Icon16Done from '@vkontakte/icons/dist/16/done';
 import Head from './js/elements/panelHeader';
 import MasterCard from './js/masters/mastersCard.js';
 import MasterPhoto from './js/masters/mastersPhoto.js';
-import MasterComments from './js/masters/mastersComments.js';
-//import Idea from './js/idea/idea.js';
+import MasterComments from './/js/masters/mastersComments.js';
+//import Idea from './js/ideaidea.js';
 import News from './js/news/news.js';
 import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
@@ -30,6 +30,7 @@ import Setting from './js/lk/setting.js';
 import Favourite from './js/lk/favourite.js';
 import FindModel from "./js/findmodel/findModel";
 import FindModelMaster from "./js/lk/findModelMaster";
+import Partners from "./js/lk/partners";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
@@ -79,7 +80,8 @@ class App extends React.Component {
             searchCity: '',
             activeModal: null,
             modalHistory: [],
-            targetCity: 'Не выбрано'
+            targetCity: 'Не выбрано',
+            activeTabLk: 'about'
 
         };
         this.onStoryChange = this.onStoryChange.bind(this);
@@ -432,14 +434,33 @@ class App extends React.Component {
                         }>
                             <Panel id="lk">
                                 <PanelHeader>Личный кабинет</PanelHeader>
-                                <Lk
-                                    user={this.state.user}
-                                    openSetting={() => this.setActiveModal('setting')}
-                                    //openSetting={() => this.setState({activePanelLk: 'setting'})}
-                                    openFavourite={() => this.setState({activePanelLk: 'favourite'})}
-                                    openFindModel={() => this.setState({activePanelLk: 'findModel'})}
-                                    openMasterPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
-                                />
+                                <Tabs>
+                                    <TabsItem
+                                        onClick={() => this.setState({ activeTabLk: 'about' })}
+                                        selected={this.state.activeTabLk === 'about'}
+                                    >
+                                        О пользователе
+                                    </TabsItem>
+                                    <TabsItem
+                                        onClick={() => this.setState({ activeTabLk: 'partners' })}
+                                        selected={this.state.activeTabLk === 'partners'}
+                                    >
+                                        Партнерам
+                                    </TabsItem>
+                                </Tabs>
+                                <Separator />
+                                {
+                                    this.state.activeTabLk === 'about' ?
+                                        <Lk
+                                            user={this.state.user}
+                                            openSetting={() => this.setActiveModal('setting')}
+                                            //openSetting={() => this.setState({activePanelLk: 'setting'})}
+                                            openFavourite={() => this.setState({activePanelLk: 'favourite'})}
+                                            openFindModel={() => this.setState({activePanelLk: 'findModel'})}
+                                            openMasterPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
+                                        /> :
+                                        <Partners />
+                                }
                                 {this.state.snackbar}
                             </Panel>
                             <Panel id='favourite'>

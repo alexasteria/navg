@@ -28,6 +28,7 @@ class Lk extends React.Component {
     componentDidMount() {
 
     }
+
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -46,6 +47,11 @@ class Lk extends React.Component {
             .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
 
     }
+
+    addToFavApp = () => {
+        bridge.send("VKWebAppAddToFavorites", {});
+    };
+
     render(){
         return (
             <Div>
@@ -61,12 +67,6 @@ class Lk extends React.Component {
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
                     <Group title="Основное" separator={'hide'}>
-                        {/*<Cell*/}
-                        {/*    //expandable*/}
-                        {/*    onClick={() => this.setState({ activePanel: 'nothing' })}*/}
-                        {/*    user={this.state.user}*/}
-                        {/*    indicator={this.state.user.location.city.title}*/}
-                        {/*>Ваш город</Cell>*/}
                         <Separator style={{ margin: '12px 0' }} />
                         <List>
                             <Cell
@@ -83,10 +83,9 @@ class Lk extends React.Component {
                         </List>
                     </Group>
                 <Banner
-                    before={<Avatar size={96} mode="image" src="https://sun9-32.userapi.com/uFzLOK55iY7pC0DHjneEdP9G6gXcXi2Mxj9wVA/wnTmzh_blNM.jpg" />}
-                    header="Установите в ваше сообщество"
-                    subheader="Если вы являетесь владельцем сообщества со схожей тематикой нашего приложения, установите Навигатор красоты в свою группу. Ваши подписчики смогут получить удобный инструмент для поиска мастеров."
-                    actions={<Button>Установить в сообщество</Button>}
+                    header="Мы избранные"
+                    subheader="Добавьте Навигатор красоты в список избранных приложений. Мы всего в одном клике от вас."
+                    actions={<Button onClick={()=>this.addToFavApp}>Добавить</Button>}
                 />
                 {this.state.user.isMaster &&
                     <Group title="Меню мастера">
