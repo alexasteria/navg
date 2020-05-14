@@ -49,7 +49,7 @@ class Lk extends React.Component {
     }
 
     addToFavApp = () => {
-        bridge.send("VKWebAppAddToFavorites", {});
+        bridge.send("VKWebAppAddToFavorites", {}).then(data=>console.log(data));
     };
 
     render(){
@@ -82,11 +82,15 @@ class Lk extends React.Component {
                             >Мои записи</Cell>
                         </List>
                     </Group>
-                <Banner
-                    header="Мы избранные"
-                    subheader="Добавьте Навигатор красоты в список избранных приложений. Мы всего в одном клике от вас."
-                    actions={<Button onClick={()=>this.addToFavApp}>Добавить</Button>}
-                />
+                {
+                    this.props.isFavourite === 0 ?
+                        <Banner
+                            header="Мы избранные"
+                            subheader="Добавьте Навигатор красоты в список избранных приложений. Мы всего в одном клике от вас."
+                            actions={<Button onClick={()=>this.addToFavApp()}>Добавить</Button>}
+                        /> :
+                        null
+                }
                 {this.state.user.isMaster &&
                     <Group title="Меню мастера">
                     <Separator style={{ margin: '12px 0' }} />
