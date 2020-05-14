@@ -10,7 +10,6 @@ export default class MastersList extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
         try {
             if (this.props.city === 'Не выбрано') throw 'Нет города';
             if (this.props.mastersList.length === 0) throw 'Никого не нашли';

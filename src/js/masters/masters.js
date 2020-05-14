@@ -16,28 +16,52 @@ export default class Masters extends React.Component{
     }
 
     componentDidMount() {
-        this.loadList()
+        console.log('store',this.props);
+        if (this.props.mastersList.length === 0) {
+            this.loadList()
+        } else {
+            //this.filter(this.props.mastersList);
+            this.setState({filteredList: this.props.mastersList,isLoad: true}, ()=> {
+                if (this.props.scroll){
+                    console.log('scroll');
+                    window.scrollTo(0, this.props.scroll)
+                }
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        this.props.changeMasterslistScroll(window.self.pageYOffset);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps !== this.props) {
+        if(prevProps.targetCategory !== this.props.targetCategory) {
+            console.log('chnge cat');
             this.setState({isLoad: false},()=>this.loadList())
         }
     }
+
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     if(prevProps !== this.props) {
+    //         this.setState({isLoad: false},()=>this.loadList())
+    //     }
+    // }
 
     loadList = () => {
         if(this.props.targetCategory === '') {
             fetch(BACKEND.masters.category+'all/'+this.props.user.location.city.id)
                 .then(res => res.json())
                 .then(mastersList => {
-                    this.setState({mastersList: mastersList}, ()=> this.filter());
+                    this.filter(mastersList);
+                    //this.setState({mastersList: mastersList}, ()=> this.filter());
                     this.setTitle(mastersList.length)
                 });
         } else {
             fetch(BACKEND.masters.category+this.props.targetCategory._id+'/'+this.props.user.location.city.id)
                 .then(res => res.json())
                 .then(mastersList => {
-                    this.setState({mastersList: mastersList}, ()=> this.filter());
+                    this.filter(mastersList);
+                    //this.setState({mastersList: mastersList}, ()=> this.filter());
                     this.setTitle(mastersList.length)
                 });
         }
@@ -69,11 +93,13 @@ export default class Masters extends React.Component{
         }
     };
 
-    filter() {
+    filter(mastersList) {
         if(this.state.filter.length === 0) {
-            this.setState({filteredList: this.state.mastersList,isLoad: true}, ()=>this.setTitle(this.state.mastersList.length))
+            this.props.changeMastersList(mastersList);
+            //this.setState({isLoad:true});
+            this.setState({filteredList: mastersList,isLoad: true}, ()=>this.setTitle(mastersList.length))
         } else {
-            let filteredList = this.state.mastersList.filter(master=> {
+            let filteredList = mastersList.filter(master=> {
                 let i = 0;
                 this.state.filter.forEach(filter=>{
                     if(master.categories.subcat){
@@ -84,6 +110,8 @@ export default class Masters extends React.Component{
                 });
                 if (i>0) return true
             });
+            this.props.changeMastersList(filteredList);
+            //this.setState({isLoad:true});
             this.setState({filteredList: filteredList,isLoad: true}, ()=>this.setTitle(filteredList.length));
         }
     }
@@ -93,7 +121,7 @@ export default class Masters extends React.Component{
             <React.Fragment>
                 <PanelHeader>Мастера</PanelHeader>
                 <HeadCity
-                    userCity={this.props.user.location.city}
+                    targetCity={this.props.targetCity}
                     changeCity={()=>this.props.changeCity()}
                 />
                 <SelectMimicry
@@ -108,7 +136,7 @@ export default class Masters extends React.Component{
                     this.props.targetCategory && this.state.isLoad &&
                     <ScrollSubcat
                         targetCategory={this.props.targetCategory}
-                        mastersList={this.state.mastersList}
+                        mastersList={this.state.filteredList}
                         checkSubcat={(e)=>this.checkSubcat(e)}
                     />
                 }

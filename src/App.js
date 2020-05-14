@@ -34,13 +34,16 @@ import Partners from "./js/lk/partners";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
-//import bridge from "@vkontakte/vk-bridge-mock";
-import bridge from '@vkontakte/vk-bridge';
+import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
 import spinner from './js/elements/img/spinner.svg'
+import {connect} from "react-redux";
+import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll} from "./store/actions";
+import {bindActionCreators} from "redux";
 
 class App extends React.Component {
     constructor(props) {
@@ -92,6 +95,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         bridge.send('VKWebAppGetUserInfo', {})
             .then(data => {
                 //console.log(data);
@@ -114,8 +118,9 @@ class App extends React.Component {
                 if (usersArr.length === 0) {
                     this.regNewUser();
                 } else {
-                    let targetCity = usersArr[0].city !== typeof Object ? 'Не выбрано' : usersArr[0].city;
-                    this.setState({user: usersArr[0], targetCity: targetCity});
+                    let targetCity = typeof usersArr[0].location.city !== 'object' ? 'Не выбрано' : usersArr[0].location.city;
+                    this.props.changeTargetCity(targetCity);
+                    this.setState({user: usersArr[0]});
                 }
             })
             .catch(error => {
@@ -270,12 +275,13 @@ class App extends React.Component {
     changeTargetCity(city){
         let user = this.state.user;
         user.location.city = city;
-        console.log(city);
-        this.setState({targetCity: city, user:user}, () => this.setActiveModal(null));
+        this.setState({user:user}, () => this.setActiveModal(null));
         patchData(BACKEND.users+'/'+user._id, user);
+        this.props.changeTargetCity(city);
     }
 
     render() {
+        const {mastersList} = this.props;
         if (this.state.user === '') {
             return (
                 // <Placeholder icon={<Spinner size="large" style={{marginTop: 20}}/>}>
@@ -341,10 +347,15 @@ class App extends React.Component {
                                 <Masters
                                     user={this.state.user}
                                     changeCity={() => this.setActiveModal('cityList')}
+                                    targetCity={this.props.targetCity}
                                     openSnack={(title)=>this.openSnack(title)}
-                                    changeCategory={()=>this.setState({activeViewMasters: 'masterCat'},()=>console.log('ok'))}
-                                    targetCategory={this.state.targetCategory}
+                                    changeCategory={()=>this.setState({activeViewMasters: 'masterCat'})}
+                                    targetCategory={this.props.targetCategory}
                                     openPanelMaster={this.openPanelMaster}
+                                    mastersList={mastersList}
+                                    changeMastersList={(newMastersList)=>this.props.changeMastersList(newMastersList)}
+                                    changeMasterslistScroll={(scroll)=>this.props.changeMasterslistScroll(scroll)}
+                                    scroll={this.props.mastersListScroll}
                                 />
                                 {this.state.snackbar}
                             </Panel>
@@ -371,11 +382,16 @@ class App extends React.Component {
                                 <PanelHeader>Выбор категории</PanelHeader>
                                 <Group>
                                     <CategoriesList
-                                        targetCategory={this.state.targetCategory}
-                                        setCategory={(category) => this.setState({
-                                            targetCategory: category,
-                                            activeViewMasters: 'mastersList'
-                                        })}
+                                        //targetCategory={this.state.targetCategory}
+                                        targetCategory={this.props.targetCategory}
+                                        setCategory={(category) => {
+                                            this.props.changeTargetCategory(category);
+                                            this.setState({activeViewMasters: 'mastersList'});
+                                        }}
+                                        // setCategory={(category) => this.setState({
+                                        //     targetCategory: category,
+                                        //     activeViewMasters: 'mastersList'
+                                        // })}
                                     />
                                 </Group>
                             </Panel>
@@ -402,6 +418,7 @@ class App extends React.Component {
                                 openMasterOnId={this.openMasterOnId}
                                 user={this.state.user}
                                 changeCity={() => this.setActiveModal('cityList')}
+                                targetCity={this.props.targetCity}
                             />
                         </Panel>
                         <Panel id="masterInfo">
@@ -485,28 +502,28 @@ class App extends React.Component {
                                 <Head title={'Мастер ищет модель'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
                                 <FindModelMaster user={this.state.user} popout={this.openAlert}/>
                             </Panel>
-                            <Panel id='setting'>
-                                <Head title={'Настройки'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <Setting
-                                    targetCity={this.state.targetCity}
-                                    user={this.state.user}
-                                    popout={this.openAlert}
-                                    changeCity={() => this.setState({activePanelLk: 'changeCity'})}
-                                />
-                            </Panel>
-                            <Panel id='changeCity'>
-                                <Head title={'Выбор города'}
-                                      goBack={() => this.setState({activePanelLk: 'setting'})}/>
-                                <CityList changeCity={(city) => this.setState({
-                                    targetCity: city,
-                                    activePanelLk: 'setting'
-                                })}/>
-                            </Panel>
+                            {/*<Panel id='setting'>*/}
+                            {/*    <Head title={'Настройки'} goBack={() => this.setState({activePanelLk: 'lk'})}/>*/}
+                            {/*    <Setting*/}
+                            {/*        targetCity={this.props.targetCity}*/}
+                            {/*        user={this.state.user}*/}
+                            {/*        popout={this.openAlert}*/}
+                            {/*        changeCity={() => this.setState({activePanelLk: 'changeCity'})}*/}
+                            {/*    />*/}
+                            {/*</Panel>*/}
+                            {/*<Panel id='changeCity'>*/}
+                            {/*    <Head title={'Выбор города'}*/}
+                            {/*          goBack={() => this.setState({activePanelLk: 'setting'})}/>*/}
+                            {/*    <CityList changeCity={(city) => this.setState({*/}
+                            {/*        targetCity: city,*/}
+                            {/*        activePanelLk: 'setting'*/}
+                            {/*    })}/>*/}
+                            {/*</Panel>*/}
                         </View>
                         <View activePanel={this.state.activePanelReg} id="registration">
                             <Panel id='registration'>
                                 <Head title={'Регистрация'} goBack={() => this.setState({activeViewLk: 'lk'})}/>
-                                <Invite targetCity={this.state.targetCity}
+                                <Invite targetCity={this.props.targetCity}
                                         user={this.state.user}
                                         closeReg={this.closeReg}
                                         changeCity={() => this.setState({activePanelReg: 'changeCity'})}
@@ -517,10 +534,10 @@ class App extends React.Component {
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}
                                       goBack={() => this.setState({activePanelReg: 'registration'})}/>
-                                <CityList changeCity={(city) => this.setState({
-                                    targetCity: city,
-                                    activePanelReg: 'registration'
-                                })}/>
+                                <CityList changeCity={(city) => {
+                                    this.props.changeTargetCity(city);
+                                    this.setState({activePanelReg: 'registration'})
+                                }}/>
                             </Panel>
                         </View>
                     </Root>
@@ -530,5 +547,22 @@ class App extends React.Component {
     }
 }
 
+const putStateToProps = (state) => {
+    return {
+        mastersList: state.mastersList,
+        targetCategory: state.targetCategory,
+        targetCity: state.targetCity,
+        mastersListScroll: state.mastersListScroll
+    };
+};
 
-export default App;
+const putActionsToProps = (dispatch) => {
+    return {
+        changeMastersList: bindActionCreators(changeMastersList, dispatch),
+        changeTargetCategory: bindActionCreators(changeTargetCategory, dispatch),
+        changeTargetCity: bindActionCreators(changeTargetCity, dispatch),
+        changeMasterslistScroll: bindActionCreators(changeMasterslistScroll, dispatch)
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(App);

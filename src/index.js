@@ -5,6 +5,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 //import bridge from '@vkontakte/vk-bridge-mock';
 import bridge from '@vkontakte/vk-bridge';
+import {createStore} from "redux";
+import {Provider} from "react-redux"
+import {rootReducer} from "./store/reducers";
+
+const store = createStore(rootReducer);
 
 bridge.send("VKWebAppInit", {})
     .then(data => console.log('Инициализировали апи вк? '+data.result));
@@ -35,10 +40,7 @@ let params = window
         {}
     );
 
-console.log(params);
-
-
-ReactDOM.render(<App linkParams={linkParams} params={params} />, document.getElementById('root'));
+ReactDOM.render(<Provider store={store}><App linkParams={linkParams} params={params} /></Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
