@@ -20,7 +20,9 @@ class FindModelMaster extends React.Component {
         this.state = {
             master: '',
             body: '',
-            isLoaded: false
+            isLoaded: false,
+            isActive: false,
+            error: ''
         };
     }
     componentDidMount() {
@@ -31,29 +33,11 @@ class FindModelMaster extends React.Component {
                 fetch(BACKEND.findModel.onMasterId+master[0]._id)
                     .then(res => res.json())
                     .then(find => {
-                        this.setState({findArr: find, isLoaded: true});
                         if (find.length > 0) {
-                            this.setState({body: find[0].body, loadFind: find[0]});
-                            let activeFind =
-                                <Group>
-                                    <Cell>Ваш активный поиск</Cell>
-                                    <Separator style={{ margin: '12px 0' }} />
-                                    <Cell expandable
-                                          photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                                          description={'desf'}
-                                          before={<Avatar src={this.state.master.avatarLink} size={50}/>}
-                                          size="l"
-                                    >{this.state.master.firstname} {this.state.master.lastname}
-                                    </Cell>
-                                    <Cell multiline>
-                                        {this.state.findArr[0].body}
-                                    </Cell>
-                                </Group>
-                            ;
-                            this.setState({activeFind: activeFind});
+                            this.setState({body:find[0].body, error: '', isLoaded: true, isActive: true, loadFind: find[0]});
                         } else {
-                            let activeFind = <Cell>У вас нет активных поисков</Cell>;
-                            this.setState({activeFind: activeFind});
+                            let error = <Cell>У вас нет активных поисков</Cell>;
+                            this.setState({error: error, isLoaded: true});
                         }
                     });
             });
@@ -72,8 +56,7 @@ class FindModelMaster extends React.Component {
             lastname: this.state.master.lastname,
             avatarLink: this.state.master.avatarLink
         };
-        console.log(this.state.loadFind);
-        if (this.state.loadFind._id) {
+        if (this.state.isActive === true) {
             let f =this.state.loadFind;
             f.body = this.state.body;
             this.setState({loadFind: f});
@@ -118,7 +101,10 @@ class FindModelMaster extends React.Component {
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
             .then(response=>response.json()) // парсит JSON ответ в Javascript объект
-            .then(result=>console.log(result),(result)=>this.setState({loadFind: result}))
+            .then(result=>{
+                console.log(result);
+                this.setState({loadFind: result, isActive: true})
+            })
 
     }
     render(){
@@ -138,19 +124,19 @@ class FindModelMaster extends React.Component {
                     <Button size="xl" onClick={this.save}>Сохранить</Button>
                     <Separator style={{ margin: '12px 0' }} />
                     {
-                        this.state.loadFind &&
+                        this.state.isActive &&
                         <CardGrid>
                             <Cell>Ваш активный поиск:</Cell>
                             <Card size='l'>
                                 <Cell expandable
                                       photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
                                       description={'Так будет выглядеть запрос в ленте'}
-                                      before={<Avatar src={this.state.master.avatarLink} size={50}/>}
+                                      before={<Avatar src={this.state.loadFind.avatarLink} size={50}/>}
                                       size="l"
-                                >{this.state.master.firstname} {this.state.master.lastname}
+                                >{this.state.loadFind.firstname} {this.state.loadFind.lastname}
                                 </Cell>
                                 <Cell multiline>
-                                    {this.state.loadFind.body}
+                                    {this.state.body}
                                 </Cell>
                             </Card>
                         </CardGrid>

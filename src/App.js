@@ -228,15 +228,7 @@ class App extends React.Component {
     //     this.setState({ activeMaster: master });
     // };
     openMasterOnId = (masterId) => {
-        fetch(BACKEND.masters.onID + masterId)
-            .then(res => res.json())
-            .then(master => {
-                console.log(master);
-                this.setState({activeMaster: master});
-                //this.setState({ activeViewMasters: 'mastersList' });
-                //this.setState({ activeStory: 'masters' });
-                this.setState({activePanelFindModels: 'masterInfo'});
-            });
+        this.setState({activePanelFindModels: 'masterInfo', activeMasterId: masterId});
     };
     openMasterOnLink = (masterId) => {
         this.setState({activeMasterId: masterId,activeStory: 'masters',activeViewMasters: 'mastersList',activePanelMasters: 'masterInfo'});
@@ -351,6 +343,7 @@ class App extends React.Component {
                                     user={this.state.user}
                                     openComments={() => this.setState({activePanelMasters: 'masterComments'})}
                                     activeMasterId={this.state.activeMasterId}
+                                    setActiveMaster={(master)=>this.setState({activeMaster: master})}
                                 />
                             </Panel>
                             <Panel id="masterPhoto">
@@ -402,7 +395,7 @@ class App extends React.Component {
                         <Panel id="findmodel">
                             <PanelHeader>Мастер ищет модель</PanelHeader>
                             <FindModel
-                                openMasterOnId={this.openMasterOnId}
+                                openMasterOnId={(masterId)=>this.openMasterOnId(masterId)}
                                 user={this.state.user}
                                 changeCity={() => this.setActiveModal('cityList')}
                                 targetCity={this.props.targetCity}
@@ -413,20 +406,34 @@ class App extends React.Component {
                             />
                         </Panel>
                         <Panel id="masterInfo">
-                            <Head title={'О мастере'}
-                                  goBack={() => this.setState({activePanelFindModels: 'findmodel'})}/>
-                            <MasterCard openPhoto={() => this.setState({activePanelFindModels: 'masterPhoto'})}
-                                        user={this.state.user} activeMaster={this.state.activeMaster}
-                                        openComments={() => this.setState({activePanelFindModels: 'masterComments'})}/>
+                            <Head
+                                title={'О мастере'}
+                                goBack={() => this.setState({activePanelFindModels: 'findmodel'})}
+                            />
+                            <MasterCard
+                                openPhoto={() => this.setState({activePanelFindModels: 'masterPhoto'})}
+                                user={this.state.user}
+                                activeMasterId={this.state.activeMasterId}
+                                openComments={() => this.setState({activePanelFindModels: 'masterComments'})}
+                                setActiveMaster={(master)=>this.setState({activeMaster: master})}
+                            />
                         </Panel>
                         <Panel id="masterPhoto">
-                            <Head title={'Портфолио'}
-                                  goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}/>
+                            <Head
+                                title={'Портфолио'}
+                                goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}
+                            />
                             <MasterPhoto activeMaster={this.state.activeMaster}/>
                         </Panel>
                         <Panel id="masterComments">
-                            <Head title={'Отзывы'} goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}/>
-                            <MasterComments user={this.state.user} activeMaster={this.state.activeMaster}/>
+                            <Head
+                                title={'Отзывы'}
+                                goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}
+                            />
+                            <MasterComments
+                                user={this.state.user}
+                                activeMaster={this.state.activeMaster}
+                            />
                         </Panel>
                     </View>
 
@@ -492,6 +499,7 @@ class App extends React.Component {
                                     user={this.state.user}
                                     activeMasterId={this.state.activeMasterId}
                                     openComments={() => this.setState({activePanelLk: 'masterComments'})}
+                                    setActiveMaster={(master)=>this.setState({activeMaster: master})}
                                 />
                             </Panel>
                             <Panel id="masterPhoto">

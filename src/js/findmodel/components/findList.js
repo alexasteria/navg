@@ -37,8 +37,8 @@ function renderLastPhoto(arr){
 }
 
 export default function FindList(props){
+    console.log(props);
     if (props.findArr.length === 0) {
-        console.log(props);
         return (
             <Placeholder
                 icon={<Icon56UsersOutline />}
@@ -60,7 +60,7 @@ export default function FindList(props){
                                       description={getDate(find.date)}
                                       before={<Avatar src={find.avatarLink} size={50}/>}
                                       size="l"
-                                      onClick={() => this.props.openMasterOnId(find.masterId)}
+                                      onClick={() => props.openMasterOnId(find.masterId)}
                                       bottom=""
                                 >{find.firstname} {find.lastname}
                                 </Cell>

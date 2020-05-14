@@ -66,6 +66,7 @@ class FindModel extends React.Component {
                         findArr={this.state.findArr}
                         share={()=>this.share}
                         user={this.props.user}
+                        openMasterOnId={this.props.openMasterOnId}
                     />
                 </React.Fragment>
             );

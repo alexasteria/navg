@@ -34,7 +34,7 @@ class MastersCard extends React.Component {
         fetch(BACKEND.masters.onID + this.props.activeMasterId)
             .then(res => res.json())
             .then(master => {
-                console.log(master);
+                this.props.setActiveMaster(master);
                 this.setState({activeMaster: master}, ()=> this.loadFavs())
             });
     }
