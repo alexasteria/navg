@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="баг фикс">
-      <change afterPath="$PROJECT_DIR$/src/js/lk/partners.js" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Исправлен баг если у мастера нет субкатегорий">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -389,14 +386,7 @@
       <workItem from="1589140707602" duration="532000" />
       <workItem from="1589141254584" duration="2140000" />
       <workItem from="1589229563429" duration="886000" />
-      <workItem from="1589238442719" duration="1022000" />
-    </task>
-    <task id="LOCAL-00030" summary="Отображение цены в карточке мастера">
-      <created>1584197324370</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1584197324370</updated>
+      <workItem from="1589238442719" duration="1721000" />
     </task>
     <task id="LOCAL-00031" summary="Снэкбары">
       <created>1584205405151</created>
@@ -734,7 +724,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589141494351</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="Исправлен баг если у мастера нет субкатегорий">
+      <created>1589239485120</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1589239485121</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -755,7 +752,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Телефон" />
     <MESSAGE value="Отправка телефона работает корректно" />
     <MESSAGE value="bug fix" />
     <MESSAGE value="Фикс даты комментария" />
@@ -780,7 +776,8 @@
     <MESSAGE value="Начало работы над сохранением стэйта при ререндере" />
     <MESSAGE value="Починил модалки" />
     <MESSAGE value="баг фикс" />
-    <option name="LAST_COMMIT_MESSAGE" value="баг фикс" />
+    <MESSAGE value="Исправлен баг если у мастера нет субкатегорий" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлен баг если у мастера нет субкатегорий" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -791,10 +788,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589141493917">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589239484730">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589141493917" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589239484730" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
