@@ -52,7 +52,8 @@ export default class Masters extends React.Component{
             fetch(BACKEND.masters.category+'all/'+this.props.user.location.city.id)
                 .then(res => res.json())
                 .then(mastersList => {
-                    this.filter(mastersList);
+                    this.props.changeMastersList(mastersList);
+                    this.filter();
                     //this.setState({mastersList: mastersList}, ()=> this.filter());
                     this.setTitle(mastersList.length)
                 });
@@ -60,7 +61,8 @@ export default class Masters extends React.Component{
             fetch(BACKEND.masters.category+this.props.targetCategory._id+'/'+this.props.user.location.city.id)
                 .then(res => res.json())
                 .then(mastersList => {
-                    this.filter(mastersList);
+                    this.props.changeMastersList(mastersList);
+                    this.filter();
                     //this.setState({mastersList: mastersList}, ()=> this.filter());
                     this.setTitle(mastersList.length)
                 });
@@ -93,13 +95,12 @@ export default class Masters extends React.Component{
         }
     };
 
-    filter(mastersList) {
+    filter() {
         if(this.state.filter.length === 0) {
-            this.props.changeMastersList(mastersList);
             //this.setState({isLoad:true});
-            this.setState({filteredList: mastersList,isLoad: true}, ()=>this.setTitle(mastersList.length))
+            this.setState({filteredList: this.props.mastersList, isLoad: true}, ()=>this.setTitle(this.props.mastersList.length))
         } else {
-            let filteredList = mastersList.filter(master=> {
+            let filteredList = this.props.mastersList.filter(master=> {
                 let i = 0;
                 this.state.filter.forEach(filter=>{
                     if(master.categories.subcat){
@@ -110,7 +111,6 @@ export default class Masters extends React.Component{
                 });
                 if (i>0) return true
             });
-            this.props.changeMastersList(filteredList);
             //this.setState({isLoad:true});
             this.setState({filteredList: filteredList,isLoad: true}, ()=>this.setTitle(filteredList.length));
         }
@@ -136,7 +136,7 @@ export default class Masters extends React.Component{
                     this.props.targetCategory && this.state.isLoad &&
                     <ScrollSubcat
                         targetCategory={this.props.targetCategory}
-                        mastersList={this.state.filteredList}
+                        mastersList={this.props.mastersList}
                         checkSubcat={(e)=>this.checkSubcat(e)}
                     />
                 }

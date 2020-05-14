@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Мастер лист и категории в глобальном сторе">
-      <change afterPath="$PROJECT_DIR$/src/store/actions.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/reducers.js" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="scroll position in masters list">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/headCity.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/headCity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersList.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -401,14 +394,7 @@
       <workItem from="1589434776927" duration="2657000" />
       <workItem from="1589437600715" duration="1802000" />
       <workItem from="1589439413126" duration="1681000" />
-      <workItem from="1589441220663" duration="313000" />
-    </task>
-    <task id="LOCAL-00032" summary="Дизайн карточки мастер листа">
-      <created>1584207942288</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1584207942288</updated>
+      <workItem from="1589441220663" duration="1223000" />
     </task>
     <task id="LOCAL-00033" summary="Фикс лайков">
       <created>1584290763412</created>
@@ -746,7 +732,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589429419923</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="scroll position in masters list">
+      <created>1589441754211</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1589441754212</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -767,7 +760,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Фикс даты комментария" />
     <MESSAGE value="Карточки под прайслист в настройках" />
     <MESSAGE value="Панель с городами + фильтр поиска" />
     <MESSAGE value="хедеры" />
@@ -792,7 +784,8 @@
     <MESSAGE value="Исправлен баг если у мастера нет субкатегорий" />
     <MESSAGE value="Перед редаксом" />
     <MESSAGE value="Мастер лист и категории в глобальном сторе" />
-    <option name="LAST_COMMIT_MESSAGE" value="Мастер лист и категории в глобальном сторе" />
+    <MESSAGE value="scroll position in masters list" />
+    <option name="LAST_COMMIT_MESSAGE" value="scroll position in masters list" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -803,10 +796,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589437589821">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589441753732">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589437589821" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589441753732" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

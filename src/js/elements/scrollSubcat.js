@@ -12,6 +12,7 @@ function countSubcat(id,props){
 }
 
 export default function ScrollSubcat(props){
+    console.log(props);
     const subcatStyle = {
         flexShrink: 0,
         display: 'flex',
