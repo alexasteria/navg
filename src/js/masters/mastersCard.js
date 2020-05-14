@@ -30,9 +30,13 @@ class MastersCard extends React.Component {
     }
 
     componentDidMount() {
+        console.log(BACKEND.masters.onID + this.props.activeMasterId);
         fetch(BACKEND.masters.onID + this.props.activeMasterId)
             .then(res => res.json())
-            .then(master => {this.setState({activeMaster: master[0]}, ()=> this.loadFavs())});
+            .then(master => {
+                console.log(master);
+                this.setState({activeMaster: master}, ()=> this.loadFavs())
+            });
     }
 
     componentWillUnmount() {

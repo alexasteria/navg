@@ -219,8 +219,7 @@ class App extends React.Component {
     //     this.setState({ story: story });
     // };
     openPanelMaster = (panelName, master) => {
-        this.setState({activePanelMasters: panelName});
-        this.setState({activeMaster: master});
+        this.setState({activeMaster: master, activeMasterId: master._id, activePanelMasters: panelName});
     };
     // openMaster = (master) => {
     //     this.setState({ activeViewMasters: 'mastersList' });
@@ -243,14 +242,7 @@ class App extends React.Component {
         this.setState({activeMasterId: masterId,activeStory: 'masters',activeViewMasters: 'mastersList',activePanelMasters: 'masterInfo'});
     };
     openFavMasterOnId = (masterId) => {
-        fetch(BACKEND.masters.onID + masterId)
-            .then(res => res.json())
-            .then(master => {
-                this.setState({activeMaster: master});
-                //this.setState({ activeViewMasters: 'mastersList' });
-                //this.setState({ activeStory: 'masters' });
-                this.setState({activePanelLk: 'masterInfo'});
-            });
+        this.setState({activeMasterId: masterId, activePanelLk: 'masterInfo'});
     };
     activePanelMasters = (name) => {
         this.setState({activePanelMasters: name});
@@ -354,10 +346,11 @@ class App extends React.Component {
                             <Panel id="masterInfo">
                                 <Head title={'О мастере'}
                                       goBack={() => this.setState({activePanelMasters: 'mastersList'})}/>
-                                <MasterCard openPhoto={() => this.setState({activePanelMasters: 'masterPhoto'})}
-                                            user={this.state.user}
-                                            openComments={() => this.setState({activePanelMasters: 'masterComments'})}
-                                            activeMasterId={this.state.activeMasterId}
+                                <MasterCard
+                                    openPhoto={() => this.setState({activePanelMasters: 'masterPhoto'})}
+                                    user={this.state.user}
+                                    openComments={() => this.setState({activePanelMasters: 'masterComments'})}
+                                    activeMasterId={this.state.activeMasterId}
                                 />
                             </Panel>
                             <Panel id="masterPhoto">
@@ -366,9 +359,14 @@ class App extends React.Component {
                                 <MasterPhoto activeMaster={this.state.activeMaster}/>
                             </Panel>
                             <Panel id="masterComments">
-                                <Head title={'Отзывы'}
-                                      goBack={() => this.setState({activePanelMasters: 'masterInfo'})}/>
-                                <MasterComments user={this.state.user} activeMaster={this.state.activeMaster}/>
+                                <Head
+                                    title={'Отзывы'}
+                                    goBack={() => this.setState({activePanelMasters: 'masterInfo'})}
+                                />
+                                <MasterComments
+                                    user={this.state.user}
+                                    activeMaster={this.state.activeMaster}
+                                />
                             </Panel>
                         </View>
                         <View activePanel="masterCat" id="masterCat">
@@ -475,14 +473,26 @@ class App extends React.Component {
                                 {this.state.snackbar}
                             </Panel>
                             <Panel id='favourite'>
-                                <Head title={'Избранное'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <Favourite user={this.state.user} openFavMasterOnId={this.openFavMasterOnId}/>
+                                <Head
+                                    title={'Избранное'}
+                                    goBack={() => this.setState({activePanelLk: 'lk'})}
+                                />
+                                <Favourite
+                                    user={this.state.user}
+                                    openFavMasterOnId={this.openFavMasterOnId}
+                                />
                             </Panel>
                             <Panel id="masterInfo">
-                                <Head title={'О мастере'} goBack={() => this.setState({activePanelLk: 'favourite'})}/>
-                                <MasterCard openPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
-                                            user={this.state.user} activeMaster={this.state.activeMaster}
-                                            openComments={() => this.setState({activePanelLk: 'masterComments'})}/>
+                                <Head
+                                    title={'О мастере'}
+                                    goBack={() => this.setState({activePanelLk: 'favourite'})}
+                                />
+                                <MasterCard
+                                    openPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
+                                    user={this.state.user}
+                                    activeMasterId={this.state.activeMasterId}
+                                    openComments={() => this.setState({activePanelLk: 'masterComments'})}
+                                />
                             </Panel>
                             <Panel id="masterPhoto">
                                 <Head title={'Портфолио'} goBack={() => this.setState({activePanelLk: 'lk'})}/>

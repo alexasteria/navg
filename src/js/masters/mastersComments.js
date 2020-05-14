@@ -21,29 +21,20 @@ class MastersCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            comments: {
-                id: '1',
-                body: 'ТестТестТестТестТестТестТестТестТестТестТестТестТестТестТестТестТестТестТестТестТестТестТест',
-                author: 'Тест Тестович',
-                date: Date.now()
-            },
-            body: '',
-            commentsArr: [],
-            isLoad: false,
             rating: 3,
+            body: '',
+            isLoad: false,
             snackbar: null
         };
     }
     componentDidMount() {
-        this.setState({commentsArr: this.props.activeMaster.comments});
-        //console.log('comments ',   this.props.activeMaster.comments);
         this.props.activeMaster.comments.map(comment => {
             if (comment.user.userId === this.props.user._id) {
                 this.setState({isCommended: true})
             }
         });
         let count = this.props.activeMaster.comments.length;
-        this.setState({countComments: count, isLoad: true});
+        this.setState({commentsArr: this.props.activeMaster.comments, countComments: count, isLoad: true});
     }
     sendComment = () => {
         try {
@@ -72,29 +63,6 @@ class MastersCard extends React.Component {
                     </Snackbar>
             });
         }
-        // if (this.state.body.length < 50) {
-        //     this.setState({ snackbar:
-        //             <Snackbar
-        //                 layout="vertical"
-        //                 onClose={() => this.setState({ snackbar: null })}
-        //             >
-        //                 Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.
-        //             </Snackbar>
-        //     });
-        // } else {
-        //     let comment = {
-        //         user: {
-        //             userId: this.props.user._id,
-        //             firstname: this.props.user.firstname,
-        //             lastname: this.props.user.lastname,
-        //             avatarLink: this.props.user.avatarLink
-        //         },
-        //         rating: Number(this.state.rating),
-        //         body: this.state.body
-        //     };
-        //         this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
-        //         this.setState({isCommended: true});
-        // }
     };
     postData(url = '', data = {}, method) {
         // Значения по умолчанию обозначены знаком *
@@ -139,7 +107,7 @@ class MastersCard extends React.Component {
     }
     sendMessage = (bodyComment) => {
         let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
-        let message = "Привет! У тебя новый комментарий: "+bodyComment;
+        let message = "Привет! У тебя новый отзыв: "+bodyComment;
         bridge.send("VKWebAppCallAPIMethod", {
             "method": "messages.send",
             "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.props.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
@@ -175,40 +143,41 @@ class MastersCard extends React.Component {
         }
     };
     validate() {
-        //console.log(this.props.activeMaster.vkUid, this.props.user.vkUid);
-        if (this.props.activeMaster.vkUid === this.props.user.vkUid) {
-            return (
-                <Div style={{fontSize: 12, color: 'darkgray'}}>Нельзя оставлять комментарий на самого себя</Div >
-            )
-        }
-        else if (this.state.isCommended === true) {
-            return (
-                <Div style={{fontSize: 12, color: 'darkgray'}}>Вы уже оставляли комментарий об этом мастере</Div>
-            )
-        } else {
-            return (
-                <FormLayout>
-                    <Slider
-                        step={1}
-                        min={1}
-                        max={5}
-                        value={Number(this.state.rating)}
-                        onChange={rating => this.setState({rating})}
-                        top="Оцените работу мастера"
-                    />
-                    <Counter mode="primary">Ваша оценка: {this.state.rating}</Counter>
-                    <Textarea
-                        name={'body'}
-                        value={this.state.body}
-                        status={this.state.body.length > 20 ? 'valid' : 'error'}
-                        bottom={this.state.body.length > 20 ? '' : 'Опишите подробнее. Символов: '+this.state.body.replace(/ /g, "").length+' из 50' }
-                        top={"Добавление отзыва"}
-                        placeholder="Опишите, что вам понравилось или не понравилось в работе мастера"
-                        onChange={this.handleChange}
-                    />
-                    <CellButton onClick={() => this.sendComment()} before={<Icon24Add />}>Добавить отзыв</CellButton>
-                </FormLayout>
-            )
+        if (this.state.isLoad === true){
+            if (this.props.activeMaster.vkUid === this.props.user.vkUid) {
+                return (
+                    <Div style={{fontSize: 12, color: 'darkgray'}}>Нельзя оставлять комментарий на самого себя</Div >
+                )
+            }
+            else if (this.state.isCommended === true) {
+                return (
+                    <Div style={{fontSize: 12, color: 'darkgray'}}>Вы уже оставляли комментарий об этом мастере</Div>
+                )
+            } else {
+                return (
+                    <FormLayout>
+                        <Slider
+                            step={1}
+                            min={1}
+                            max={5}
+                            value={Number(this.state.rating)}
+                            onChange={rating=>this.setState({rating})}
+                            top="Оцените работу мастера"
+                        />
+                        <Counter mode="primary">Ваша оценка: {this.state.rating}</Counter>
+                        <Textarea
+                            name={'body'}
+                            value={this.state.body}
+                            status={this.state.body.length > 20 ? 'valid' : 'error'}
+                            bottom={this.state.body.length > 20 ? '' : 'Опишите подробнее. Символов: '+this.state.body.replace(/ /g, "").length+' из 50' }
+                            top={"Добавление отзыва"}
+                            placeholder="Опишите, что вам понравилось или не понравилось в работе мастера"
+                            onChange={this.handleChange}
+                        />
+                        <CellButton onClick={() => this.sendComment()} before={<Icon24Add />}>Добавить отзыв</CellButton>
+                    </FormLayout>
+                )
+            }
         }
     }
     handleChange = (event) => {
