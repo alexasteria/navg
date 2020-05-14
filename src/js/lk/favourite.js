@@ -1,13 +1,10 @@
 import React from 'react';
 import {
-    Group,
-    Div, Separator, Cell, Avatar, Spinner, Card, CardGrid, FixedLayout
+Cell, Avatar, Card, CardGrid
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from "../func/func";
 import Spin from '../elements/spinner'
-import Icon16Like from '@vkontakte/icons/dist/16/like';
-import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 
 class Favourite extends React.Component {
     constructor(props) {
@@ -19,41 +16,46 @@ class Favourite extends React.Component {
         };
     }
 
-    componentWillMount() {
-        this.loadFavsMasters(this.props.user);
+    componentDidMount() {
+        this.loadFavsMasters(this.props.user.favs);
     }
 
-    loadFavsMasters = (user) => {
-        fetch(BACKEND.favs.user + user._id)
+    loadFavsMasters = (favs) => {
+        //favs is array masters ID
+        let ids = {ids: favs};
+        fetch(BACKEND.masters.onarrayid, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(ids), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+        })
             .then(res => res.json())
-            .then(favsArr => {
-                if(favsArr.length === 0){
-                    this.setState({isLoaded: true});
-                } else {
-                    favsArr.map(fav => {
-                        fetch(BACKEND.masters.onID + fav.masterId)
-                            .then(res => res.json())
-                            .then(master => {
-                                let mastersArr = this.state.mastersArr;
-                                mastersArr.push(master);
-                                this.setState({mastersArr: mastersArr, isLoaded: true});
-                            });
-                        //this.setState({isLoaded: true});
-                    });
-                }
-            });
+            .then(mastersArr => {
+                this.setState({mastersArr: mastersArr, isLoaded: true});
+            })
+            .catch(err=> {
+                console.log(err);
+                this.setState({isLoaded: true});
+            })
     };
 
     render() {
         if (this.state.isLoaded === false) {
             return (<Spin/>)
         } else {
-            if(this.state.mastersArr.length === 0) {
+            if(this.state.mastersArr.message === 'Список избранного пуст') {
                 return (
                         <CardGrid>
                             <Card size="l" mode="shadow">
                                 <Cell multiline align="center">
-                                    Список избранного пуст
+                                    {this.state.mastersArr.message}
                                 </Cell>
                             </Card>
                         </CardGrid>
@@ -61,7 +63,7 @@ class Favourite extends React.Component {
             } else {
                 return (
                     this.state.mastersArr.map(master => {
-                        if ((master !== null) && (master.visible === true)) { //если мастер не удален
+                        if ((master !== null)) { //если мастер не удален
                             return (
                                 <CardGrid key={master._id}>
                                     <Card size="l" mode="shadow">

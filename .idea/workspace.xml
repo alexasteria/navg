@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Мастер ищет модель скролл и данные">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Все работает">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/partners.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/partners.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -397,14 +399,12 @@
       <workItem from="1589439413126" duration="1681000" />
       <workItem from="1589441220663" duration="1796000" />
       <workItem from="1589443029627" duration="1796000" />
-      <workItem from="1589444836317" duration="1343000" />
-    </task>
-    <task id="LOCAL-00036" summary="Передали фото в бэк">
-      <created>1584984382221</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1584984382221</updated>
+      <workItem from="1589444836317" duration="1778000" />
+      <workItem from="1589446919557" duration="1338000" />
+      <workItem from="1589449692496" duration="1795000" />
+      <workItem from="1589451563888" duration="1732000" />
+      <workItem from="1589453307351" duration="1796000" />
+      <workItem from="1589455114658" duration="1575000" />
     </task>
     <task id="LOCAL-00037" summary="Добавляются фотки локально">
       <created>1585171692160</created>
@@ -742,7 +742,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589445214669</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="Все работает">
+      <created>1589446384349</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1589446384349</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -763,7 +770,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="выбор города класс" />
     <MESSAGE value="город в настройках" />
     <MESSAGE value="Город в настройках и регистрации готовы" />
     <MESSAGE value="Осталось пофиксить смену категорий если город есть" />
@@ -788,7 +794,8 @@
     <MESSAGE value="Категории без багов" />
     <MESSAGE value="Мастерлист в сторе" />
     <MESSAGE value="Мастер ищет модель скролл и данные" />
-    <option name="LAST_COMMIT_MESSAGE" value="Мастер ищет модель скролл и данные" />
+    <MESSAGE value="Все работает" />
+    <option name="LAST_COMMIT_MESSAGE" value="Все работает" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -799,10 +806,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589445214248">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589446384048">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589445214248" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589446384048" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

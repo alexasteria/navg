@@ -8,7 +8,9 @@ export const BACKEND = {
         all: BACK_LINK+'masters/',
         onID: BACK_LINK+'masters/',
         category: BACK_LINK+'masters/category/',
-        vkuid: BACK_LINK+'masters/vkuid/'
+        vkuid: BACK_LINK+'masters/vkuid/',
+        subscribers: BACK_LINK+'masters/subscribe/',
+        onarrayid: BACK_LINK+'masters/onarrayid/'
     },
     favs: {
         new: BACK_LINK+'favs/',

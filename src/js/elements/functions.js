@@ -16,8 +16,7 @@ function postData(url = '', data = {}) {
         referrer: 'no-referrer', // no-referrer, *client
         body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
     })
-        .then(data)
-        .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+        .then(res => res.json())
 }
 
 function patchData(url = '', data = {}) {

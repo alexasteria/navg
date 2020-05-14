@@ -34,8 +34,8 @@ import Partners from "./js/lk/partners";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
-//import bridge from "@vkontakte/vk-bridge-mock";
-import bridge from '@vkontakte/vk-bridge';
+import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
@@ -240,15 +240,7 @@ class App extends React.Component {
             });
     };
     openMasterOnLink = (masterId) => {
-        fetch(BACKEND.masters.onID + masterId)
-            .then(res => res.json())
-            .then(master => {
-                console.log(master);
-                this.setState({activeMaster: master});
-                this.setState({activeStory: 'masters'});
-                this.setState({activeViewMasters: 'mastersList'});
-                this.setState({activePanelMasters: 'masterInfo'});
-            });
+        this.setState({activeMasterId: masterId,activeStory: 'masters',activeViewMasters: 'mastersList',activePanelMasters: 'masterInfo'});
     };
     openFavMasterOnId = (masterId) => {
         fetch(BACKEND.masters.onID + masterId)
@@ -363,8 +355,10 @@ class App extends React.Component {
                                 <Head title={'О мастере'}
                                       goBack={() => this.setState({activePanelMasters: 'mastersList'})}/>
                                 <MasterCard openPhoto={() => this.setState({activePanelMasters: 'masterPhoto'})}
-                                            user={this.state.user} activeMaster={this.state.activeMaster}
-                                            openComments={() => this.setState({activePanelMasters: 'masterComments'})}/>
+                                            user={this.state.user}
+                                            openComments={() => this.setState({activePanelMasters: 'masterComments'})}
+                                            activeMasterId={this.state.activeMasterId}
+                                />
                             </Panel>
                             <Panel id="masterPhoto">
                                 <Head title={'Портфолио'}
@@ -535,7 +529,7 @@ class App extends React.Component {
                                 <Head title={'Выбор города'}
                                       goBack={() => this.setState({activePanelReg: 'registration'})}/>
                                 <CityList changeCity={(city) => {
-                                    this.props.changeTargetCity(city);
+                                    this.changeTargetCity(city);
                                     this.setState({activePanelReg: 'registration'})
                                 }}/>
                             </Panel>

@@ -17,36 +17,46 @@ import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from '../func/func';
 import bridge from "@vkontakte/vk-bridge";
+import {patchData} from "../elements/functions";
 
 class MastersCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeMasterId: this.props.activeMasterId,
-            activeMaster: {
-                priceList: []
-            },
-            favsArr: [
-                {vkUid:12523452}
-            ],
-            isFavourite: {
-                status: false
-            },
             isLoad: false,
-            snackbar: null
+            snackbar: null,
+            isChange: false
         };
     }
+
     componentDidMount() {
-        console.log(this.props);
-        this.setState({activeMaster: this.props.activeMaster});
-        this.loadFavs();
+        fetch(BACKEND.masters.onID + this.props.activeMasterId)
+            .then(res => res.json())
+            .then(master => {this.setState({activeMaster: master[0]}, ()=> this.loadFavs())});
     }
+
+    componentWillUnmount() {
+        if (this.state.isChange){ //если были изменения пишем в бд при разрушении ДОМ дерева
+            patchData(BACKEND.users+'/'+this.state.user._id, this.state.user);
+            if (this.state.isFavourite === true) {
+                let count = {count: 1};
+                patchData(BACKEND.masters.subscribers+this.state.activeMaster._id, count);
+                //прибавляем счетчик мастера
+            } else {
+                let count = {count: -1};
+                patchData(BACKEND.masters.subscribers+this.state.activeMaster._id, count);
+                //убавляем счетчик
+            }
+        }
+    }
+
     handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
         console.log(this.state);
     };
+
     favStatus = () => {
-        if(this.state.isFavourite.status === false) {
+        if(this.state.isFavourite === false) {
             return (
                             <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                                 <Icon16LikeOutline width={30} height={30} fill="red"/>
@@ -93,41 +103,34 @@ class MastersCard extends React.Component {
     //     )
     // }
     loadFavs = () => {
-        //console.log(BACKEND.favs.master+this.props.activeMaster._id);
-        fetch(BACKEND.favs.master+this.props.activeMaster._id)
-            .then(res => res.json())
-            .then(favsArr => {
-                this.setState({favsArr: favsArr});
-                let count = favsArr.length;
-                this.setState({countFavs: count});
-                this.setState({isLoad: true})
-                this.state.favsArr.map(fav => {
-                    if (fav.userId === this.props.user._id) {
-                        this.setState({isFavourite: {status: true, id: fav._id}});
-                        //console.log('У тебя в избранном');
-                    } else {
-                        this.setState({isFavourite: {status: false}})
-                        //console.log('Нет в избранном');
-                    }
-                });
-            });
-    }
+        console.log(this.state.activeMaster);
+        if (this.props.user.favs){
+            if (this.props.user.favs.includes(this.state.activeMaster._id)){
+                this.setState({isFavourite: true});
+            } else {
+                this.setState({isFavourite: false});
+            }
+        }
+        this.setState({countFavs: this.state.activeMaster.subscribers, isLoad: true});
+    };
     changeVisible = (index) => {
         this.setState({[index]: !this.state[index]})
-    }
+    };
     checkFavs = () => {
-        console.log('прежний статус '+this.state.isFavourite.status);
-        if (this.state.isFavourite.status === false) {
-            let fav = {
-                userId: this.props.user._id,
-                userVkUid: this.props.user.vkUid,
-                masterId: this.state.activeMaster._id,
-                masterVkUid: this.state.activeMaster.vkUid
-            };
-            this.postData(BACKEND.favs.new, fav, 'POST');
-            this.setState({isFavourite: {status: true}});
-            this.setState({countFavs: this.state.countFavs+1});
-            this.openSnackAvatar('Вы подписались на обновления мастера. Отменить подписку можно во вкладке Кабинет, в разделе Избранное.', this.state.activeMaster.avatarLink);
+        if (this.state.isFavourite === false) {
+            let user = this.props.user;
+            user.favs.push(this.state.activeMaster._id);
+            this.setState({isFavourite: true, countFavs: this.state.countFavs+1, isChange: !this.state.isChange, user: user}, ()=>
+                this.openSnackAvatar('Вы подписались на обновления мастера.', this.state.activeMaster.avatarLink));
+        } else {
+            let user = this.props.user;
+            let index = this.props.user.favs.indexOf(this.state.activeMaster._id);
+            let favs = this.props.user.favs;
+            if (index > -1) {
+                favs.splice(index, 1);
+            } else favs.splice(0, index);
+            this.setState({isFavourite: false, countFavs: this.state.countFavs-1, isChange: !this.state.isChange, user: user}, ()=>
+                this.openSnackAvatar('Мастер удален из списка избранного.', this.state.activeMaster.avatarLink));
         }
 
     };
@@ -190,16 +193,6 @@ class MastersCard extends React.Component {
                         />
                         <Div className="FormField__border"></Div>
                     </Div>
-                    {/*<Input*/}
-                    {/*    mask="7 (999) 999-99-99"*/}
-                    {/*    inputmask="7 (999) 999-99-99"*/}
-                    {/*    name='phone'*/}
-                    {/*    type="text"*/}
-                    {/*    defaultValue={number || ''}*/}
-                    {/*    align="center"*/}
-                    {/*    value={this.state.phone}*/}
-                    {/*    onChange={this.handleChange}*/}
-                    {/*/>*/}
                     <p>Укажите номер телефона. Если мастер не сможет ответить прямо сейчас, он свяжется с вами.</p>
                     <Button onClick={this.sendMessage}>Отправить</Button>
                     </FormLayout>
