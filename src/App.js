@@ -42,7 +42,7 @@ import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
 import spinner from './js/elements/img/spinner.svg'
 import {connect} from "react-redux";
-import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll} from "./store/actions";
+import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll} from "./store/actions";
 import {bindActionCreators} from "redux";
 
 class App extends React.Component {
@@ -414,6 +414,10 @@ class App extends React.Component {
                                 user={this.state.user}
                                 changeCity={() => this.setActiveModal('cityList')}
                                 targetCity={this.props.targetCity}
+                                changeFindModelsList={(find)=>this.props.changeFindModelsList(find)}
+                                findModelsList={this.props.findModelsList}
+                                scroll={this.props.findModelsListScroll}
+                                changeFindModelsListScroll={(scroll)=>this.props.changeFindModelsListScroll(scroll)}
                             />
                         </Panel>
                         <Panel id="masterInfo">
@@ -547,7 +551,9 @@ const putStateToProps = (state) => {
         mastersList: state.mastersList,
         targetCategory: state.targetCategory,
         targetCity: state.targetCity,
-        mastersListScroll: state.mastersListScroll
+        mastersListScroll: state.mastersListScroll,
+        findModelsList: state.findModelsList,
+        findModelsListScroll: state.findModelsListScroll
     };
 };
 
@@ -556,7 +562,9 @@ const putActionsToProps = (dispatch) => {
         changeMastersList: bindActionCreators(changeMastersList, dispatch),
         changeTargetCategory: bindActionCreators(changeTargetCategory, dispatch),
         changeTargetCity: bindActionCreators(changeTargetCity, dispatch),
-        changeMasterslistScroll: bindActionCreators(changeMasterslistScroll, dispatch)
+        changeMasterslistScroll: bindActionCreators(changeMasterslistScroll, dispatch),
+        changeFindModelsList: bindActionCreators(changeFindModelsList, dispatch),
+        changeFindModelsListScroll: bindActionCreators(changeFindModelsListScroll, dispatch)
     };
 };
 

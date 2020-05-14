@@ -2,7 +2,9 @@ import {
     ACTION_CHANGE_MASTERS_LIST,
     ACTION_CHANGE_TARGET_CATEGORY,
     ACTION_CHANGE_TARGET_CITY,
-    ACTION_CHANGE_MASTERSLIST_SCROLL
+    ACTION_CHANGE_MASTERSLIST_SCROLL,
+    ACTION_CHANGE_FINDMODELS_LIST,
+    ACTION_CHANGE_FINDMODELS_SCROLL
 } from "./reducers";
 
 export const changeMastersList = (newMastersList) => {
@@ -34,5 +36,21 @@ export const changeMasterslistScroll = (newScroll) => {
     return {
         type: ACTION_CHANGE_MASTERSLIST_SCROLL,
         payload: newScroll
+    };
+};
+
+export const changeFindModelsList = (newFindModelsList) => {
+    console.log('in ACTION_CHANGE_FINDMODELS_LIST', newFindModelsList);
+    return {
+        type: ACTION_CHANGE_FINDMODELS_LIST,
+        payload: newFindModelsList
+    };
+};
+
+export const changeFindModelsListScroll = (newFindModelsListScroll) => {
+    console.log('in ACTION_CHANGE_FINDMODELS_SCROLL', newFindModelsListScroll);
+    return {
+        type: ACTION_CHANGE_FINDMODELS_SCROLL,
+        payload: newFindModelsListScroll
     };
 };

@@ -21,7 +21,7 @@ export default class MastersList extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(prevProps !== this.props){
-            this.setState({error: null})
+            this.setState({error: null});
             try {
                 if (this.props.city === 'Не выбрано') throw 'Нет города';
                 if (this.props.mastersList.length === 0) throw 'Никого не нашли';

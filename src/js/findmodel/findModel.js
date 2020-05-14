@@ -14,21 +14,37 @@ class FindModel extends React.Component {
         };
     }
     componentDidMount() {
-        if(!this.state.findArr){
+        console.log(this.props);
+        if(this.props.findModelsList.length === 0){
             this.loadFind()
+        } else {
+            this.setState({findArr: this.props.findModelsList, isLoad: true}, ()=>{
+                if (this.props.scroll){
+                    console.log('scroll');
+                    window.scrollTo(0, this.props.scroll)
+                }
+            })
         }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps !== this.props) {
+        if(prevProps.targetCity !== this.props.targetCity) {
+            console.log('chnge city');
             this.setState({isLoad: false},()=>this.loadFind())
         }
     }
 
+    componentWillUnmount() {
+        this.props.changeFindModelsListScroll(window.self.pageYOffset);
+    }
+
     loadFind = () =>{
-            fetch(BACKEND.findModel.onCity+this.props.user.location.city.id)//ловим обьявления по городу юзера
+            fetch(BACKEND.findModel.onCity+this.props.targetCity.id)//ловим обьявления по городу юзера
                 .then(res => res.json())
-                .then(find => {this.setState({findArr: find, isLoad: true});});
+                .then(find => {
+                    this.setState({findArr: find, isLoad: true});
+                    this.props.changeFindModelsList(find);
+                });
     };
 
     share = () => {
