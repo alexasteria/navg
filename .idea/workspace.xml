@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Все работает">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Лайки">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -404,14 +400,8 @@
       <workItem from="1589449692496" duration="1795000" />
       <workItem from="1589451563888" duration="1732000" />
       <workItem from="1589453307351" duration="1796000" />
-      <workItem from="1589455114658" duration="1575000" />
-    </task>
-    <task id="LOCAL-00037" summary="Добавляются фотки локально">
-      <created>1585171692160</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1585171692160</updated>
+      <workItem from="1589455114658" duration="1907000" />
+      <workItem from="1589457036649" duration="376000" />
     </task>
     <task id="LOCAL-00038" summary="оложение элементов в карточке мастера">
       <created>1586113727966</created>
@@ -749,7 +739,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589446384349</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="Лайки">
+      <created>1589456722692</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1589456722692</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -770,7 +767,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="город в настройках" />
     <MESSAGE value="Город в настройках и регистрации готовы" />
     <MESSAGE value="Осталось пофиксить смену категорий если город есть" />
     <MESSAGE value="косяки пофикшены" />
@@ -795,7 +791,8 @@
     <MESSAGE value="Мастерлист в сторе" />
     <MESSAGE value="Мастер ищет модель скролл и данные" />
     <MESSAGE value="Все работает" />
-    <option name="LAST_COMMIT_MESSAGE" value="Все работает" />
+    <MESSAGE value="Лайки" />
+    <option name="LAST_COMMIT_MESSAGE" value="Лайки" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -806,10 +803,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589446384048">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589456722249">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589446384048" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589456722249" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -834,6 +831,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1584651295663" />
+    <state x="834" y="243" key="MultipleFileMergeDialog" timestamp="1589457307669">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="834" y="243" key="MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589457307669" />
     <state x="508" y="470" key="NewPhpFileDialog" timestamp="1584903289205">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -846,10 +847,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="0" y="167" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1583525819052" />
-    <state x="552" y="254" key="Vcs.Push.Dialog.v2" timestamp="1582654372643">
+    <state x="552" y="254" key="Vcs.Push.Dialog.v2" timestamp="1589457289716">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="254" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1582654372643" />
+    <state x="552" y="254" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589457289716" />
     <state x="1021" y="324" key="git4idea.merge.GitMergeDialog" timestamp="1582669311131">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
