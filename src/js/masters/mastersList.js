@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Button, Card, CardGrid, Cell, Div, Placeholder} from "@vkontakte/vkui";
+import {Avatar, Button, Card, CardGrid, Cell, Div, Group, Header, Placeholder} from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 import bridge from "@vkontakte/vk-bridge";
 
@@ -10,6 +10,7 @@ export default class MastersList extends React.Component {
     }
 
     componentDidMount() {
+        this.setTitle(this.props.mastersList.length);
         try {
             if (this.props.city === 'Не выбрано') throw 'Нет города';
             if (this.props.mastersList.length === 0) throw 'Никого не нашли';
@@ -27,6 +28,14 @@ export default class MastersList extends React.Component {
             } catch (e) {
                 this.setState({error: e})
             }
+        }
+    }
+
+    setTitle(count) {
+        if (count === undefined){
+            this.setState({title: 'Мы никого не нашли :( пока не нашли...'});
+        } else {
+            this.setState({title: 'Найдено мастеров: '+count});
         }
     }
 
@@ -106,7 +115,9 @@ export default class MastersList extends React.Component {
             )
         } else {
             return (
-                this.renderMasters()
+                <Group separator="hide" header={<Header mode="secondary">{this.state.title}</Header>}>
+                    {this.renderMasters()}
+                </Group>
             )
         }
     }

@@ -20,8 +20,7 @@ export default class Masters extends React.Component{
         if (this.props.mastersList.length === 0) {
             this.loadList()
         } else {
-            //this.filter(this.props.mastersList);
-            this.setState({filteredList: this.props.mastersList,isLoad: true}, ()=> {
+            this.setState({filteredList: this.props.mastersList, isLoad: true}, ()=> {
                 if (this.props.scroll){
                     console.log('scroll');
                     window.scrollTo(0, this.props.scroll)
@@ -35,47 +34,29 @@ export default class Masters extends React.Component{
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.targetCategory !== this.props.targetCategory) {
-            console.log('chnge cat');
+        if(prevProps.targetCity !== this.props.targetCity) {
+            console.log('chnge city');
             this.setState({isLoad: false},()=>this.loadList())
         }
     }
 
-    // componentDidUpdate(prevProps, prevState, snapshot) {
-    //     if(prevProps !== this.props) {
-    //         this.setState({isLoad: false},()=>this.loadList())
-    //     }
-    // }
-
     loadList = () => {
         if(this.props.targetCategory === '') {
-            fetch(BACKEND.masters.category+'all/'+this.props.user.location.city.id)
+            fetch(BACKEND.masters.category+'all/'+this.props.targetCity.id)
                 .then(res => res.json())
                 .then(mastersList => {
                     this.props.changeMastersList(mastersList);
                     this.filter();
-                    //this.setState({mastersList: mastersList}, ()=> this.filter());
-                    this.setTitle(mastersList.length)
                 });
         } else {
-            fetch(BACKEND.masters.category+this.props.targetCategory._id+'/'+this.props.user.location.city.id)
+            fetch(BACKEND.masters.category+this.props.targetCategory._id+'/'+this.props.targetCity.id)
                 .then(res => res.json())
                 .then(mastersList => {
                     this.props.changeMastersList(mastersList);
                     this.filter();
-                    //this.setState({mastersList: mastersList}, ()=> this.filter());
-                    this.setTitle(mastersList.length)
                 });
         }
     };
-
-    setTitle(count) {
-        if (count === undefined){
-            this.setState({title: 'Мы никого не нашли :( пока не нашли...'});
-        } else {
-            this.setState({title: 'Найдено мастеров: '+count});
-        }
-    }
 
     checkSubcat = (e) => {
         let buttonSubcat = document.getElementById(e.currentTarget.id);
@@ -97,8 +78,7 @@ export default class Masters extends React.Component{
 
     filter() {
         if(this.state.filter.length === 0) {
-            //this.setState({isLoad:true});
-            this.setState({filteredList: this.props.mastersList, isLoad: true}, ()=>this.setTitle(this.props.mastersList.length))
+            this.setState({filteredList: this.props.mastersList, isLoad: true})
         } else {
             let filteredList = this.props.mastersList.filter(master=> {
                 let i = 0;
@@ -111,8 +91,7 @@ export default class Masters extends React.Component{
                 });
                 if (i>0) return true
             });
-            //this.setState({isLoad:true});
-            this.setState({filteredList: filteredList,isLoad: true}, ()=>this.setTitle(filteredList.length));
+            this.setState({filteredList: filteredList,isLoad: true});
         }
     }
 
@@ -140,7 +119,6 @@ export default class Masters extends React.Component{
                         checkSubcat={(e)=>this.checkSubcat(e)}
                     />
                 }
-                <Group separator="hide" header={<Header mode="secondary">{this.state.title}</Header>}>
                     {
                         this.state.isLoad ?
                         <MastersList
@@ -152,7 +130,6 @@ export default class Masters extends React.Component{
                         /> :
                             <Spin/>
                     }
-                </Group>
             </React.Fragment>
         )
     }

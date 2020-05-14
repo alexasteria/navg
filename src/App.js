@@ -382,16 +382,11 @@ class App extends React.Component {
                                 <PanelHeader>Выбор категории</PanelHeader>
                                 <Group>
                                     <CategoriesList
-                                        //targetCategory={this.state.targetCategory}
                                         targetCategory={this.props.targetCategory}
                                         setCategory={(category) => {
                                             this.props.changeTargetCategory(category);
                                             this.setState({activeViewMasters: 'mastersList'});
                                         }}
-                                        // setCategory={(category) => this.setState({
-                                        //     targetCategory: category,
-                                        //     activeViewMasters: 'mastersList'
-                                        // })}
                                     />
                                 </Group>
                             </Panel>
