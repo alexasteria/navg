@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker';
 import bridge from '@vkontakte/vk-bridge';
 import {createStore} from "redux";
 import {Provider} from "react-redux"
-import {rootReducer} from "./store/reducers";
+import {rootReducer} from "./js/store/reducers";
 
 const store = createStore(rootReducer);
 

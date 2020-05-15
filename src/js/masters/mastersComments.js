@@ -16,8 +16,9 @@ import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
 import Pop from "../func/alert";
 import bridge from "@vkontakte/vk-bridge";
+import {connect} from "react-redux";
 
-class MastersCard extends React.Component {
+class MastersComments extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -195,4 +196,10 @@ class MastersCard extends React.Component {
     }
 }
 
-export default MastersCard;
+const putStateToProps = (state) => {
+    return {
+        user: state.user
+    };
+};
+
+export default connect(putStateToProps)(MastersComments);

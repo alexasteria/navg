@@ -1,5 +1,7 @@
 import React from 'react';
 import {Cell} from "@vkontakte/vkui";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 function indicator(city){
     if(city) {
@@ -8,7 +10,7 @@ function indicator(city){
 
 }
 
-export default function HeadCity(props){
+function HeadCity(props){
     return(
         <Cell
             style={{fontSize: 12, padding: 0}}
@@ -18,3 +20,12 @@ export default function HeadCity(props){
         ><span style={{fontSize: 12}}>Выбранный город</span></Cell>
     )
 }
+
+const putStateToProps = (state) => {
+    return {
+        targetCity: state.targetCity
+    };
+};
+
+
+export default connect(putStateToProps)(HeadCity);

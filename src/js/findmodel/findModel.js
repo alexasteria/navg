@@ -4,6 +4,9 @@ import FindList from './components/findList';
 import HeadCity from '../elements/headCity'
 import Spin from '../elements/spinner'
 import bridge from "@vkontakte/vk-bridge";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {changeFindModelsList, changeFindModelsListScroll,} from "../store/actions";
 
 
 class FindModel extends React.Component {
@@ -14,14 +17,12 @@ class FindModel extends React.Component {
         };
     }
     componentDidMount() {
-        console.log(this.props);
         if(this.props.findModelsList.length === 0){
             this.loadFind()
         } else {
             this.setState({findArr: this.props.findModelsList, isLoad: true}, ()=>{
-                if (this.props.scroll){
-                    console.log('scroll');
-                    window.scrollTo(0, this.props.scroll)
+                if (this.props.findModelsListScroll){
+                    window.scrollTo(0, this.props.findModelsListScroll)
                 }
             })
         }
@@ -29,7 +30,6 @@ class FindModel extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(prevProps.targetCity !== this.props.targetCity) {
-            console.log('chnge city');
             this.setState({isLoad: false},()=>this.loadFind())
         }
     }
@@ -58,8 +58,6 @@ class FindModel extends React.Component {
             return (
                 <React.Fragment>
                     <HeadCity
-                        userCity={this.props.user.location.city}
-                        targetCity={this.props.targetCity}
                         changeCity={()=>this.props.changeCity()}
                     />
                     <FindList
@@ -74,4 +72,20 @@ class FindModel extends React.Component {
     }
 }
 
-export default FindModel;
+const putStateToProps = (state) => {
+    return {
+        targetCity: state.targetCity,
+        user: state.user,
+        findModelsListScroll: state.findModelsListScroll,
+        findModelsList: state.findModelsList
+    };
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+        changeFindModelsList: bindActionCreators(changeFindModelsList, dispatch),
+        changeFindModelsListScroll: bindActionCreators(changeFindModelsListScroll, dispatch),
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(FindModel);

@@ -34,15 +34,16 @@ import Partners from "./js/lk/partners";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
-import bridge from "@vkontakte/vk-bridge-mock";
-//import bridge from '@vkontakte/vk-bridge';
+//import bridge from "@vkontakte/vk-bridge-mock";
+import bridge from '@vkontakte/vk-bridge';
 import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
 import spinner from './js/elements/img/spinner.svg'
 import {connect} from "react-redux";
-import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll} from "./store/actions";
+import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll,
+    loginUser, createUser, setMaster} from "./js/store/actions";
 import {bindActionCreators} from "redux";
 
 class App extends React.Component {
@@ -58,26 +59,6 @@ class App extends React.Component {
             activeViewMasters: 'mastersList',
             activeViewLk: 'lk',
             activePanelLk: 'lk',
-            targetCategory: '',
-            catRu: {
-                Manicure: 'Маникюр',
-                Pedicure: 'Педикюр',
-                Eyelashes: 'Ресницы',
-                Eyebrows: 'Брови',
-                Shugaring: 'Шугаринг',
-                Hairstyles: 'Уход за волосами'
-            },
-            user: '',
-            mastersList: null,
-            categories: [
-                {id: '5e37537a58b85c13bcffb8b4', label: 'Маникюр'},
-                {id: '5e3753be58b85c13bcffb8b5', label: 'Педикюр'},
-                {id: '5e3753c458b85c13bcffb8b6', label: 'Ресницы'},
-                {id: '5e3753c858b85c13bcffb8b7', label: 'Брови'},
-                {id: '5e3753cd58b85c13bcffb8b8', label: 'Шугаринг'},
-                {id: '5e3753d558b85c13bcffb8b9', label: 'Уход за волосами'},
-                {id: '5e3753dc58b85c13bcffb8ba', label: 'Косметология'},
-            ],
             activePanelReg: 'registration',
             baseCities: '',
             searchCity: '',
@@ -95,39 +76,55 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
         bridge.send('VKWebAppGetUserInfo', {})
-            .then(data => {
-                //console.log(data);
-                //this.setState({vkuser: data});
-                this.verifiedUser(data);
-            });
-        if (this.props.params) {
-            postData(BACKEND.logs.params, this.props.params);
-        }
+            .then(data => {this.verificationUser(data)});
+        if (this.props.params) {postData(BACKEND.logs.params, this.props.params)}
         if (this.props.linkParams.masterid) {
             console.log('В параметры пришел мастер');
             this.openMasterOnLink(this.props.linkParams.masterid)
         }
     }
 
-    verifiedUser = (vkUser) => {
+    verificationUser = (vkUser) => {
          fetch(BACKEND.users + '/vkuid/' + vkUser.id)
             .then(res => res.json())
             .then(usersArr => {
                 if (usersArr.length === 0) {
-                    this.regNewUser();
+                    const user = {
+                        vkUid: vkUser.id,
+                        firstname: vkUser.first_name,
+                        lastname: vkUser.last_name,
+                        avatarLink: vkUser.photo_200,
+                        sex: vkUser.sex,
+                        location: {
+                            country: vkUser.country || 'Не определен',
+                            city: vkUser.city || 'Не определен'
+                        },
+                        isMaster: false
+                    };
+                    postData(BACKEND.users, user); //регитрируем
+                    this.props.createUser(user);
                 } else {
-                    let targetCity = typeof usersArr[0].location.city !== 'object' ? 'Не выбрано' : usersArr[0].location.city;
-                    this.props.changeTargetCity(targetCity);
-                    this.setState({user: usersArr[0]});
+                    if (usersArr[0].isMaster === true) {
+                        fetch(BACKEND.masters.vkuid + usersArr[0].vkUid)
+                            .then(res => res.json())
+                            .then(master => {
+                                if (master.length === 0) {
+                                    console.log('Мастер удален');
+                                    return null
+                                } else {
+                                    this.props.setMaster(master[0]);
+                                }
+                            });
+                    }
+                    this.props.loginUser(usersArr[0]);
                 }
             })
             .catch(error => {
                 this.openSnack('Отсутствует соединение с базой пользователей.');
                 console.log(error); // Error: Not Found
             });
-    }
+    };
 
     setActiveModal(activeModal) {
         activeModal = activeModal || null;
@@ -165,26 +162,6 @@ class App extends React.Component {
         });
     }
 
-    regNewUser = () => {
-        bridge.send('VKWebAppGetUserInfo', {}).then(data => {
-            console.log('Данные с моста', data);
-            const user = {
-                vkUid: data.id,
-                firstname: data.first_name,
-                lastname: data.last_name,
-                avatarLink: data.photo_200,
-                sex: data.sex,
-                location: {
-                    country: data.country || 'Не определен',
-                    city: data.city || 'Не определен'
-                },
-                isMaster: false
-            };
-            this.setState({user: user});
-            postData(BACKEND.users, user); //регитрируем
-        });
-    };
-
     openAlert = (title, body, action) => {
         this.setState({
             popout:
@@ -202,31 +179,18 @@ class App extends React.Component {
                 </Alert>
         });
     };
-    // closeAlert = () => {
-    //     this.setState({ popout: null });
-    // };
+
     closeReg = (master) => {
-        console.log(master);
         postData(BACKEND.masters.all, master);
-        let user = this.state.user;
-        user.isMaster = true;
-        this.setState({user: user, activeViewLk: 'lk'});
+        this.props.setMaster(master);
+        this.setState({activeViewLk: 'lk'});
         // //this.verifiedUser(master); //проходит до запроса в БД пофиксить
     };
-    // change = (story, view, panel) => {
-    //     this.setState({ story: story });
-    //     this.setState({ story: story });
-    //     this.setState({ story: story });
-    // };
+
     openPanelMaster = (panelName, master) => {
         this.setState({activeMaster: master, activeMasterId: master._id, activePanelMasters: panelName});
     };
-    // openMaster = (master) => {
-    //     this.setState({ activeViewMasters: 'mastersList' });
-    //     this.setState({ activeStory: 'masters' });
-    //     this.setState({ activePanelMasters: 'masterInfo' });
-    //     this.setState({ activeMaster: master });
-    // };
+
     openMasterOnId = (masterId) => {
         this.setState({activePanelFindModels: 'masterInfo', activeMasterId: masterId});
     };
@@ -249,16 +213,16 @@ class App extends React.Component {
     }
 
     changeTargetCity(city){
-        let user = this.state.user;
+        let user = this.props.user;
         user.location.city = city;
-        this.setState({user:user}, () => this.setActiveModal(null));
-        patchData(BACKEND.users+'/'+user._id, user);
         this.props.changeTargetCity(city);
+        patchData(BACKEND.users+'/'+user._id, user);
+        this.setActiveModal(null)
     }
 
     render() {
-        const {mastersList} = this.props;
-        if (this.state.user === '') {
+        const {user, loginStatus} = this.props;
+        if (loginStatus === false) {
             return (
                 // <Placeholder icon={<Spinner size="large" style={{marginTop: 20}}/>}>
                 <Placeholder icon={<img src={spinner}/>}>
@@ -299,8 +263,10 @@ class App extends React.Component {
                     <View id="news" activePanel="news">
                         <Panel id="news">
                             <PanelHeader>Навигатор красоты</PanelHeader>
-                            <News openReg={() => this.setState({activeViewLk: 'registration', activeStory: 'lk'})}
-                                  user={this.state.user} openStory={this.openStory}/>
+                            <News
+                                openReg={() => this.setState({activeViewLk: 'registration', activeStory: 'lk'})}
+                                openStory={this.openStory}
+                            />
                         </Panel>
                     </View>
                     <Root
@@ -321,34 +287,30 @@ class App extends React.Component {
                         <View id="mastersList" activePanel={this.state.activePanelMasters}>
                             <Panel id="mastersList">
                                 <Masters
-                                    user={this.state.user}
                                     changeCity={() => this.setActiveModal('cityList')}
-                                    targetCity={this.props.targetCity}
                                     openSnack={(title)=>this.openSnack(title)}
                                     changeCategory={()=>this.setState({activeViewMasters: 'masterCat'})}
-                                    targetCategory={this.props.targetCategory}
                                     openPanelMaster={this.openPanelMaster}
-                                    mastersList={mastersList}
-                                    changeMastersList={(newMastersList)=>this.props.changeMastersList(newMastersList)}
-                                    changeMasterslistScroll={(scroll)=>this.props.changeMasterslistScroll(scroll)}
-                                    scroll={this.props.mastersListScroll}
                                 />
                                 {this.state.snackbar}
                             </Panel>
                             <Panel id="masterInfo">
-                                <Head title={'О мастере'}
-                                      goBack={() => this.setState({activePanelMasters: 'mastersList'})}/>
+                                <Head
+                                    title={'О мастере'}
+                                    goBack={() => this.setState({activePanelMasters: 'mastersList'})}
+                                />
                                 <MasterCard
                                     openPhoto={() => this.setState({activePanelMasters: 'masterPhoto'})}
-                                    user={this.state.user}
                                     openComments={() => this.setState({activePanelMasters: 'masterComments'})}
                                     activeMasterId={this.state.activeMasterId}
                                     setActiveMaster={(master)=>this.setState({activeMaster: master})}
                                 />
                             </Panel>
                             <Panel id="masterPhoto">
-                                <Head title={'Портфолио'}
-                                      goBack={() => this.setState({activePanelMasters: 'masterInfo'})}/>
+                                <Head
+                                    title={'Портфолио'}
+                                    goBack={() => this.setState({activePanelMasters: 'masterInfo'})}
+                                />
                                 <MasterPhoto activeMaster={this.state.activeMaster}/>
                             </Panel>
                             <Panel id="masterComments">
@@ -357,7 +319,6 @@ class App extends React.Component {
                                     goBack={() => this.setState({activePanelMasters: 'masterInfo'})}
                                 />
                                 <MasterComments
-                                    user={this.state.user}
                                     activeMaster={this.state.activeMaster}
                                 />
                             </Panel>
@@ -367,7 +328,6 @@ class App extends React.Component {
                                 <PanelHeader>Выбор категории</PanelHeader>
                                 <Group>
                                     <CategoriesList
-                                        targetCategory={this.props.targetCategory}
                                         setCategory={(category) => {
                                             this.props.changeTargetCategory(category);
                                             this.setState({activeViewMasters: 'mastersList'});
@@ -396,13 +356,7 @@ class App extends React.Component {
                             <PanelHeader>Мастер ищет модель</PanelHeader>
                             <FindModel
                                 openMasterOnId={(masterId)=>this.openMasterOnId(masterId)}
-                                user={this.state.user}
                                 changeCity={() => this.setActiveModal('cityList')}
-                                targetCity={this.props.targetCity}
-                                changeFindModelsList={(find)=>this.props.changeFindModelsList(find)}
-                                findModelsList={this.props.findModelsList}
-                                scroll={this.props.findModelsListScroll}
-                                changeFindModelsListScroll={(scroll)=>this.props.changeFindModelsListScroll(scroll)}
                             />
                         </Panel>
                         <Panel id="masterInfo">
@@ -412,7 +366,6 @@ class App extends React.Component {
                             />
                             <MasterCard
                                 openPhoto={() => this.setState({activePanelFindModels: 'masterPhoto'})}
-                                user={this.state.user}
                                 activeMasterId={this.state.activeMasterId}
                                 openComments={() => this.setState({activePanelFindModels: 'masterComments'})}
                                 setActiveMaster={(master)=>this.setState({activeMaster: master})}
@@ -431,7 +384,6 @@ class App extends React.Component {
                                 goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}
                             />
                             <MasterComments
-                                user={this.state.user}
                                 activeMaster={this.state.activeMaster}
                             />
                         </Panel>
@@ -443,7 +395,6 @@ class App extends React.Component {
                                 snackbar={(message) => this.openSnack(message)}
                                 modalBack={this.modalBack}
                                 activeModal={this.state.activeModal}
-                                user={this.state.user}
                                 changeModal={(name) => this.setActiveModal(name)}
                             />
                         }>
@@ -467,7 +418,7 @@ class App extends React.Component {
                                 {
                                     this.state.activeTabLk === 'about' ?
                                         <Lk
-                                            user={this.state.user}
+                                            user={user}
                                             openSetting={() => this.setActiveModal('setting')}
                                             //openSetting={() => this.setState({activePanelLk: 'setting'})}
                                             openFavourite={() => this.setState({activePanelLk: 'favourite'})}
@@ -485,7 +436,7 @@ class App extends React.Component {
                                     goBack={() => this.setState({activePanelLk: 'lk'})}
                                 />
                                 <Favourite
-                                    user={this.state.user}
+                                    user={user}
                                     openFavMasterOnId={this.openFavMasterOnId}
                                 />
                             </Panel>
@@ -496,7 +447,7 @@ class App extends React.Component {
                                 />
                                 <MasterCard
                                     openPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
-                                    user={this.state.user}
+                                    user={user}
                                     activeMasterId={this.state.activeMasterId}
                                     openComments={() => this.setState({activePanelLk: 'masterComments'})}
                                     setActiveMaster={(master)=>this.setState({activeMaster: master})}
@@ -504,21 +455,21 @@ class App extends React.Component {
                             </Panel>
                             <Panel id="masterPhoto">
                                 <Head title={'Портфолио'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <Portfolio user={this.state.user}/>
+                                <Portfolio user={user}/>
                             </Panel>
                             <Panel id="masterComments">
                                 <Head title={'Отзывы'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <MasterComments user={this.state.user} activeMaster={this.state.activeMaster}/>
+                                <MasterComments user={user} activeMaster={this.state.activeMaster}/>
                             </Panel>
                             <Panel id='findModel'>
                                 <Head title={'Мастер ищет модель'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <FindModelMaster user={this.state.user} popout={this.openAlert}/>
+                                <FindModelMaster user={user} popout={this.openAlert}/>
                             </Panel>
                             {/*<Panel id='setting'>*/}
                             {/*    <Head title={'Настройки'} goBack={() => this.setState({activePanelLk: 'lk'})}/>*/}
                             {/*    <Setting*/}
                             {/*        targetCity={this.props.targetCity}*/}
-                            {/*        user={this.state.user}*/}
+                            {/*        user={user}*/}
                             {/*        popout={this.openAlert}*/}
                             {/*        changeCity={() => this.setState({activePanelLk: 'changeCity'})}*/}
                             {/*    />*/}
@@ -535,11 +486,10 @@ class App extends React.Component {
                         <View activePanel={this.state.activePanelReg} id="registration">
                             <Panel id='registration'>
                                 <Head title={'Регистрация'} goBack={() => this.setState({activeViewLk: 'lk'})}/>
-                                <Invite targetCity={this.props.targetCity}
-                                        user={this.state.user}
-                                        closeReg={this.closeReg}
-                                        changeCity={() => this.setState({activePanelReg: 'changeCity'})}
-                                        snackbar={(message) => this.openSnack(message)}
+                                <Invite
+                                    closeReg={this.closeReg}
+                                    changeCity={() => this.setState({activePanelReg: 'changeCity'})}
+                                    snackbar={(message) => this.openSnack(message)}
                                 />
                                 {this.state.snackbar}
                             </Panel>
@@ -566,7 +516,9 @@ const putStateToProps = (state) => {
         targetCity: state.targetCity,
         mastersListScroll: state.mastersListScroll,
         findModelsList: state.findModelsList,
-        findModelsListScroll: state.findModelsListScroll
+        findModelsListScroll: state.findModelsListScroll,
+        user: state.user,
+        loginStatus: state.loginStatus
     };
 };
 
@@ -577,7 +529,10 @@ const putActionsToProps = (dispatch) => {
         changeTargetCity: bindActionCreators(changeTargetCity, dispatch),
         changeMasterslistScroll: bindActionCreators(changeMasterslistScroll, dispatch),
         changeFindModelsList: bindActionCreators(changeFindModelsList, dispatch),
-        changeFindModelsListScroll: bindActionCreators(changeFindModelsListScroll, dispatch)
+        changeFindModelsListScroll: bindActionCreators(changeFindModelsListScroll, dispatch),
+        loginUser: bindActionCreators(loginUser, dispatch),
+        createUser: bindActionCreators(createUser, dispatch),
+        setMaster: bindActionCreators(setMaster, dispatch)
     };
 };
 

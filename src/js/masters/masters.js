@@ -5,8 +5,11 @@ import MastersList from './mastersList';
 import ScrollSubcat from '../elements/scrollSubcat'
 import {BACKEND} from "../func/func";
 import Spin from '../elements/spinner'
+import {connect} from "react-redux";
+import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll} from "../store/actions";
+import {bindActionCreators} from "redux";
 
-export default class Masters extends React.Component{
+class Masters extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -16,14 +19,12 @@ export default class Masters extends React.Component{
     }
 
     componentDidMount() {
-        console.log('store',this.props);
         if (this.props.mastersList.length === 0) {
             this.loadList()
         } else {
             this.setState({filteredList: this.props.mastersList, isLoad: true}, ()=> {
-                if (this.props.scroll){
-                    console.log('scroll');
-                    window.scrollTo(0, this.props.scroll)
+                if (this.props.mastersListScroll){
+                    window.scrollTo(0, this.props.mastersListScroll)
                 }
             });
         }
@@ -35,7 +36,6 @@ export default class Masters extends React.Component{
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(prevProps.targetCity !== this.props.targetCity) {
-            console.log('chnge city');
             this.setState({isLoad: false},()=>this.loadList())
         }
     }
@@ -96,41 +96,60 @@ export default class Masters extends React.Component{
     }
 
     render() {
-        return (
-            <React.Fragment>
-                <PanelHeader>Мастера</PanelHeader>
-                <HeadCity
-                    targetCity={this.props.targetCity}
-                    changeCity={()=>this.props.changeCity()}
-                />
-                <SelectMimicry
-                    top="Выберите категорию"
-                    placeholder="Показаны мастера всех категорий"
-                    onClick={this.props.user.location.city === 'Не определено' ?
-                        this.props.openSnack('Сначала выберите город') :
-                        this.props.changeCategory
+        const {targetCategory, user} = this.props;
+            return (
+                <React.Fragment>
+                    <PanelHeader>Мастера</PanelHeader>
+                    <HeadCity changeCity={()=>this.props.changeCity()}/>
+                    <SelectMimicry
+                        top="Выберите категорию"
+                        placeholder="Показаны мастера всех категорий"
+                        onClick={user.location.city === 'Не определено' ?
+                            this.props.openSnack('Сначала выберите город') :
+                            this.props.changeCategory
+                        }
+                    >{targetCategory.label}</SelectMimicry>
+                    {
+                        targetCategory && this.state.isLoad &&
+                        <ScrollSubcat
+                            targetCategory={targetCategory}
+                            mastersList={this.props.mastersList}
+                            checkSubcat={(e)=>this.checkSubcat(e)}
+                        />
                     }
-                >{this.props.targetCategory.label}</SelectMimicry>
-                {
-                    this.props.targetCategory && this.state.isLoad &&
-                    <ScrollSubcat
-                        targetCategory={this.props.targetCategory}
-                        mastersList={this.props.mastersList}
-                        checkSubcat={(e)=>this.checkSubcat(e)}
-                    />
-                }
                     {
                         this.state.isLoad ?
-                        <MastersList
-                            openSnack={this.props.openSnack}
-                            mastersList={this.state.filteredList}
-                            category={this.props.targetCategory}
-                            city={this.props.user.location.city}
-                            openPanelMaster={this.props.openPanelMaster}
-                        /> :
+                            <MastersList
+                                openSnack={this.props.openSnack}
+                                mastersList={this.state.filteredList}
+                                category={targetCategory}
+                                city={user.location.city}
+                                openPanelMaster={this.props.openPanelMaster}
+                            /> :
                             <Spin/>
                     }
-            </React.Fragment>
-        )
+                </React.Fragment>
+            )
     }
 }
+
+const putStateToProps = (state) => {
+    return {
+        mastersList: state.mastersList,
+        targetCategory: state.targetCategory,
+        targetCity: state.targetCity,
+        mastersListScroll: state.mastersListScroll,
+        user: state.user
+    };
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+        changeMastersList: bindActionCreators(changeMastersList, dispatch),
+        changeTargetCategory: bindActionCreators(changeTargetCategory, dispatch),
+        changeTargetCity: bindActionCreators(changeTargetCity, dispatch),
+        changeMasterslistScroll: bindActionCreators(changeMasterslistScroll, dispatch)
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(Masters);

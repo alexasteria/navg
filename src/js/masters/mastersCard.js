@@ -18,6 +18,7 @@ import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from '../func/func';
 import bridge from "@vkontakte/vk-bridge";
 import {patchData} from "../elements/functions";
+import {connect} from "react-redux";
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -325,4 +326,10 @@ class MastersCard extends React.Component {
     }
 }
 
-export default MastersCard;
+const putStateToProps = (state) => {
+    return {
+        user: state.user
+    };
+};
+
+export default connect(putStateToProps)(MastersCard);

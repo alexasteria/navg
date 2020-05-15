@@ -2,6 +2,15 @@ import React from 'react';
 import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar, Input} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
 import bridge from "@vkontakte/vk-bridge";
+import {bindActionCreators} from "redux";
+import {
+    changeFindModelsList, changeFindModelsListScroll,
+    changeMastersList,
+    changeMasterslistScroll,
+    changeTargetCategory,
+    changeTargetCity, createUser, loginUser
+} from "../store/actions";
+import {connect} from "react-redux";
 
 class Invite extends React.Component {
     constructor(props) {
@@ -19,20 +28,21 @@ class Invite extends React.Component {
     }
     componentDidMount() {
         this.permMessage();
-        fetch(BACKEND.category.getAll)//ловим обьявления по городу юзера
+        this.getCategories();
+    }
+
+    getCategories = () => {
+        fetch(BACKEND.category.getAll)
             .then(res => res.json())
             .then(categories => {
                 this.setState({categories: categories});
                 categories.map(category => {
                     this.setState({[category._id]: false});
                 });
-                console.log('State on load', this.state)
             });
-
-    }
+    };
 
     regMaster = () => {
-        console.log('click');
         try {
             if (this.props.targetCity=== 'Не выбрано') throw 'Город не выбран. Вас не смогут найти.';
             if (this.state.checkLicense === false) throw 'Примите условия пользовательского соглашения, если желаете зарегистрироваться.';
@@ -74,11 +84,9 @@ class Invite extends React.Component {
                     country: this.props.user.location.country,
                     city: this.props.targetCity
                 },
-                //categories: this.state.categories,
                 categories: cat,
                 brand: this.state.brand
             };
-            master.location.city = this.props.targetCity;
             this.props.closeReg(master);
         } catch (error) {
             console.log(error);
@@ -137,13 +145,6 @@ class Invite extends React.Component {
                             >
                                 {this.props.user.firstname + ' ' + this.props.user.lastname}
                             </Cell>
-                            {/*<Cell*/}
-                            {/*    expandable*/}
-                            {/*    multiline*/}
-                            {/*    onClick={this.permPhoto}*/}
-                            {/*    description="Для загрузки фото в портфолио"*/}
-                            {/*    bottom={this.state.statusPhoto === false && 'Доступ обязателен для регистрации'}*/}
-                            {/*>Доступ к загрузке фотографий в альбом приложения - {this.state.statusPhoto === true ? 'Разрешен' : 'Не разрешен'}</Cell>*/}
                             <Cell
                                 expandable
                                 onClick={this.props.changeCity}
@@ -233,4 +234,17 @@ class Invite extends React.Component {
     }
 }
 
-export default Invite;
+const putStateToProps = (state) => {
+    return {
+        targetCity: state.targetCity,
+        user: state.user
+    };
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+        changeTargetCity: bindActionCreators(changeTargetCity, dispatch),
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(Invite);

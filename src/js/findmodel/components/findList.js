@@ -1,6 +1,7 @@
 import React from 'react';
 import {Avatar, Button, Cell, Group, Placeholder, Separator,CardGrid,Card} from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
+import FindCard from "./findCard";
 import {BACKEND} from "../../func/func";
 
 function getDate(comDate) {
@@ -53,22 +54,12 @@ export default function FindList(props){
         return (
             props.findArr.map(find => {
                 return (
-                    <CardGrid key={find._id}>
-                        <Card size="l">
-                                <Cell expandable
-                                      photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                                      description={getDate(find.date)}
-                                      before={<Avatar src={find.avatarLink} size={50}/>}
-                                      size="l"
-                                      onClick={() => props.openMasterOnId(find.masterId)}
-                                      bottom=""
-                                >{find.firstname} {find.lastname}
-                                </Cell>
-                                <Cell multiline>
-                                    {find.body}
-                                </Cell>
-                        </Card>
-                    </CardGrid>
+                    <FindCard
+                        date={getDate(find.date)}
+                        key={find._id}
+                        find={find}
+                        openMasterOnId={props.openMasterOnId}
+                    />
                 )
             })
         )

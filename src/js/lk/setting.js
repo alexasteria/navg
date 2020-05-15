@@ -24,10 +24,13 @@ import {BACKEND} from '../func/func';
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import Icon24Done from '@vkontakte/icons/dist/24/done';
 import CityListModal from "../elements/cityListModal";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {setMaster} from "../store/actions";
 
 const osname = platform();
 
-class Lk extends React.Component {
+class Setting extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -51,52 +54,40 @@ class Lk extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
-        fetch(BACKEND.category.getAll)//ловим обьявления по городу юзера
-            .then(res => res.json())
-            .then(categories => {
-                this.setState({categories: categories});
-                fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
-                    .then(res => res.json())
-                    .then(activeMaster => {
-                        if (activeMaster.length === 0) {
-                            this.setState({isLoad: true});
-                            return null
-                        } else {
-                            console.log(activeMaster[0]);
-                            this.setState({
-                                activeMaster: activeMaster[0],
-                                description: activeMaster[0].description,
-                                isMaster: true,
-                                isLoad: true
-                            }, () =>this.setActive(activeMaster[0].categories.subcat));
-                        }
+        if(this.props.user.isMaster === true) {
+            this.setState({master: this.props.master, description: this.props.master.description});
+            fetch(BACKEND.category.getAll)
+                .then(res => res.json())
+                .then(categories => {
+                    this.setState({categories: categories, isLoad: true});
+                    categories.map(category => {
+                        this.setState({[category._id]: false});
                     });
-            });
+                    this.setActive( this.props.master.categories.subcat);
+                });
+        }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.targetCity !== this.props.targetCity){
-            console.log('город был изменен');
-            let activeMaster = this.state.activeMaster;
-            activeMaster.location.city = this.props.targetCity;
-            this.setState({activeMaster: activeMaster})
+            let master = this.state.master;
+            master.location.city = this.props.targetCity;
+            this.setState({master: master});
         }
     }
 
     saveChanges = () => {
-        console.log('saving');
-        this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster);
+        this.props.setMaster(this.state.master);
+        this.patchData(BACKEND.masters.all + this.state.master._id, this.state.master);
         this.props.snackbar('Изменения сохранены');
     };
 
     setActive(subcat){
-        console.log(subcat);
         if (Array.isArray(subcat)) {
             this.state.categories.map(category => {
                 this.setState({[category._id]: false});
                 category.subcat.map(subcat => {
-                    if (this.state.activeMaster.categories.subcat.includes(subcat._id)) {
+                    if (this.state.master.categories.subcat.includes(subcat._id)) {
                         subcat.active = true;
                     }
                 })
@@ -128,8 +119,6 @@ class Lk extends React.Component {
                     }
                 })
         });
-        //activeMaster.location.city = this.props.targetCity;
-        console.log(activeMaster);
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
             method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
@@ -148,41 +137,36 @@ class Lk extends React.Component {
                 console.log(response.json());
                 this.props.modalBack();
                 this.props.snackbar('Изменения сохранены');
-                //this.props.popout();
-                //console.log(activeMaster);
             }); // парсит JSON ответ в Javascript объект
     }
 
     visible = event => {
         const target = event.target;
         const name = target.name;
-        let activeMaster = this.state.activeMaster;
-        activeMaster[name] = !activeMaster[name];
-        this.setState({activeMaster: activeMaster});
+        let master = this.state.master;
+        master[name] = !master[name];
+        this.setState({master: master});
     };
     onRemove = (index) => {
-        let activeMaster = this.state.activeMaster;
-        activeMaster.priceList = [...this.state.activeMaster.priceList.slice(0, index), ...this.state.activeMaster.priceList.slice(index + 1)];
-        this.setState({activeMaster: activeMaster});
-        this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)
-        this.openSnack("Процедура удалена")
+        let master = this.state.master;
+        master.priceList = [...this.state.master.priceList.slice(0, index), ...this.state.master.priceList.slice(index + 1)];
+        this.setState({master: master});
+        this.patchData(BACKEND.masters.all + this.state.master._id, this.state.master);
+        this.openSnack("Процедура удалена");
     };
     addProd = (status) => {
         this.setState({add: status})
     };
     saveProd = (title, body, price) => {
-        //console.log(title, body, price);
-        let activeMaster = this.state.activeMaster;
-        activeMaster.priceList.push({
+        let master = this.state.master;
+        master.priceList.push({
             title: this.state.newProdTitle,
             body: this.state.newProdBody,
             price: this.state.newProdPrice
         });
-        this.setState({activeMaster: activeMaster});
+        this.setState({master: master});
         this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
-        console.log('Active master ',this.state.activeMaster);
-        this.patchData(BACKEND.masters.all + this.state.activeMaster._id, this.state.activeMaster)
-    }
+    };
 
     counter = (index) => {
         let countMass = this.state.categories[index].subcat.filter(
@@ -197,7 +181,7 @@ class Lk extends React.Component {
         return countMass.length;
     };
     checkBan = () => {
-        if (this.state.activeMaster.banned.status === true) {
+        if (this.state.master.banned.status === true) {
             return (
                 <Cell multiline>Ваш профиль сейчас не выводится в поиске, так-как обнаружены нарушения. Для возобновления доступа - исправьте их. Информация отправлена в личные сообщения.</Cell>
             )
@@ -207,7 +191,7 @@ class Lk extends React.Component {
                     asideContent={<Switch
                         name={'visible'}
                         onChange={this.visible}
-                        checked={this.state.activeMaster.visible}/>}>
+                        checked={this.state.master.visible}/>}>
                     Показывать профиль в поиске
                 </Cell>
             )
@@ -220,25 +204,21 @@ class Lk extends React.Component {
         const indexSubcat = target.id;
         let categories = this.state.categories;
         categories[indexCat].subcat[indexSubcat].active = !this.state.categories[indexCat].subcat[indexSubcat].active;
-        // if (this.counter(indexCat) > 0) {
-        //     this.state.categories[indexCat].active = true;
-        // } else {
-        //     this.state.categories[indexCat].active = false;
-        // }
-        this.setState({categories: categories},()=>console.log(this.state))
+        this.setState({categories: categories});
     };
 
     changeCity = (city) => {
-        let master = this.state.activeMaster;
+        let master = this.state.master;
         master.location.city = city;
-        this.setState({activeMaster: master});
+        this.props.setMaster(master);
         this.props.changeModal('setting');
     };
 
     render() {
-        if (this.state.isLoad === false){
+        if(this.state.isLoad === false){
             return null
-        } else if (this.props.user.isMaster === false) {
+        }
+        if (this.props.user.isMaster === false) {
             return null
         } else {
                 return (
@@ -264,16 +244,16 @@ class Lk extends React.Component {
                                 <Cell
                                     size="l"
                                     description={
-                                        this.state.activeMaster.visible ? 'Ваш профиль доступен в поиске' : 'Ваш профиль не выводится в поиске'
+                                        this.state.master.visible ? 'Ваш профиль доступен в поиске' : 'Ваш профиль не выводится в поиске'
                                     }
-                                    before={<Avatar src={this.state.activeMaster.avatarLink} size={80}/>}
+                                    before={<Avatar src={this.state.master.avatarLink} size={80}/>}
                                 >
-                                    {this.state.activeMaster.firstname + ' ' + this.state.activeMaster.lastname}
+                                    {this.state.master.firstname + ' ' + this.state.master.lastname}
                                 </Cell>
                                 <Cell
                                     expandable
                                     onClick={() => this.props.changeModal('changeCity')}
-                                    indicator={this.state.activeMaster.location.city === typeof String ? 'Не выбрано' : this.state.activeMaster.location.city.title}
+                                    indicator={this.state.master.location.city === typeof String ? 'Не выбрано' : this.state.master.location.city.title}
                                 >
                                     Ваш город
                                 </Cell>
@@ -281,11 +261,11 @@ class Lk extends React.Component {
                                     {this.checkBan()}
                                 </Group>
                                 <Group title={'Прайс-лист'}>
-                                    {this.state.activeMaster.priceList.length === 0 &&
+                                    {this.state.master.priceList.length === 0 &&
                                     <Cell multiline>Вы еще не указали ни одной процедуры. Пока они не указаны, пользователи не смогут связаться с Вами.</Cell>
                                     }
                                     <CardGrid>
-                                        {this.state.activeMaster.priceList.map((item, index) => (
+                                        {this.state.master.priceList.map((item, index) => (
                                             <Card size="l" mode="shadow">
                                                 <Cell
                                                     key={item}
@@ -296,11 +276,11 @@ class Lk extends React.Component {
                                                         this.onRemove(index)
                                                     }}>
                                                     <Cell
-                                                        description="Название процедуры">{this.state.activeMaster.priceList[index].title}</Cell>
+                                                        description="Название процедуры">{this.state.master.priceList[index].title}</Cell>
                                                     <Cell description="Краткое описание процедуры"
-                                                          multiline>{this.state.activeMaster.priceList[index].body}</Cell>
+                                                          multiline>{this.state.master.priceList[index].body}</Cell>
                                                     <Cell
-                                                        description="Минимальная цена за работу">{this.state.activeMaster.priceList[index].price}</Cell>
+                                                        description="Минимальная цена за работу">{this.state.master.priceList[index].price}</Cell>
                                                 </Cell>
                                             </Card>
                                         ))}
@@ -421,4 +401,19 @@ class Lk extends React.Component {
 
     }
 }
-export default withModalRootContext (Lk);
+
+const putStateToProps = (state) => {
+    return {
+        targetCity: state.targetCity,
+        user: state.user,
+        master: state.master
+    };
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+        setMaster: bindActionCreators(setMaster, dispatch)
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(withModalRootContext (Setting));

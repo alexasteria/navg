@@ -2,8 +2,9 @@ import React from 'react';
 import {Cell, List, Spinner} from "@vkontakte/vkui";
 import {BACKEND} from "../func/func";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
+import {connect} from "react-redux";
 
-export default class CategoriesList extends React.Component {
+class CategoriesList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -56,3 +57,11 @@ export default class CategoriesList extends React.Component {
         }
     }
 }
+
+const putStateToProps = (state) => {
+    return {
+        targetCategory: state.targetCategory
+    };
+};
+
+export default connect(putStateToProps)(CategoriesList);

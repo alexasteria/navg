@@ -28,7 +28,8 @@ export const BACKEND = {
     },
     vkapi: {
         uploadPhoto: BACK_LINK+'vkapi/uploadPhoto/',
-        savePhoto: BACK_LINK+'vkapi/savePhoto/'
+        savePhoto: BACK_LINK+'vkapi/savePhoto/',
+        savePhotoFindModels: BACK_LINK+'vkapi/savePhotoFindModels/'
     },
     category: {
         getAll: BACK_LINK+'category/'

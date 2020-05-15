@@ -4,8 +4,35 @@ import {
     ACTION_CHANGE_TARGET_CITY,
     ACTION_CHANGE_MASTERSLIST_SCROLL,
     ACTION_CHANGE_FINDMODELS_LIST,
-    ACTION_CHANGE_FINDMODELS_SCROLL
+    ACTION_CHANGE_FINDMODELS_SCROLL,
+    LOGIN_USER,
+    CREATE_USER,
+    SET_MASTER
 } from "./reducers";
+
+export const setMaster = master => {
+    console.log('SET_MASTER', master);
+    return {
+        type: SET_MASTER,
+        payload: master
+    };
+};
+
+export const createUser = user => {
+    console.log('CREATE_USER', user);
+    return {
+        type: CREATE_USER,
+        payload: user
+    };
+};
+
+export const loginUser = (user) => {
+    console.log('LOGIN_USER', user);
+    return {
+        type: LOGIN_USER,
+        payload: user
+    };
+};
 
 export const changeMastersList = (newMastersList) => {
     console.log('in ACTION_CHANGE_MASTERS_LIST', newMastersList);
