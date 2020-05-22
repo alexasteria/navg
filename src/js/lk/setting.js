@@ -11,7 +11,6 @@ import {
     Button,
     CellButton,
     Input,
-    Spinner,
     CardGrid,
     Card,
     ModalPage,
@@ -134,7 +133,6 @@ class Setting extends React.Component {
             body: JSON.stringify(activeMaster), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
             .then(response => {
-                console.log(response.json());
                 this.props.modalBack();
                 this.props.snackbar('Изменения сохранены');
             }); // парсит JSON ответ в Javascript объект
@@ -152,20 +150,44 @@ class Setting extends React.Component {
         master.priceList = [...this.state.master.priceList.slice(0, index), ...this.state.master.priceList.slice(index + 1)];
         this.setState({master: master});
         this.patchData(BACKEND.masters.all + this.state.master._id, this.state.master);
-        this.openSnack("Процедура удалена");
     };
     addProd = (status) => {
         this.setState({add: status})
     };
-    saveProd = (title, body, price) => {
-        let master = this.state.master;
-        master.priceList.push({
-            title: this.state.newProdTitle,
-            body: this.state.newProdBody,
-            price: this.state.newProdPrice
-        });
-        this.setState({master: master});
-        this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
+    saveProd = () => {
+        try {
+            if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
+            if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
+            if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
+            let priceList = this.state.priceList;
+            priceList.push({
+                title: this.state.newProdTitle,
+                body: this.state.newProdBody,
+                price: this.state.newProdPrice
+            });
+            this.setState({priceList: priceList, add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
+            this.props.snackbar('Процедура добавлена');
+        } catch (error) {
+            this.props.snackbar(error)
+        }
+    };
+    saveProd = () => {
+        try {
+            if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
+            if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
+            if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
+            let master = this.state.master;
+            master.priceList.push({
+                title: this.state.newProdTitle,
+                body: this.state.newProdBody,
+                price: this.state.newProdPrice
+            });
+            this.setState({master: master});
+            this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
+            this.props.snackbar('Процедура добавлена');
+        } catch (error) {
+            this.props.snackbar(error)
+        }
     };
 
     counter = (index) => {

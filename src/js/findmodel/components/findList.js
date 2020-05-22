@@ -1,8 +1,7 @@
 import React from 'react';
-import {Avatar, Button, Cell, Group, Placeholder, Separator,CardGrid,Card} from "@vkontakte/vkui";
+import {Button, Placeholder,Card} from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 import FindCard from "./findCard";
-import {BACKEND} from "../../func/func";
 
 function getDate(comDate) {
     if (comDate === 'Только что') {
@@ -38,7 +37,6 @@ function renderLastPhoto(arr){
 }
 
 export default function FindList(props){
-    console.log(props);
     if (props.findArr.length === 0) {
         return (
             <Placeholder

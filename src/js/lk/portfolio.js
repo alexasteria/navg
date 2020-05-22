@@ -1,8 +1,7 @@
 import React from 'react';
-import {Group, Div, File, FormLayout, CardGrid, Card, Spinner, Button, Snackbar, Cell, PanelSpinner} from "@vkontakte/vkui"
+import {Group, Div, File, FormLayout, CardGrid, Card, Snackbar, Cell, PanelSpinner} from "@vkontakte/vkui"
 import {BACKEND} from '../func/func.js';
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
-//import bridge from '@vkontakte/vk-bridge-mock';
 import bridge from '@vkontakte/vk-bridge';
 import Spin from '../elements/spinner'
 import fetchJsonp from "fetch-jsonp";
@@ -21,12 +20,10 @@ class MastersCard extends React.Component {
     }
     componentDidMount() {
         this.getToken();
-        console.log(this.props);
         fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
             .then(res => res.json())
             .then(activeMaster => {
                this.setState({activeMaster: activeMaster[0], images: activeMaster[0].photos.reverse(), isLoad: true});
-               console.log(activeMaster[0]);
             });
     }
     openSnack (text) {
@@ -64,7 +61,6 @@ class MastersCard extends React.Component {
                 .then(res => res.json())
                 .then(response => {
                     this.openSnack(response.message);
-                    //console.log(response);
                     fetchJsonp(response.saveUrl, {
                         mode: 'no-cors',
                         method: 'GET'
@@ -80,7 +76,6 @@ class MastersCard extends React.Component {
                                 masterId: this.state.activeMaster._id,
                                 newImg: newImg
                             };
-                            //console.log(data);
                             fetch(BACKEND.vkapi.savePhoto, {
                                 mode: 'cors', // no-cors, cors, *same-origin
                                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -112,23 +107,14 @@ class MastersCard extends React.Component {
             "method": "photos.getUploadServer",
             "params": {"group_id": "193179174","album_id": "269622026", "v":"5.103", "access_token": token}})
             .then(result => {
-                //console.log(result.response.upload_url);
                 this.setState({uploadUrl: result.response.upload_url, token: token});
             })
             .catch(e => console.log(e))
 
     };
-    // getApiCall = () => {
-    //     bridge.send("VKWebAppCallAPIMethod", {
-    //         "method": "photos.getUploadServer",
-    //         "request_id": "32test",
-    //         "params": {"user_ids": "1", "v":"5.103", "access_token":"your_token"}})
-    //         .then(result => console.log(result));
-    // }
     getToken = () => {
         bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
             .then(data => {
-                //console.log('Токен '+data.access_token);
                 this.getUploadServer(data.access_token);
                 //this.setState({token: data.access_token})
             })
@@ -140,7 +126,6 @@ class MastersCard extends React.Component {
                 <CardGrid>
                     {
                         this.state.images.map((image, index) => {
-                            //console.log(image, index);
                             return (
                                 <Card
                                     size="s"

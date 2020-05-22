@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Баг фикс">
-      <change afterPath="$PROJECT_DIR$/src/js/findmodel/components/findCard.js" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Тест после перевода на редакс">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/categoriesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/categoriesList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/cityListModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityListModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/elements/headCity.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/headCity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/garage/addcar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/garage/fcarlist.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/garage/garage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/idea/idea.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/registration/registration.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/reducers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/store/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/store/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/reducers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -435,14 +441,16 @@
       <workItem from="1589575165738" duration="1795000" />
       <workItem from="1589576972790" duration="1795000" />
       <workItem from="1589578780731" duration="1796000" />
-      <workItem from="1589580588343" duration="288000" />
-    </task>
-    <task id="LOCAL-00041" summary="bugfix">
-      <created>1586122723551</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1586122723552</updated>
+      <workItem from="1589580588343" duration="1107000" />
+      <workItem from="1589594269055" duration="1803000" />
+      <workItem from="1589596089589" duration="1053000" />
+      <workItem from="1589602455677" duration="7000" />
+      <workItem from="1589602630770" duration="624000" />
+      <workItem from="1589604289310" duration="1181000" />
+      <workItem from="1589607087322" duration="245000" />
+      <workItem from="1590182980094" duration="1794000" />
+      <workItem from="1590184787262" duration="1798000" />
+      <workItem from="1590186608791" duration="339000" />
     </task>
     <task id="LOCAL-00042" summary="Все работает. Коммит перед редактированием инвайта">
       <created>1586196565055</created>
@@ -780,7 +788,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589461634818</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="Тест после перевода на редакс">
+      <created>1589581076783</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1589581076783</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -801,7 +816,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="косяки пофикшены" />
     <MESSAGE value="ограничение длины коммента" />
     <MESSAGE value="Города мастера и из поиска не перебивают друг друга" />
     <MESSAGE value="Кнопки фильтра субкатегорий без функции" />
@@ -826,7 +840,8 @@
     <MESSAGE value="Лайки" />
     <MESSAGE value="upd" />
     <MESSAGE value="Баг фикс" />
-    <option name="LAST_COMMIT_MESSAGE" value="Баг фикс" />
+    <MESSAGE value="Тест после перевода на редакс" />
+    <option name="LAST_COMMIT_MESSAGE" value="Тест после перевода на редакс" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="207" key="#ESLint" timestamp="1581014908172">
@@ -837,10 +852,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589461634412">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1589581076269">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589461634412" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589581076269" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -881,10 +896,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="0" y="167" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1583525819052" />
-    <state x="552" y="254" key="Vcs.Push.Dialog.v2" timestamp="1589457444495">
+    <state x="552" y="254" key="Vcs.Push.Dialog.v2" timestamp="1589581096429">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="254" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589457444495" />
+    <state x="552" y="254" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589581096429" />
     <state x="1021" y="324" key="git4idea.merge.GitMergeDialog" timestamp="1582669311131">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -6,7 +6,6 @@ import {
     ACTION_CHANGE_FINDMODELS_LIST,
     ACTION_CHANGE_FINDMODELS_SCROLL,
     LOGIN_USER,
-    CREATE_USER,
     SET_MASTER
 } from "./reducers";
 
@@ -15,14 +14,6 @@ export const setMaster = master => {
     return {
         type: SET_MASTER,
         payload: master
-    };
-};
-
-export const createUser = user => {
-    console.log('CREATE_USER', user);
-    return {
-        type: CREATE_USER,
-        payload: user
     };
 };
 

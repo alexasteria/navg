@@ -1,15 +1,25 @@
 import React from 'react';
-import {Group, Select, Cell, Switch, FormLayoutGroup, Link, Button, Checkbox, Textarea, FormLayout, Div, Avatar, Input} from "@vkontakte/vkui"
+import {
+    Group,
+    Select,
+    Cell,
+    Switch,
+    FormLayoutGroup,
+    Link,
+    Button,
+    Checkbox,
+    Textarea,
+    FormLayout,
+    Div,
+    Avatar,
+    Input,
+    CardGrid, Card, CellButton
+} from "@vkontakte/vkui"
 import {BACKEND} from "../func/func";
 import bridge from "@vkontakte/vk-bridge";
 import {bindActionCreators} from "redux";
-import {
-    changeFindModelsList, changeFindModelsListScroll,
-    changeMastersList,
-    changeMasterslistScroll,
-    changeTargetCategory,
-    changeTargetCity, createUser, loginUser
-} from "../store/actions";
+import {changeTargetCity} from "../store/actions";
+import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {connect} from "react-redux";
 
 class Invite extends React.Component {
@@ -22,7 +32,8 @@ class Invite extends React.Component {
             statusPhoto: false,
             statusMessage: false,
             checkLicense: false,
-            description: ''
+            description: '',
+            priceList: []
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -48,6 +59,7 @@ class Invite extends React.Component {
             if (this.state.checkLicense === false) throw 'Примите условия пользовательского соглашения, если желаете зарегистрироваться.';
             if (this.state.statusMessage === false) throw 'Предоставьте доступ на получение сообщений, чтобы мы уведомили вас о заказе.';
             if (this.state.description.length < 50) throw 'Блок "О себе" должен содержать более 50-ти символов.';
+            if (this.state.priceList.length < 1) throw 'Добавьте как минимум одну процедуру, чтобы клиенты смогли записаться к вам.';
             if (!this.state.type) throw 'Укажите тип исполнителя работ: Частное лицо или Организация.';
             let cat = {
                 subcat: [],
@@ -85,7 +97,10 @@ class Invite extends React.Component {
                     city: this.props.targetCity
                 },
                 categories: cat,
-                brand: this.state.brand
+                brand: this.state.brand,
+                banned: {status: false},
+                priceList: this.state.priceList,
+                visible: true
             };
             this.props.closeReg(master);
         } catch (error) {
@@ -93,18 +108,34 @@ class Invite extends React.Component {
             this.props.snackbar(error)
         }
     };
-    // permPhoto = () => {
-    //     bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
-    //         .then(data => {
-    //             console.log(data);
-    //             this.setState({statusPhoto: data.result})
-    //         })
-    //         .catch(error => console.log(error))
-    // };
+    addProd = (status) => {
+        this.setState({add: status})
+    };
+    saveProd = () => {
+        try {
+            if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
+            if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
+            if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
+            let priceList = this.state.priceList;
+            priceList.push({
+                title: this.state.newProdTitle,
+                body: this.state.newProdBody,
+                price: this.state.newProdPrice
+            });
+            this.setState({priceList: priceList, add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
+        } catch (error) {
+            this.props.snackbar(error)
+        }
+    };
+    onRemove = (index) => {
+        let priceList = this.state.priceList;
+        priceList = [...this.state.priceList.slice(0, index), ...this.state.priceList.slice(index + 1)];
+        this.setState({priceList: priceList});
+        this.props.snackbar('Процедура удалена');
+    };
     permMessage = () => {
             bridge.send("VKWebAppAllowMessagesFromGroup", {"group_id": 193179174, "key": "dBuBKe1kFcdemzB"})
                 .then(result => {
-                    console.log(result);
                     this.setState({statusMessage: result.result})
                 })
                 .catch(e => console.log(e))
@@ -138,30 +169,39 @@ class Invite extends React.Component {
         return (
                     <Group>
                         <FormLayout>
-                            <Cell
-                                size="l"
-                                description="Регистрация мастера"
-                                before={<Avatar src={this.props.user.avatarLink} size={80}/>}
-                            >
-                                {this.props.user.firstname + ' ' + this.props.user.lastname}
-                            </Cell>
-                            <Cell
-                                expandable
-                                onClick={this.props.changeCity}
-                                indicator={this.props.targetCity.title || 'Не выбран'}
-                                status={this.props.targetCity.title ? 'valid' : 'error'}
-                                bottom={this.props.targetCity.title ? '' : 'Пожалуйста, укажите город в котором вы работаете'}
-                            >
-                                Ваш город
-                            </Cell>
-                            <Cell
-                                expandable
-                                multiline
-                                onClick={this.permMessage}
-                                description="Для получения уведомлений о заявках"
-                                status={this.state.statusMessage === true ? 'valid' : 'error'}
-                                bottom={this.state.statusMessage === false && 'Доступ обязателен для регистрации'}
-                            >Доступ на получение личных сообщений от приложения - {this.state.statusMessage=== true ? 'Разрешен' : 'Не разрешен'}</Cell>
+                            <CardGrid>
+                                <Card size="l" mode="shadow">
+                                    <Cell
+                                        size="l"
+                                        description="Регистрация мастера"
+                                        before={<Avatar src={this.props.user.avatarLink} size={80}/>}
+                                    >
+                                        {this.props.user.firstname + ' ' + this.props.user.lastname}
+                                    </Cell>
+                                    <Cell
+                                        expandable
+                                        onClick={this.props.changeCity}
+                                        indicator={this.props.targetCity.title || 'Не выбран'}
+                                        status={this.props.targetCity.title ? 'valid' : 'error'}
+                                        bottom={this.props.targetCity.title ? '' : 'Пожалуйста, укажите город в котором вы работаете'}
+                                    >
+                                        Ваш город
+                                    </Cell>
+                                </Card>
+                            </CardGrid>
+                            <CardGrid>
+                                <Card size="l" mode="shadow">
+                                    <Cell
+                                        expandable
+                                        multiline
+                                        onClick={this.permMessage}
+                                        description="Для получения уведомлений о заявках"
+                                        status={this.state.statusMessage === true ? 'valid' : 'error'}
+                                        bottom={this.state.statusMessage === false && 'Доступ обязателен для регистрации'}
+                                    >Доступ на получение личных сообщений от приложения - {this.state.statusMessage=== true ? <span style={{color: 'green'}}>Разрешен</span> : <span style={{color: 'red'}}>Не разрешен</span>}
+                                    </Cell>
+                                </Card>
+                            </CardGrid>
                             <Textarea
                                 name={'description'}
                                 status={this.state.description ? 'valid' : 'error'}
@@ -209,6 +249,66 @@ class Invite extends React.Component {
                                 })
                             }
                             </FormLayoutGroup>
+                            <Group title={'Прайс-лист'} style={{ background: '#f5f5f5' }}>
+                                {this.state.priceList.length === 0 &&
+                                <Cell multiline>Вы еще не указали ни одной процедуры. Пока они не указаны, пользователи не смогут связаться с Вами.</Cell>
+                                }
+                                <CardGrid>
+                                    {this.state.priceList.map((item, index) => (
+                                        <Card size="l" mode="shadow">
+                                            <Cell
+                                                key={item}
+                                                multiline
+                                                removable
+                                                onRemove={() => {
+                                                    this.onRemove(index)
+                                                }}>
+                                                <Cell
+                                                    description="Название процедуры">{this.state.priceList[index].title}</Cell>
+                                                <Cell description="Краткое описание процедуры"
+                                                      multiline>{this.state.priceList[index].body}</Cell>
+                                                <Cell
+                                                    description="Минимальная цена за работу">{this.state.priceList[index].price}</Cell>
+                                            </Cell>
+                                        </Card>
+                                    ))}
+                                </CardGrid>
+                                {this.state.add &&
+                                <Div>
+                                    <Cell description="Добавления нового элемента" multiline>
+                                        <Input
+                                            require
+                                            name="newProdTitle"
+                                            type="text"
+                                            value={this.state.newProdTitle}
+                                            placeholder={'Введите название'}
+                                            onChange={this.handleChange}/>
+                                        <Textarea
+                                            require
+                                            name="newProdBody"
+                                            value={this.state.newProdBody}
+                                            placeholder={'Укажите описание'}
+                                            onChange={this.handleChange}/>
+                                        <Input
+                                            require
+                                            name="newProdPrice"
+                                            type="number" value={this.state.newProdPrice}
+                                            placeholder={'Укажите цену'}
+                                            onChange={this.handleChange}/>
+                                    </Cell>
+                                    <Div style={{display: 'flex'}}>
+                                        <Button size="l" stretched style={{marginRight: 8}}
+                                                onClick={() => this.saveProd()}>Сохранить</Button>
+                                        <Button size="l" stretched mode="destructive"
+                                                onClick={() => this.addProd(false)}>Отменить</Button>
+                                    </Div>
+                                </Div>
+                                }
+                                <CellButton
+                                    onClick={() => this.addProd(true)}
+                                    before={<Icon24Add/>}
+                                >Добавить процедуру</CellButton>
+                            </Group>
                             <Select
                                 name={'type'}
                                 value={this.state.type}

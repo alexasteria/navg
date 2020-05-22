@@ -1,12 +1,12 @@
 import React from 'react';
 import HeadCity from "../elements/headCity";
-import {Group, Header, PanelHeader, SelectMimicry, Cell, Spinner} from "@vkontakte/vkui";
+import {PanelHeader, SelectMimicry} from "@vkontakte/vkui";
 import MastersList from './mastersList';
 import ScrollSubcat from '../elements/scrollSubcat'
 import {BACKEND} from "../func/func";
 import Spin from '../elements/spinner'
 import {connect} from "react-redux";
-import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll} from "../store/actions";
+import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll} from "../store/actions";
 import {bindActionCreators} from "redux";
 
 class Masters extends React.Component{

@@ -1,16 +1,13 @@
 import React from 'react';
 import {
     Group,
-    List,
     Cell,
     Separator,
     Div,
     Avatar,
     Counter,
-    Gallery,
     Snackbar,
-    UsersStack,
-    Spinner, Header, Card, CardGrid, CardScroll, Button, Alert, Input,FormLayout
+    Spinner, Header, Card, CardGrid, CardScroll, Button, FormLayout
 } from "@vkontakte/vkui"
 import InputMask from 'react-input-mask';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
@@ -31,7 +28,6 @@ class MastersCard extends React.Component {
     }
 
     componentDidMount() {
-        console.log(BACKEND.masters.onID + this.props.activeMasterId);
         fetch(BACKEND.masters.onID + this.props.activeMasterId)
             .then(res => res.json())
             .then(master => {
@@ -57,7 +53,6 @@ class MastersCard extends React.Component {
 
     handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
-        console.log(this.state);
     };
 
     favStatus = () => {
@@ -96,19 +91,7 @@ class MastersCard extends React.Component {
                 </Snackbar>
         });
     }
-    // subscribers = () => {
-    //     return (
-    //         <UsersStack
-    //         photos={[
-    //             'https://sun9-1.userapi.com/c850624/v850624456/9f63e/c2_IbBit7I8.jpg?ava=1',
-    //             'https://sun9-6.userapi.com/c851528/v851528416/e0360/1UfQ8aSIGVA.jpg?ava=1'
-    //         ]}
-    //         size="s"
-    //     >Настя и Jean и еще {this.state.countFavs} подписчиков</UsersStack>
-    //     )
-    // }
     loadFavs = () => {
-        console.log(this.state.activeMaster);
         if (this.props.user.favs){
             if (this.props.user.favs.includes(this.state.activeMaster._id)){
                 this.setState({isFavourite: true});
@@ -146,7 +129,6 @@ class MastersCard extends React.Component {
             "method": "messages.send",
             "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.state.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
             .then(result => {
-                console.log(result);
                 this.setState({ snackbar: null });
                 let mess = {
                     userId: this.props.user._id,
@@ -163,9 +145,7 @@ class MastersCard extends React.Component {
         this.setState({sendtitle: title});
         bridge.send("VKWebAppGetPhoneNumber", {"group_id": 193179174, "key": "dBuBKe1kFcdemzB"})
             .then(result => {
-                console.log(result);
                 this.setState({phone: result.phone_number});
-                //this.sendMessage();
                 this.enterNumber(result.phone_number)
             })
             .catch(e => {

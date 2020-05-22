@@ -35,7 +35,6 @@ class CityListModal extends React.Component {
             }
         })
             .then(result => {
-                console.log(result.response);
                 this.setState({cities: result.response.items}, () => this.props.updateModalHeight())
             })
             .catch(e => console.log(e))

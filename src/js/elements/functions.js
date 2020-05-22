@@ -1,5 +1,3 @@
-import {BACKEND} from "../func/func";
-import {Snackbar} from "@vkontakte/vkui";
 import React from "react";
 
 function postData(url = '', data = {}) {

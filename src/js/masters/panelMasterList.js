@@ -1,22 +1,17 @@
 import React from 'react';
 import {
     Spinner,
-    Separator,
     Avatar,
     Button,
     Cell,
     Div,
     Group,
-    List,
     Header,
     CardGrid,
     Card,
     Placeholder, Counter, HorizontalScroll
 } from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
-import Icon24Favorite from '@vkontakte/icons/dist/24/favorite';
-import Icon16Like from '@vkontakte/icons/dist/16/like';
-import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from "../func/func";
 import bridge from "@vkontakte/vk-bridge";
 
@@ -45,7 +40,6 @@ class MasterList extends React.Component {
 
         componentDidUpdate(prevProps, prevState, snapshot) {
             if (prevProps.city !== this.props.city || prevProps.category !== this.props.category) {
-                console.log(prevProps, this.props);
                 this.loadList()
             }
         }
@@ -59,13 +53,11 @@ class MasterList extends React.Component {
             if (index > -1) {
                 filter.splice(index, 1);
             } else filter.splice(0, index);
-            console.log('filter: ', filter);
             this.setState({filter: filter});
         } else {
             buttonSubcat.style.backgroundColor='lavender';
             let filter = this.state.filter;
             filter.push(e.currentTarget.id);
-            console.log('filter: ', filter);
             this.setState({filter: filter});
         }
     };
@@ -88,20 +80,16 @@ class MasterList extends React.Component {
     }
     loadList = () => {
             if(this.props.category === '') {
-                console.log(BACKEND.masters.category+'all/'+this.props.city.id);
                 fetch(BACKEND.masters.category+'all/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
-                        console.log(mastersList);
                         this.setState({mastersList: mastersList, isLoad: true});
                         this.setTitle(this.state.mastersList.length);
                     });
             } else {
-                console.log(BACKEND.masters.category+this.props.category._id+'/'+this.props.city.id);
                 fetch(BACKEND.masters.category+this.props.category._id+'/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
-                        console.log(mastersList);
                         this.setState({mastersList: mastersList, isLoad: true});
                         this.setTitle(this.state.mastersList.length);
                     });
@@ -110,10 +98,8 @@ class MasterList extends React.Component {
     countSubcat = (id) => {
         let count = 0;
         this.state.mastersList.map((master)=>{
-            //console.log(master.categories.subcat, id);
             if (master.categories.subcat){
                 if(master.categories.subcat.includes(id)) {
-                    //console.log('совпало');
                     count++
                 }
             }
@@ -167,7 +153,6 @@ class MasterList extends React.Component {
                         });
                         let sum = ratingArr.reduce((a, b) => a + b, 0);
                         let rating = sum/ratingArr.length;
-                        //console.log(rating);
                         return (
                                 <CardGrid key={master.vkUid} style={{padding: 0}}>
                                     <Card size="l" mode="shadow">
@@ -209,7 +194,7 @@ class MasterList extends React.Component {
             )
         }
 
-    }
+    };
     render() {
         if(this.state.isLoad === false) {
             return (<Spinner size="large" style={{ marginTop: 20 }} />)

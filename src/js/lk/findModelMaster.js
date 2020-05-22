@@ -3,12 +3,10 @@ import {
     FormLayout,
     Button,
     Cell,
-    Group,
     FormLayoutGroup,
     Textarea,
     Separator,
-    Avatar,
-    Spinner, CardGrid, Card, File, Snackbar, Div, PanelSpinner
+    CardGrid, Card, File, Snackbar, Div, PanelSpinner
 } from "@vkontakte/vkui";
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 import {BACKEND} from "../func/func";
@@ -69,9 +67,7 @@ class FindModelMaster extends React.Component {
     getToken = () => {
         bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
             .then(data => {
-                //console.log('Токен '+data.access_token);
                 this.getUploadServer(data.access_token);
-                //this.setState({token: data.access_token})
             })
             .catch(error => console.log(error))
     }
@@ -81,7 +77,6 @@ class FindModelMaster extends React.Component {
             "method": "photos.getUploadServer",
             "params": {"group_id": "193179174","album_id": "269622026", "v":"5.103", "access_token": token}})
             .then(result => {
-                //console.log(result.response.upload_url);
                 this.setState({uploadUrl: result.response.upload_url, token: token});
             })
             .catch(e => console.log(e))
@@ -120,26 +115,6 @@ class FindModelMaster extends React.Component {
                             let loadFind = this.state.loadFind;
                             loadFind.images.push(newImg);
                             this.setState({loading: false, loadFind: loadFind}, ()=>this.save());
-                            // fetch(BACKEND.vkapi.savePhotoFindModels, {
-                            //     mode: 'cors', // no-cors, cors, *same-origin
-                            //     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                            //     credentials: 'same-origin', // include, *same-origin, omit
-                            //     headers: {
-                            //         'Content-Type': 'application/json',
-                            //         // 'Content-Type': 'application/x-www-form-urlencoded',
-                            //     },
-                            //     method: 'POST',
-                            //     body: JSON.stringify(data),
-                            //     redirect: 'follow', // manual, *follow, error
-                            //     referrer: 'no-referrer', // no-referrer, *client
-                            // })
-                            //     .then(result => result.json())
-                            //     .then(result => {
-                            //         this.openSnack(result.message);
-                            //         console.log(result.url);
-                            //     })
-                            //     .catch(error => this.openSnack(error))
-
                         })
                         .catch(error => this.openSnack(error))
                 })
@@ -176,7 +151,7 @@ class FindModelMaster extends React.Component {
             this.postData(BACKEND.findModel.new, find);
             this.openSnack('Информация о поиске успешно размещена.')
         }
-    }
+    };
     patchData(url = '', data = {}) {
         return fetch(url, {
             method: 'PATCH', // *GET, POST, PUT, DELETE, etc.

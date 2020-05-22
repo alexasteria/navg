@@ -14,7 +14,6 @@ import {
 } from "@vkontakte/vkui"
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
-import Pop from "../func/alert";
 import bridge from "@vkontakte/vk-bridge";
 import {connect} from "react-redux";
 
@@ -54,7 +53,7 @@ class MastersComments extends React.Component {
             this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
             this.setState({isCommended: true});
         } catch (e) {
-            console.log(e)
+            console.log(e);
             this.setState({ snackbar:
                     <Snackbar
                         layout="vertical"
@@ -81,7 +80,6 @@ class MastersComments extends React.Component {
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
             .then(response => {
-                console.log(data);
                 console.log(response.json());
                 let arr = this.state.commentsArr;
                 data.date = "Только что";

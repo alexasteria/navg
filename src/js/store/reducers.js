@@ -5,7 +5,6 @@ export const ACTION_CHANGE_MASTERSLIST_SCROLL = 'ACTION_CHANGE_MASTERSLIST_SCROL
 export const ACTION_CHANGE_FINDMODELS_LIST = 'ACTION_CHANGE_FINDMODELS_LIST';
 export const ACTION_CHANGE_FINDMODELS_SCROLL = 'ACTION_CHANGE_FINDMODELS_SCROLL';
 export const LOGIN_USER = 'LOGIN_USER';
-export const CREATE_USER = 'CREATE_USER';
 export const SET_MASTER = 'SET_MASTER';
 
 const initialState = {
@@ -38,8 +37,6 @@ export const rootReducer = (state = initialState, action) => {
         case ACTION_CHANGE_FINDMODELS_SCROLL:
             return {...state, findModelsListScroll: action.payload};
         case LOGIN_USER:
-            return {...state, loginStatus: true, user: action.payload, targetCity:action.payload.location.city};
-        case CREATE_USER:
             return {...state, loginStatus: true, user: action.payload, targetCity:action.payload.location.city};
         case SET_MASTER:
             let changeIsMaster = state.user;

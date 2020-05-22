@@ -1,7 +1,6 @@
 import React from 'react';
 import {Cell} from "@vkontakte/vkui";
 import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
 
 function indicator(city){
     if(city) {

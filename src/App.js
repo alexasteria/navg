@@ -21,7 +21,6 @@ import Head from './js/elements/panelHeader';
 import MasterCard from './js/masters/mastersCard.js';
 import MasterPhoto from './js/masters/mastersPhoto.js';
 import MasterComments from './/js/masters/mastersComments.js';
-//import Idea from './js/ideaidea.js';
 import News from './js/news/news.js';
 import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
@@ -36,14 +35,13 @@ import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
 //import bridge from "@vkontakte/vk-bridge-mock";
 import bridge from '@vkontakte/vk-bridge';
-import CityListModal from "./js/elements/cityListModal";
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
 import spinner from './js/elements/img/spinner.svg'
 import {connect} from "react-redux";
 import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll,
-    loginUser, createUser, setMaster} from "./js/store/actions";
+    loginUser, setMaster} from "./js/store/actions";
 import {bindActionCreators} from "redux";
 
 class App extends React.Component {
@@ -100,10 +98,23 @@ class App extends React.Component {
                             country: vkUser.country || 'Не определен',
                             city: vkUser.city || 'Не определен'
                         },
-                        isMaster: false
+                        isMaster: false,
+                        favs: []
                     };
-                    postData(BACKEND.users, user); //регитрируем
-                    this.props.createUser(user);
+                    fetch(BACKEND.users, {
+                        method: 'POST',
+                        mode: 'cors',
+                        cache: 'no-cache',
+                        credentials: 'same-origin',
+                        headers: {'Content-Type': 'application/json',},
+                        redirect: 'follow',
+                        referrer: 'no-referrer',
+                        body: JSON.stringify(user)
+                    })
+                        .then(res => res.json())
+                        .then(newUser => {
+                            this.props.loginUser(newUser);
+                        });
                 } else {
                     if (usersArr[0].isMaster === true) {
                         fetch(BACKEND.masters.vkuid + usersArr[0].vkUid)
@@ -148,7 +159,7 @@ class App extends React.Component {
         const blueBackground = {
             backgroundColor: 'var(--accent)'
         };
-        if (this.state.snackbar) return;
+        if (this.state.snackbar) this.setState({snackbar: null});
         this.setState({
             snackbar:
                 <Snackbar
@@ -181,10 +192,22 @@ class App extends React.Component {
     };
 
     closeReg = (master) => {
-        postData(BACKEND.masters.all, master);
-        this.props.setMaster(master);
-        this.setState({activeViewLk: 'lk'});
-        // //this.verifiedUser(master); //проходит до запроса в БД пофиксить
+        fetch(BACKEND.masters.all, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {'Content-Type': 'application/json',},
+            redirect: 'follow',
+            referrer: 'no-referrer',
+            body: JSON.stringify(master)
+        })
+            .then(res => res.json())
+            .then(newMaster => {
+                this.props.setMaster(newMaster);
+                this.setState({activeViewLk: 'lk'});
+                this.openSnack('Вы успешно зарегистрированы. Не забудьте добавить фотографии в портфолио - так, шансы получить заказ намного выше.')
+            });
     };
 
     openPanelMaster = (panelName, master) => {
@@ -224,7 +247,6 @@ class App extends React.Component {
         const {user, loginStatus} = this.props;
         if (loginStatus === false) {
             return (
-                // <Placeholder icon={<Spinner size="large" style={{marginTop: 20}}/>}>
                 <Placeholder icon={<img src={spinner}/>}>
                     Выполняется вход...
                     {this.state.snackbar}
@@ -420,7 +442,6 @@ class App extends React.Component {
                                         <Lk
                                             user={user}
                                             openSetting={() => this.setActiveModal('setting')}
-                                            //openSetting={() => this.setState({activePanelLk: 'setting'})}
                                             openFavourite={() => this.setState({activePanelLk: 'favourite'})}
                                             openFindModel={() => this.setState({activePanelLk: 'findModel'})}
                                             openMasterPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
@@ -465,23 +486,6 @@ class App extends React.Component {
                                 <Head title={'Мастер ищет модель'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
                                 <FindModelMaster user={user} popout={this.openAlert}/>
                             </Panel>
-                            {/*<Panel id='setting'>*/}
-                            {/*    <Head title={'Настройки'} goBack={() => this.setState({activePanelLk: 'lk'})}/>*/}
-                            {/*    <Setting*/}
-                            {/*        targetCity={this.props.targetCity}*/}
-                            {/*        user={user}*/}
-                            {/*        popout={this.openAlert}*/}
-                            {/*        changeCity={() => this.setState({activePanelLk: 'changeCity'})}*/}
-                            {/*    />*/}
-                            {/*</Panel>*/}
-                            {/*<Panel id='changeCity'>*/}
-                            {/*    <Head title={'Выбор города'}*/}
-                            {/*          goBack={() => this.setState({activePanelLk: 'setting'})}/>*/}
-                            {/*    <CityList changeCity={(city) => this.setState({*/}
-                            {/*        targetCity: city,*/}
-                            {/*        activePanelLk: 'setting'*/}
-                            {/*    })}/>*/}
-                            {/*</Panel>*/}
                         </View>
                         <View activePanel={this.state.activePanelReg} id="registration">
                             <Panel id='registration'>
@@ -531,7 +535,6 @@ const putActionsToProps = (dispatch) => {
         changeFindModelsList: bindActionCreators(changeFindModelsList, dispatch),
         changeFindModelsListScroll: bindActionCreators(changeFindModelsListScroll, dispatch),
         loginUser: bindActionCreators(loginUser, dispatch),
-        createUser: bindActionCreators(createUser, dispatch),
         setMaster: bindActionCreators(setMaster, dispatch)
     };
 };

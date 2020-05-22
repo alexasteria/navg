@@ -36,5 +36,6 @@ export const BACKEND = {
     },
     logs: {
         params: BACK_LINK+'logs/params/'
-    }
+    },
+    sendmessage: BACK_LINK+'sendmessage'
 };
