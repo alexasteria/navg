@@ -20,7 +20,7 @@ import Icon16Done from '@vkontakte/icons/dist/16/done';
 import Head from './js/elements/panelHeader';
 import MasterCard from './js/masters/mastersCard.js';
 import MasterPhoto from './js/masters/mastersPhoto.js';
-import MasterComments from './/js/masters/mastersComments.js';
+import MasterComments from './js/masters/mastersComments.js';
 import News from './js/news/news.js';
 import Invite from './js/lk/invite.js';
 import Lk from './js/lk/lk.js'
@@ -206,8 +206,23 @@ class App extends React.Component {
             .then(newMaster => {
                 this.props.setMaster(newMaster);
                 this.setState({activeViewLk: 'lk'});
-                this.openSnack('Вы успешно зарегистрированы. Не забудьте добавить фотографии в портфолио - так, шансы получить заказ намного выше.')
-            });
+                this.openSnack('Вы успешно зарегистрированы. Не забудьте добавить фотографии в портфолио - так, шансы получить заказ намного выше.');
+                this.sendMessage('Благодарим за регистрацию. Не забудьте добавить фотографии в портфолио в разделе Кабинет->Портфолио. Так же, при необходимости, в разделе Кабинет->Поиск модели - можно создать объявление о поиске модели для пополнения портфолио, либо акционных предложений.');
+            })
+        .catch(e=>{
+            console.log(e);
+            this.openSnack('Ошибка при регистрации');
+            this.setState({activeViewLk: 'lk'});
+        })
+    };
+
+    sendMessage = (message) => {
+        let token = BACKEND.keyGroup;
+        bridge.send("VKWebAppCallAPIMethod", {
+            "method": "messages.send",
+            "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.props.user.vkUid,"message": message, "v":"5.103", "access_token": token}})
+            .then(result => console.log(result))
+            .catch(e => console.log(e))
     };
 
     openPanelMaster = (panelName, master) => {
@@ -247,7 +262,7 @@ class App extends React.Component {
         const {user, loginStatus} = this.props;
         if (loginStatus === false) {
             return (
-                <Placeholder icon={<img src={spinner}/>}>
+                <Placeholder icon={<img alt={'Загрузка'} src={spinner}/>}>
                     Выполняется вход...
                     {this.state.snackbar}
                 </Placeholder>

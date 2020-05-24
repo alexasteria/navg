@@ -7,6 +7,7 @@ import {Placeholder,
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import bridge from "@vkontakte/vk-bridge";
 import {connect} from "react-redux";
+import {BACKEND} from "../func/func";
 
 class News extends React.Component {
     constructor (props) {
@@ -18,9 +19,18 @@ class News extends React.Component {
     }
 
     componentDidMount() {
-        bridge.send("VKWebAppJoinGroup", {
-            group_id: 193179174
-        }).then(result=>this.setState({inGroup: result}));
+        bridge.send("VKWebAppCallAPIMethod", {
+                    "method": "groups.isMember",
+                    "params": {"group_id": "193179174","user_id": "269622026", "v":"5.103", "access_token": BACKEND.keyGroup}})
+                    .then(result => {
+                        console.log(result);
+                        if (result.response === 0){
+                            this.setState({inGroup: false})
+                        } else {
+                            this.setState({inGroup: true})
+                        }
+                    })
+                    .catch(e => console.log(e))
     }
 
     addFav = () => {

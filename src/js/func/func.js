@@ -37,5 +37,7 @@ export const BACKEND = {
     logs: {
         params: BACK_LINK+'logs/params/'
     },
-    sendmessage: BACK_LINK+'sendmessage'
+    sendmessage: BACK_LINK+'sendmessage',
+    keyGroup: 'f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf', //'17e5eb3d17e5eb3d17e5eb3dee17888047117e517e5eb3d4a4130ddab66ef8955df224b'
+    secretKey: 'eb8wUDGs1LQoSKPsIS9i'
 };

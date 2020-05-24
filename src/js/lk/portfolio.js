@@ -116,7 +116,6 @@ class MastersCard extends React.Component {
         bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
             .then(data => {
                 this.getUploadServer(data.access_token);
-                //this.setState({token: data.access_token})
             })
             .catch(error => console.log(error))
     }

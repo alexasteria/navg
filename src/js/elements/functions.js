@@ -34,7 +34,8 @@ function patchData(url = '', data = {}) {
     })
         .then(response => {
             console.log(response.json());
-        }); // парсит JSON ответ в Javascript объект
+        }) // парсит JSON ответ в Javascript объект
+        .catch(e=>console.log(e));
 }
 
 

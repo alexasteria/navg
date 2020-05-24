@@ -124,7 +124,7 @@ class MastersCard extends React.Component {
     };
     sendMessage = () => {
         let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться на '+this.state.sendtitle+'! Информация для связи: Телефон - +'+this.state.phone+', страница VK - http://vk.com/id'+this.props.user.vkUid;
-        let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
+        let token = BACKEND.keyGroup;
         bridge.send("VKWebAppCallAPIMethod", {
             "method": "messages.send",
             "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.state.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
