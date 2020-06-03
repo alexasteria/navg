@@ -1,9 +1,11 @@
 import React from 'react';
 import {
-    Cell, Avatar, Card, CardGrid, Spinner
+    Avatar, RichCell, Spinner, Placeholder
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from "../func/func";
+import Icon56LikeOutline from '@vkontakte/icons/dist/56/like_outline';
+import Icon16Chevron from '@vkontakte/icons/dist/16/chevron';
 import Spin from '../elements/spinner'
 
 class Favourite extends React.Component {
@@ -52,31 +54,41 @@ class Favourite extends React.Component {
         } else {
             if(this.state.mastersArr.message === 'Список избранного пуст') {
                 return (
-                        <CardGrid>
-                            <Card size="l" mode="shadow">
-                                <Cell multiline align="center">
-                                    {this.state.mastersArr.message}
-                                </Cell>
-                            </Card>
-                        </CardGrid>
+                    <Placeholder
+                        stretched
+                        icon={<Icon56LikeOutline/>}
+                        header={this.state.mastersArr.message}
+                    >Добавить мастера в этот список можно, нажав соответствующую кнопку в профиле мастера.
+                    </Placeholder>
                 )
             } else {
                 return (
                     this.state.mastersArr.map(master => {
                         if ((master !== null)) { //если мастер не удален
                             return (
-                                <CardGrid key={master._id}>
-                                    <Card size="l" mode="shadow">
-                                        <Cell expandable
-                                              photo={master.avatarLink}
-                                              description={master.type}
-                                              before={<Avatar src={master.avatarLink} size={50}/>}
-                                              size="l"
-                                              onClick={() => this.props.openFavMasterOnId(master._id)}
-                                        >{master.firstname} {master.lastname}
-                                        </Cell>
-                                    </Card>
-                                </CardGrid>
+                                <RichCell
+                                    key={master._id}
+                                    before={<Avatar size={72} src={master.avatarLink} />}
+                                    text={master.type}
+                                    caption={master.location.city.title}
+                                    after={<Icon16Chevron/>}
+                                    onClick={() => this.props.openFavMasterOnId(master._id)}
+                                >
+                                    {master.firstname} {master.lastname}
+                                </RichCell>
+
+                                // <CardGrid key={master._id}>
+                                //     <Card size="l" mode="shadow">
+                                //         <Cell expandable
+                                //               photo={master.avatarLink}
+                                //               description={master.type}
+                                //               before={<Avatar src={master.avatarLink} size={50}/>}
+                                //               size="l"
+                                //               onClick={() => this.props.openFavMasterOnId(master._id)}
+                                //         >{master.firstname} {master.lastname}
+                                //         </Cell>
+                                //     </Card>
+                                // </CardGrid>
                             )
                         }
                     })

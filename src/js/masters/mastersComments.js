@@ -5,7 +5,7 @@ import {
     Cell,
     Avatar,
     Footer,
-    CellButton,
+    Button,
     Textarea,
     Spinner,
     Separator,
@@ -39,7 +39,7 @@ class MastersComments extends React.Component {
     sendComment = () => {
         try {
             if (this.state.body.length < 20) throw 'Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.';
-            if (this.state.body.length > 200) throw 'Длина отзыва ограничена 200 символами.';
+            if (this.state.body.length > 100) throw 'Длина отзыва ограничена 100 символами.';
             let comment = {
                 user: {
                     userId: this.props.user._id,
@@ -161,19 +161,25 @@ class MastersComments extends React.Component {
                             max={5}
                             value={Number(this.state.rating)}
                             onChange={rating=>this.setState({rating})}
-                            top="Оцените работу мастера"
+                            top={"Моя оценка работы мастера: "+this.state.rating}
+                            bottom='Перемещайте ползунок влево или вправо для изменения оценки'
                         />
-                        <Counter mode="primary">Ваша оценка: {this.state.rating}</Counter>
                         <Textarea
                             name={'body'}
                             value={this.state.body}
-                            status={this.state.body.length > 20 ? 'valid' : 'error'}
-                            bottom={this.state.body.length > 20 ? '' : 'Опишите подробнее. Символов: '+this.state.body.replace(/ /g, "").length+' из 50' }
+                            bottom={this.state.body.length > 20 ? '' : 'Опишите подробнее. Отзыв должен состоять от 20 до 100 символов. Сейчас '+this.state.body.replace(/ /g, "").length+' из 100.' }
                             top={"Добавление отзыва"}
                             placeholder="Опишите, что вам понравилось или не понравилось в работе мастера"
                             onChange={this.handleChange}
                         />
-                        <CellButton onClick={() => this.sendComment()} before={<Icon24Add />}>Добавить отзыв</CellButton>
+                        <Button
+                            stretched
+                            mode="outline"
+                            before={<Icon24Add />}
+                            onClick={() => this.sendComment()}
+                        >
+                            Добавить отзыв
+                        </Button>
                     </FormLayout>
                 )
             }

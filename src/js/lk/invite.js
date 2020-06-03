@@ -21,7 +21,8 @@ import {bindActionCreators} from "redux";
 import {changeTargetCity} from "../store/actions";
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {connect} from "react-redux";
-import Icon16Dropdown from '@vkontakte/icons/dist/16/dropdown';
+import Icon16Down from '@vkontakte/icons/dist/16/down';
+import Icon16Up from '@vkontakte/icons/dist/16/up';
 
 class Invite extends React.Component {
     constructor(props) {
@@ -233,7 +234,7 @@ class Invite extends React.Component {
                                                   indicator={
                                                       'Выбрано: ' + this.counter(i)
                                                   }
-                                                  after={<Icon16Dropdown />}
+                                                  asideContent={this.state[category._id] ? <Icon16Up /> : <Icon16Down />}
                                             >
                                                 {category.label}
                                             </Cell>
@@ -339,7 +340,7 @@ class Invite extends React.Component {
                                 </FormLayoutGroup>
                             }
                             <Checkbox onChange={() => this.setState({checkLicense: !this.state.checkLicense})}>Согласен
-                                c <Link>условиями использования приложения</Link></Checkbox>
+                                c <Link onClick={this.props.openRules}>условиями использования приложения</Link></Checkbox>
                             <Button size="xl" onClick={this.regMaster}>Зарегистрироваться как мастер</Button>
                         </FormLayout>
                     </Group>

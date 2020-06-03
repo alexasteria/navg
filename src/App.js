@@ -33,12 +33,13 @@ import Partners from "./js/lk/partners";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
-import bridge from "@vkontakte/vk-bridge-mock";
-//import bridge from '@vkontakte/vk-bridge';
+//import bridge from "@vkontakte/vk-bridge-mock";
+import bridge from '@vkontakte/vk-bridge';
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
 import spinner from './js/elements/img/spinner.svg'
+import Rules from './js/lk/rules';
 import {connect} from "react-redux";
 import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll,
     loginUser, setMaster} from "./js/store/actions";
@@ -306,29 +307,28 @@ class App extends React.Component {
                                 stretched
                                 icon={<Spinner size="large" style={{ marginTop: 40 }} />}
                                 header="Выполняется вход..."
-                            >stretched
-                                Это может занять несколько секунд
+                            >Это может занять несколько секунд
                                 {this.state.snackbar}
                             </Placeholder>
                         </Panel>
                     </View>
                 </ConfigProvider>
             )
-      } //if (this.state.validationParams === false) {
-        //     return (
-        //         <ConfigProvider scheme={this.state.scheme}>
-        //             <View id="warn" activePanel="warn">
-        //                 <Panel id="warn">
-        //                     <Placeholder
-        //                         icon={<Spinner size="large" style={{ marginTop: 40 }} />}
-        //                     >
-        //                         Все, беда. Кто-то лезет в параметры запуска :(
-        //                     </Placeholder>
-        //                 </Panel>
-        //             </View>
-        //         </ConfigProvider>
-        //     )
-        // }
+      } if (this.state.validationParams === false) {
+            return (
+                <ConfigProvider scheme={this.state.scheme}>
+                    <View id="warn" activePanel="warn">
+                        <Panel id="warn">
+                            <Placeholder
+                                icon={<Spinner size="large" style={{ marginTop: 40 }} />}
+                            >
+                                Все, беда. Кто-то лезет в параметры запуска :(
+                            </Placeholder>
+                        </Panel>
+                    </View>
+                </ConfigProvider>
+            )
+        }
         else {
             return (
                 <ConfigProvider scheme={this.state.scheme}>
@@ -373,27 +373,35 @@ class App extends React.Component {
                     <Root
                         id="masters"
                         activeView={this.state.activeViewMasters}
-                        modal={
-                            <Modal
-                                header={'Выбор города'}
-                                activeModal={this.state.activeModal}
-                                pageId={'cityList'}
-                                onClose={()=>this.setActiveModal(null)}
-                                content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
-                                leftButton={false}
-                                rightButton={false}
-                            />
-                        }
+                        // modal={
+                        //     // <Modal
+                        //     //     header={'Выбор города'}
+                        //     //     activeModal={this.state.activeModal}
+                        //     //     pageId={'cityList'}
+                        //     //     onClose={()=>this.setActiveModal(null)}
+                        //     //     content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
+                        //     //     leftButton={false}
+                        //     //     rightButton={false}
+                        //     // />
+                        // }
                     >
                         <View id="mastersList" activePanel={this.state.activePanelMasters}>
                             <Panel id="mastersList">
                                 <Masters
-                                    changeCity={() => this.setActiveModal('cityList')}
+                                    changeCity={()=>this.setState({activePanelMasters: 'changeCity'})}
                                     openSnack={(title)=>this.openSnack(title)}
                                     changeCategory={()=>this.setState({activeViewMasters: 'masterCat'})}
                                     openPanelMaster={this.openPanelMaster}
                                 />
                                 {this.state.snackbar}
+                            </Panel>
+                            <Panel id='changeCity'>
+                                <Head title={'Выбор города'}
+                                      goBack={() => this.setState({activePanelMasters: 'mastersList'})}/>
+                                <CityList changeCity={(city) => {
+                                    this.changeTargetCity(city);
+                                    this.setState({activePanelMasters: 'mastersList'})
+                                }}/>
                             </Panel>
                             <Panel id="masterInfo">
                                 <Head
@@ -441,24 +449,32 @@ class App extends React.Component {
                     <View
                         id="findmodel"
                         activePanel={this.state.activePanelFindModels}
-                        modal={
-                            <Modal
-                                header={'Выбор города'}
-                                activeModal={this.state.activeModal}
-                                pageId={'cityList'}
-                                onClose={()=>this.setActiveModal(null)}
-                                content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
-                                leftButton={false}
-                                rightButton={false}
-                            />
-                        }
+                        // modal={
+                        //     <Modal
+                        //         header={'Выбор города'}
+                        //         activeModal={this.state.activeModal}
+                        //         pageId={'cityList'}
+                        //         onClose={()=>this.setActiveModal(null)}
+                        //         content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
+                        //         leftButton={false}
+                        //         rightButton={false}
+                        //     />
+                        // }
                     >
                         <Panel id="findmodel">
                             <PanelHeader>Ишу модель</PanelHeader>
                             <FindModel
                                 openMasterOnId={(masterId)=>this.openMasterOnId(masterId)}
-                                changeCity={() => this.setActiveModal('cityList')}
+                                changeCity={() => this.setState({activePanelFindModels: 'changeCity'})}
                             />
+                        </Panel>
+                        <Panel id='changeCity'>
+                            <Head title={'Выбор города'}
+                                  goBack={() => this.setState({activePanelFindModels: 'findmodel'})}/>
+                            <CityList changeCity={(city) => {
+                                this.changeTargetCity(city);
+                                this.setState({activePanelFindModels: 'findmodel'})
+                            }}/>
                         </Panel>
                         <Panel id="masterInfo">
                             <Head
@@ -566,15 +582,20 @@ class App extends React.Component {
                                 <FindModelMaster user={user} popout={this.openAlert}/>
                             </Panel>
                         </View>
-                        <View activePanel={this.state.activePanelReg} id="registration">
+                        <View activePanel={this.state.activePanelReg} id='registration'>
                             <Panel id='registration'>
                                 <Head title={'Регистрация'} goBack={() => this.setState({activeViewLk: 'lk'})}/>
                                 <Invite
                                     closeReg={this.closeReg}
                                     changeCity={() => this.setState({activePanelReg: 'changeCity'})}
+                                    openRules={() => this.setState({activePanelReg: 'rules'})}
                                     snackbar={(message) => this.openSnack(message)}
                                 />
                                 {this.state.snackbar}
+                            </Panel>
+                            <Panel id='rules'>
+                                <Head title={'Соглашение'} goBack={() => this.setState({activePanelReg: 'registration'})}/>
+                                <Rules />
                             </Panel>
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}

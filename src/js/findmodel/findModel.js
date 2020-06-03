@@ -49,8 +49,8 @@ class FindModel extends React.Component {
     };
 
     share = () => {
-        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866'})
-            .then(result => this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink))
+        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938'})
+            .then(result => this.openSnackAvatar('Ссылка на приложение отправлена.', this.state.activeMaster.avatarLink))
     };
     render(){
         if (this.state.isLoad === false){
@@ -70,7 +70,7 @@ class FindModel extends React.Component {
                     />
                     <FindList
                         findArr={this.state.findArr}
-                        share={()=>this.share}
+                        share={this.share}
                         user={this.props.user}
                         openMasterOnId={this.props.openMasterOnId}
                     />

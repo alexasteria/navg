@@ -76,31 +76,36 @@ class News extends React.Component {
         const {user} = this.props;
         return (
             <Group>
-                <CardGrid>
-                    <Card size="l">
-                        <Cell
-                            photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                            description={
-                                user.isMaster === false ? 'Пользователь' : 'Авторизованный мастер'
-                            }
-                            //bottomContent={}
-                            before={<Avatar src={user.avatarLink} size={50}/>}
-                            size="l"
-                        >{user.firstname} {user.lastname}
-                        </Cell>
-                        {user.isMaster === false &&
-                        <Cell
-                            multiline
-                            onClick={this.props.openReg}
-                            before={<Icon24UserOutgoing/>}
-                            expandable
-                        >
-                            Если вы - мастер, пройдите простую процедуру регистрации
-                        </Cell>
-                        }
-                    </Card>
-                </CardGrid>
                 {this.feedList()}
+                <FixedLayout
+                    vertical="bottom"
+                    style={{marginBottom: 5}}
+                >
+                    <CardGrid>
+                        <Card size="l">
+                            <Cell
+                                photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
+                                description={
+                                    user.isMaster === false ? 'Пользователь' : 'Авторизованный мастер'
+                                }
+                                //bottomContent={}
+                                before={<Avatar src={user.avatarLink} size={50}/>}
+                                size="l"
+                            >{user.firstname} {user.lastname}
+                            </Cell>
+                            {user.isMaster === false &&
+                            <Cell
+                                multiline
+                                onClick={this.props.openReg}
+                                before={<Icon24UserOutgoing/>}
+                                expandable
+                            >
+                                Если вы - мастер, пройдите простую процедуру регистрации
+                            </Cell>
+                            }
+                        </Card>
+                    </CardGrid>
+                </FixedLayout>
             </Group>
         );
     }

@@ -18,7 +18,7 @@ class Partners extends React.Component {
             <React.Fragment>
                 <Banner
                     header="Установите в ваше сообщество"
-                    asideMode="dismiss"
+                    //asideMode="dismiss"
                     subheader="Если вы являетесь владельцем сообщества со схожей тематикой нашего приложения, установите Навигатор красоты в свою группу. Ваши подписчики смогут получить удобный инструмент для поиска мастеров."
                     actions={<Button onClick={()=>this.addToCommunity()}>Установить в сообщество</Button>}
                 />

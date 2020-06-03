@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Проверка sign">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Пользовательское соглашение">
+      <change afterPath="$PROJECT_DIR$/src/js/lk/rules.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/partners.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/partners.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -461,14 +457,11 @@
       <workItem from="1591214167494" duration="1759000" />
       <workItem from="1591216077478" duration="1842000" />
       <workItem from="1591217959224" duration="1818000" />
-      <workItem from="1591219801819" duration="226000" />
-    </task>
-    <task id="LOCAL-00044" summary="Вывел список категорий из БД">
-      <created>1586205854451</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1586205854451</updated>
+      <workItem from="1591219801819" duration="1799000" />
+      <workItem from="1591221616220" duration="1795000" />
+      <workItem from="1591223423501" duration="1899000" />
+      <workItem from="1591225336261" duration="1800000" />
+      <workItem from="1591227160034" duration="784000" />
     </task>
     <task id="LOCAL-00045" summary="Запись клиента работает. Изменена схема в монге.">
       <created>1586207855347</created>
@@ -806,7 +799,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590360213049</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="До изменение выбора городов">
+      <created>1591220144721</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1591220144721</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -827,8 +827,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Кнопки фильтра субкатегорий без функции" />
-    <MESSAGE value="Исправлена ошибка с городом мастера" />
     <MESSAGE value="Исправлен баг в каунтере субкатегорий" />
     <MESSAGE value="Исправлен баг с настройкой категорий мастера" />
     <MESSAGE value="Управление фильтром субкатегорий. Берется первый элемент фильтра." />
@@ -852,7 +850,9 @@
     <MESSAGE value="Тест после перевода на редакс" />
     <MESSAGE value="Прайс заполняется при регистрации" />
     <MESSAGE value="Проверка sign" />
-    <option name="LAST_COMMIT_MESSAGE" value="Проверка sign" />
+    <MESSAGE value="До изменение выбора городов" />
+    <MESSAGE value="Пользовательское соглашение" />
+    <option name="LAST_COMMIT_MESSAGE" value="Пользовательское соглашение" />
   </component>
   <component name="WindowStateProjectService">
     <state x="858" y="332" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590825401880">
@@ -867,10 +867,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1590360212625">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1591227138873">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590360212625" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1591227138873" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

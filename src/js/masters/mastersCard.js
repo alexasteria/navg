@@ -7,7 +7,7 @@ import {
     Avatar,
     Counter,
     Snackbar,
-    Spinner, Header, Card, CardGrid, CardScroll, Button, FormLayout
+    Spinner, Header, Card, CardGrid, CardScroll, Button, FormLayout, RichCell, CellButton
 } from "@vkontakte/vkui"
 import InputMask from 'react-input-mask';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
@@ -16,6 +16,7 @@ import {BACKEND} from '../func/func';
 import bridge from "@vkontakte/vk-bridge";
 import {patchData} from "../elements/functions";
 import {connect} from "react-redux";
+import Icon24Phone from '@vkontakte/icons/dist/24/phone';
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -36,16 +37,16 @@ class MastersCard extends React.Component {
             });
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps !== this.props){
-            fetch(BACKEND.masters.onID + this.props.activeMasterId)
-                .then(res => res.json())
-                .then(master => {
-                    this.props.setActiveMaster(master);
-                    this.setState({activeMaster: master}, ()=> this.loadFavs())
-                });
-        }
-    }
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     if (prevProps !== this.props){
+    //         fetch(BACKEND.masters.onID + this.props.activeMasterId)
+    //             .then(res => res.json())
+    //             .then(master => {
+    //                 this.props.setActiveMaster(master);
+    //                 this.setState({activeMaster: master}, ()=> this.loadFavs())
+    //             });
+    //     }
+    // }
 
     componentWillUnmount() {
         if (this.state.isChange){ //если были изменения пишем в бд при разрушении ДОМ дерева
@@ -66,6 +67,13 @@ class MastersCard extends React.Component {
         this.setState({[event.target.name]: event.target.value});
     };
 
+    openShowImages(images, index) {
+        bridge.send("VKWebAppShowImages", {
+            images: images,
+            start_index: index
+        }).then(data => console.log(data));
+    }
+
     favStatus = () => {
         if(this.state.isFavourite === false) {
             return (
@@ -83,7 +91,13 @@ class MastersCard extends React.Component {
     };
     connectStatus = (title) => {
         return (
-            <Button onClick={() => this.getPhone(title)}>Записаться</Button>
+            <Button
+                before={<Icon24Phone/>}
+                onClick={() => this.getPhone(title)}
+                mode="outline"
+            >
+                Записаться
+            </Button>
         )
     };
     share = () => {
@@ -238,42 +252,46 @@ class MastersCard extends React.Component {
                             {this.state.activeMaster.firstname} {this.state.activeMaster.lastname}
                         </Cell>
                         <Separator/>
-                        <Cell expandable onClick={() => this.props.openComments()} indicator={this.state.activeMaster.comments.length}>Отзывы</Cell>
+                        <Cell
+                            expandable
+                            onClick={() => this.props.openComments()} indicator={this.state.activeMaster.comments.length}
+                            description={'Подписчиков: ' + this.state.countFavs}
+                        >
+                            Отзывы
+                        </Cell>
                         {/*{this.subscribers()}*/}
-                        <Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>
+                        {/*<Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>*/}
                     </Group>
                     <Group title="Портфолио">
                         {
                             this.state.activeMaster.photos.length > 0 &&
                                 <Div>
-                                    <Cell>Последние работы мастера</Cell>
+                                    <Cell>Выполненые работы мастера</Cell>
                                     <CardScroll>
                                         {
-                                            this.state.activeMaster.photos.slice(0, 5).map((photoUrl, index) => {
+                                            this.state.activeMaster.photos.map((photoUrl, index) => {
                                                 return (
-                                                    <Card size="s">
-                                                        <div key={index} style={{
-                                                            width: 144,
-                                                            height: 96,
-                                                            backgroundImage: 'url('+photoUrl+')',
-                                                            backgroundSize: 'cover'}} />
+                                                    <Card
+                                                        style={{padding: 2, borderRadius: 13, margin: 0}}
+                                                        size="s"
+                                                        mode="shadow"
+                                                        key={index}
+                                                        onClick={() => this.openShowImages(this.state.activeMaster.photos, index)}
+                                                    >
+                                                        <div style={{width: 144, height: 96, backgroundImage: 'url('+photoUrl+')', backgroundSize: 'cover', borderRadius: 13}} />
                                                     </Card>
                                                 )
                                             })
                                         }
                                     </CardScroll>
+                                    <Cell
+                                        expandable
+                                        onClick={() => this.props.openPhoto()}
+                                        description={this.state.activeMaster.photos.length+' фото в портфолио'}
+                                        indicator={this.state.activeMaster.photos.length}
+                                    >Посмотреть сеткой</Cell>
                                 </Div>
                         }
-                        <Cell
-                            expandable
-                            onClick={() => this.props.openPhoto()}
-                            description={
-                                this.state.activeMaster.photos.length > 0 ?
-                                    this.state.activeMaster.photos.length+' фото в портфолио' :
-                                    'У мастера еще нет фотографий работ'
-                            }
-                            indicator={this.state.activeMaster.photos.length}
-                        >Посмотреть все фото</Cell>
                     </Group>
                     <Group separator="hide">
                         {
@@ -295,10 +313,12 @@ class MastersCard extends React.Component {
                                                 </Cell>
                                                 {
                                                     this.state[index] &&
-                                                    <Cell description="Краткое описание процедуры"
-                                                          multiline>{this.state.activeMaster.priceList[index].body}
-                                                    <Cell>{this.connectStatus(this.state.activeMaster.priceList[index].title)}</Cell>
-                                                    </Cell>
+                                                        <div>
+                                                            <Cell>{this.connectStatus(this.state.activeMaster.priceList[index].title)}</Cell>
+                                                            <Cell description="Краткое описание процедуры"
+                                                                  multiline>{this.state.activeMaster.priceList[index].body}
+                                                            </Cell>
+                                                        </div>
                                                 }
                                                 <Separator></Separator>
                                             </Card>
