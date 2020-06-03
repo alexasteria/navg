@@ -36,6 +36,17 @@ class MastersCard extends React.Component {
             });
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps !== this.props){
+            fetch(BACKEND.masters.onID + this.props.activeMasterId)
+                .then(res => res.json())
+                .then(master => {
+                    this.props.setActiveMaster(master);
+                    this.setState({activeMaster: master}, ()=> this.loadFavs())
+                });
+        }
+    }
+
     componentWillUnmount() {
         if (this.state.isChange){ //если были изменения пишем в бд при разрушении ДОМ дерева
             patchData(BACKEND.users+'/'+this.state.user._id, this.state.user);
@@ -109,7 +120,7 @@ class MastersCard extends React.Component {
             let user = this.props.user;
             user.favs.push(this.state.activeMaster._id);
             this.setState({isFavourite: true, countFavs: this.state.countFavs+1, isChange: !this.state.isChange, user: user}, ()=>
-                this.openSnackAvatar('Вы подписались на обновления мастера.', this.state.activeMaster.avatarLink));
+                this.openSnackAvatar('Мастер добавлен в список избранных.', this.state.activeMaster.avatarLink));
         } else {
             let user = this.props.user;
             let index = this.props.user.favs.indexOf(this.state.activeMaster._id);
@@ -118,7 +129,7 @@ class MastersCard extends React.Component {
                 favs.splice(index, 1);
             } else favs.splice(0, index);
             this.setState({isFavourite: false, countFavs: this.state.countFavs-1, isChange: !this.state.isChange, user: user}, ()=>
-                this.openSnackAvatar('Мастер удален из списка избранного.', this.state.activeMaster.avatarLink));
+                this.openSnackAvatar('Мастер удален из списка избранных.', this.state.activeMaster.avatarLink));
         }
 
     };
@@ -275,7 +286,9 @@ class MastersCard extends React.Component {
                                         <CardGrid style={{padding: 0}}>
                                             <Card size="l">
                                                 <Cell
-                                                    description={'От ' + item.price + " рублей"}
+                                                    description={
+                                                        item.price !== '' ? 'От ' + item.price + " рублей" : 'Стоимость не указана'
+                                                    }
                                                     expandable
                                                     indicator="">
                                                     {this.state.activeMaster.priceList[index].title}

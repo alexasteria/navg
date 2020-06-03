@@ -2,6 +2,7 @@ import React from 'react';
 import {BACKEND} from "../func/func";
 import FindList from './components/findList';
 import HeadCity from '../elements/headCity'
+import {Spinner} from '@vkontakte/vkui';
 import Spin from '../elements/spinner'
 import bridge from "@vkontakte/vk-bridge";
 import {connect} from "react-redux";
@@ -53,7 +54,14 @@ class FindModel extends React.Component {
     };
     render(){
         if (this.state.isLoad === false){
-            return (<Spin/>)
+            return (
+                <React.Fragment>
+                    <HeadCity
+                        changeCity={()=>this.props.changeCity()}
+                    />
+                    <Spinner size="large" style={{ marginTop: 20 }} />
+                </React.Fragment>
+            )
         } else {
             return (
                 <React.Fragment>

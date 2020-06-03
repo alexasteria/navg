@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 /src/js/func/func.js
+/src/stat.js
 
 # testing
 /coverage

@@ -21,6 +21,7 @@ import {bindActionCreators} from "redux";
 import {changeTargetCity} from "../store/actions";
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {connect} from "react-redux";
+import Icon16Dropdown from '@vkontakte/icons/dist/16/dropdown';
 
 class Invite extends React.Component {
     constructor(props) {
@@ -114,8 +115,11 @@ class Invite extends React.Component {
     saveProd = () => {
         try {
             if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
+            if (this.state.newProdTitle.length > 20) throw 'Название длинее 20-ти символов необходимо сократить';
             if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
+            if (this.state.newProdBody.length > 250) throw 'Описание процедуры слишком длинное. Сейчас заполнено - '+this.state.newProdBody.length+" из "+250;
             if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
+            if (this.state.newProdPrice.length > 5) throw 'Максимально допустимы 5-ти значные суммы';
             let priceList = this.state.priceList;
             priceList.push({
                 title: this.state.newProdTitle,
@@ -192,19 +196,27 @@ class Invite extends React.Component {
                             <CardGrid>
                                 <Card size="l" mode="shadow">
                                     <Cell
-                                        expandable
                                         multiline
-                                        onClick={this.permMessage}
-                                        description="Для получения уведомлений о заявках"
-                                        status={this.state.statusMessage === true ? 'valid' : 'error'}
+                                        asideContent={
+                                            <Switch
+                                                onChange={this.permMessage}
+                                                checked={this.state.statusMessage}/>
+                                        }
                                         bottom={this.state.statusMessage === false && 'Доступ обязателен для регистрации'}
-                                    >Доступ на получение личных сообщений от приложения - {this.state.statusMessage=== true ? <span style={{color: 'green'}}>Разрешен</span> : <span style={{color: 'red'}}>Не разрешен</span>}
+                                    >Доступ на получение личных сообщений от приложения, для получения уведомлений о заявках
                                     </Cell>
+                                    {/*<Cell*/}
+                                    {/*    expandable*/}
+                                    {/*    multiline*/}
+                                    {/*    onClick={this.permMessage}*/}
+                                    {/*    description="Для получения уведомлений о заявках"*/}
+                                    {/*    status={this.state.statusMessage === true ? 'valid' : 'error'}*/}
+                                    {/*>Доступ на получение личных сообщений от приложения - {this.state.statusMessage=== true ? <span style={{color: 'green'}}>Разрешен</span> : <span style={{color: 'red'}}>Не разрешен</span>}*/}
+                                    {/*</Cell>*/}
                                 </Card>
                             </CardGrid>
                             <Textarea
                                 name={'description'}
-                                status={this.state.description ? 'valid' : 'error'}
                                 bottom={this.state.description ? '' : 'Пожалуйста, напишите пару слов о себе'}
                                 top="О себе"
                                 value={this.state.description}
@@ -216,11 +228,13 @@ class Invite extends React.Component {
                                 this.state.categories.map((category, i) => {
                                     return (
                                         <Group key={category._id}>
-                                            <Cell expandable name={category._id}
+                                            <Cell name={category._id}
                                                   onClick={() => this.setState({[category._id]: !this.state[category._id]})}
                                                   indicator={
                                                       'Выбрано: ' + this.counter(i)
-                                                  }>
+                                                  }
+                                                  after={<Icon16Dropdown />}
+                                            >
                                                 {category.label}
                                             </Cell>
                                             {this.state[category._id] &&
@@ -249,7 +263,7 @@ class Invite extends React.Component {
                                 })
                             }
                             </FormLayoutGroup>
-                            <Group title={'Прайс-лист'} style={{ background: '#f5f5f5' }}>
+                            <Group title={'Прайс-лист'}>
                                 {this.state.priceList.length === 0 &&
                                 <Cell multiline>Вы еще не указали ни одной процедуры. Пока они не указаны, пользователи не смогут связаться с Вами.</Cell>
                                 }
@@ -273,7 +287,7 @@ class Invite extends React.Component {
                                         </Card>
                                     ))}
                                 </CardGrid>
-                                {this.state.add &&
+                                {this.state.add ?
                                 <Div>
                                     <Cell description="Добавления нового элемента" multiline>
                                         <Input
@@ -302,17 +316,16 @@ class Invite extends React.Component {
                                         <Button size="l" stretched mode="destructive"
                                                 onClick={() => this.addProd(false)}>Отменить</Button>
                                     </Div>
-                                </Div>
+                                </Div> :
+                                    <CellButton
+                                        onClick={() => this.addProd(true)}
+                                        before={<Icon24Add/>}
+                                    >Добавить процедуру</CellButton>
                                 }
-                                <CellButton
-                                    onClick={() => this.addProd(true)}
-                                    before={<Icon24Add/>}
-                                >Добавить процедуру</CellButton>
                             </Group>
                             <Select
                                 name={'type'}
                                 value={this.state.type}
-                                status={this.state.type ? 'valid' : 'error'}
                                 bottom={this.state.type ? '' : 'Пожалуйста, укажите тип оказания услуг'}
                                 onChange={this.handleChange}
                                 placeholder="Выберите тип оказания услуг">

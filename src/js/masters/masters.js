@@ -1,6 +1,6 @@
 import React from 'react';
 import HeadCity from "../elements/headCity";
-import {PanelHeader, SelectMimicry} from "@vkontakte/vkui";
+import {PanelHeader, SelectMimicry, Spinner} from "@vkontakte/vkui";
 import MastersList from './mastersList';
 import ScrollSubcat from '../elements/scrollSubcat'
 import {BACKEND} from "../func/func";
@@ -59,9 +59,7 @@ class Masters extends React.Component{
     };
 
     checkSubcat = (e) => {
-        let buttonSubcat = document.getElementById(e.currentTarget.id);
-        if(buttonSubcat.style.backgroundColor==='lavender'){
-            buttonSubcat.style.backgroundColor='#fff';
+        if(this.state.filter.includes(e.currentTarget.id)){
             let index = this.state.filter.indexOf(e.currentTarget.id);
             let filter = this.state.filter;
             if (index > -1) {
@@ -69,7 +67,6 @@ class Masters extends React.Component{
             } else filter.splice(0, index);
             this.setState({filter: filter}, ()=> this.filter());
         } else {
-            buttonSubcat.style.backgroundColor='lavender';
             let filter = this.state.filter;
             filter.push(e.currentTarget.id);
             this.setState({filter: filter}, ()=> this.filter());
@@ -115,6 +112,7 @@ class Masters extends React.Component{
                             targetCategory={targetCategory}
                             mastersList={this.props.mastersList}
                             checkSubcat={(e)=>this.checkSubcat(e)}
+                            filter={this.state.filter}
                         />
                     }
                     {
@@ -126,7 +124,7 @@ class Masters extends React.Component{
                                 city={user.location.city}
                                 openPanelMaster={this.props.openPanelMaster}
                             /> :
-                            <Spin/>
+                            <Spinner size="large" style={{ marginTop: 20 }} />
                     }
                 </React.Fragment>
             )

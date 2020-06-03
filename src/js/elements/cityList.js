@@ -1,7 +1,8 @@
 import React from 'react';
-import {Cell, List, Search, Spinner, withModalRootContext} from '@vkontakte/vkui';
+import {Cell, List, Placeholder, Search, Spinner, withModalRootContext} from '@vkontakte/vkui';
 import bridge from '@vkontakte/vk-bridge';
 import PropTypes from 'prop-types'
+import Icon56PlaceOutline from '@vkontakte/icons/dist/56/place_outline';
 
 class CityList extends React.Component {
 
@@ -56,7 +57,7 @@ class CityList extends React.Component {
             return (
                 <React.Fragment>
                     <Search value={this.state.search} onChange={this.onChange} after={null}/>
-                    {this.state.cities.length > 0 &&
+                    {this.state.cities.length > 0 ?
                     <List>
                         {this.state.cities.map(city =>
                             <Cell
@@ -67,7 +68,13 @@ class CityList extends React.Component {
                                 {city.title}
                             </Cell>
                         )}
-                    </List>
+                    </List> :
+                        <Placeholder
+                            icon={<Icon56PlaceOutline />}
+                            header="Город не найден"
+                        >
+                            Проверьте опечатки или измените критерии поиска
+                        </Placeholder>
                     }
                 </React.Fragment>
             );

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-Cell, Avatar, Card, CardGrid
+    Cell, Avatar, Card, CardGrid, Spinner
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from "../func/func";
@@ -48,7 +48,7 @@ class Favourite extends React.Component {
 
     render() {
         if (this.state.isLoaded === false) {
-            return (<Spin/>)
+            return (<Spinner size="large" style={{ marginTop: 20 }} />)
         } else {
             if(this.state.mastersArr.message === 'Список избранного пуст') {
                 return (

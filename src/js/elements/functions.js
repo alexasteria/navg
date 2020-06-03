@@ -8,7 +8,6 @@ function postData(url = '', data = {}) {
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
             'Content-Type': 'application/json',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error
         referrer: 'no-referrer', // no-referrer, *client

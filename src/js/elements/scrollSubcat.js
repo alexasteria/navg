@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Counter, HorizontalScroll} from "@vkontakte/vkui";
+import {Button, Counter, HorizontalScroll, Tabs, TabsItem} from "@vkontakte/vkui";
 
 function countSubcat(id,props){
     let count = 0;
@@ -22,26 +22,45 @@ export default function ScrollSubcat(props){
     if(props.targetCategory._id!=='all'){
         return(
             <HorizontalScroll>
-                <div style={{display: 'flex'}}>
+                <Tabs>
                     {
                         props.targetCategory.subcat.map(subcat=>{
                             return (
-                                <div style={{subcatStyle}} key={subcat._id}>
-                                    <Button
-                                        after={<Counter size='s'>{countSubcat(subcat._id, props)}</Counter>}
-                                        id={subcat._id}
-                                        onClick={props.checkSubcat}
-                                        style={{margin: '4px 4px 0px 0px'}}
-                                        mode="outline"
-                                    >
-                                        {subcat.label}
-                                    </Button>
-                                </div>
+                                <TabsItem
+                                    after={<Counter size='s'>{countSubcat(subcat._id, props)}</Counter>}
+                                    key={subcat._id}
+                                    id={subcat._id}
+                                    onClick={props.checkSubcat}
+                                    selected={props.filter.includes(subcat._id)}
+                                >
+                                    {subcat.label}
+                                </TabsItem>
                             )
                         })
                     }
-                </div>
+                </Tabs>
             </HorizontalScroll>
+            // <HorizontalScroll>
+            //     <div style={{display: 'flex'}}>
+            //         {
+            //             props.targetCategory.subcat.map(subcat=>{
+            //                 return (
+            //                     <div style={{subcatStyle}} key={subcat._id}>
+            //                         <Button
+            //                             after={<Counter size='s'>{countSubcat(subcat._id, props)}</Counter>}
+            //                             id={subcat._id}
+            //                             onClick={props.checkSubcat}
+            //                             style={{margin: '4px 4px 0px 0px'}}
+            //                             mode="outline"
+            //                         >
+            //                             {subcat.label}
+            //                         </Button>
+            //                     </div>
+            //                 )
+            //             })
+            //         }
+            //     </div>
+            // </HorizontalScroll>
         )
     } else {
         return null

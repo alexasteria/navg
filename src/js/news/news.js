@@ -19,11 +19,11 @@ class News extends React.Component {
     }
 
     componentDidMount() {
+        let user = this.props.user;
         bridge.send("VKWebAppCallAPIMethod", {
                     "method": "groups.isMember",
-                    "params": {"group_id": "193179174","user_id": "269622026", "v":"5.103", "access_token": BACKEND.keyGroup}})
+                    "params": {"group_id": "193179174","user_id": user.vkUid, "v":"5.103", "access_token": BACKEND.keyGroup}})
                     .then(result => {
-                        console.log(result);
                         if (result.response === 0){
                             this.setState({inGroup: false})
                         } else {
@@ -76,32 +76,30 @@ class News extends React.Component {
         const {user} = this.props;
         return (
             <Group>
-                <FixedLayout vertical="bottom">
-                    <CardGrid>
-                        <Card size="l">
-                            <Cell
-                                  photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                                  description={
-                                      user.isMaster === false ? 'Пользователь' : 'Авторизованный мастер'
-                                  }
-                                  //bottomContent={}
-                                  before={<Avatar src={user.avatarLink} size={50}/>}
-                                  size="l"
-                            >{user.firstname} {user.lastname}
-                            </Cell>
-                            {user.isMaster === false &&
-                                <Cell
-                                    multiline
-                                    onClick={this.props.openReg}
-                                    before={<Icon24UserOutgoing/>}
-                                    expandable
-                                >
-                                    Если вы - мастер, пройдите простую процедуру регистрации
-                                </Cell>
+                <CardGrid>
+                    <Card size="l">
+                        <Cell
+                            photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
+                            description={
+                                user.isMaster === false ? 'Пользователь' : 'Авторизованный мастер'
                             }
-                        </Card>
-                    </CardGrid>
-                </FixedLayout>
+                            //bottomContent={}
+                            before={<Avatar src={user.avatarLink} size={50}/>}
+                            size="l"
+                        >{user.firstname} {user.lastname}
+                        </Cell>
+                        {user.isMaster === false &&
+                        <Cell
+                            multiline
+                            onClick={this.props.openReg}
+                            before={<Icon24UserOutgoing/>}
+                            expandable
+                        >
+                            Если вы - мастер, пройдите простую процедуру регистрации
+                        </Cell>
+                        }
+                    </Card>
+                </CardGrid>
                 {this.feedList()}
             </Group>
         );

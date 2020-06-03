@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Прайс заполняется при регистрации">
-      <change afterPath="$PROJECT_DIR$/src/Warn.js" afterDir="false" />
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Проверка sign">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -441,14 +444,24 @@
       <workItem from="1590352829480" duration="1187000" />
       <workItem from="1590355349881" duration="1381000" />
       <workItem from="1590358096309" duration="1796000" />
-      <workItem from="1590359904270" duration="207000" />
-    </task>
-    <task id="LOCAL-00043" summary="Рендер категории, показ/скрытие, без счетчика">
-      <created>1586204206955</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1586204206955</updated>
+      <workItem from="1590359904270" duration="858000" />
+      <workItem from="1590416599165" duration="1655000" />
+      <workItem from="1590698495324" duration="1796000" />
+      <workItem from="1590700417838" duration="1815000" />
+      <workItem from="1590702676348" duration="1795000" />
+      <workItem from="1590704483782" duration="1568000" />
+      <workItem from="1590805942011" duration="1793000" />
+      <workItem from="1590808056192" duration="1796000" />
+      <workItem from="1590809994172" duration="1474000" />
+      <workItem from="1590814479635" duration="1097000" />
+      <workItem from="1590816956757" duration="165000" />
+      <workItem from="1590820927486" duration="1124000" />
+      <workItem from="1590825375003" duration="197000" />
+      <workItem from="1591211249770" duration="1354000" />
+      <workItem from="1591214167494" duration="1759000" />
+      <workItem from="1591216077478" duration="1842000" />
+      <workItem from="1591217959224" duration="1818000" />
+      <workItem from="1591219801819" duration="226000" />
     </task>
     <task id="LOCAL-00044" summary="Вывел список категорий из БД">
       <created>1586205854451</created>
@@ -786,7 +799,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590186972541</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="Проверка sign">
+      <created>1590360213048</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1590360213049</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -807,7 +827,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Города мастера и из поиска не перебивают друг друга" />
     <MESSAGE value="Кнопки фильтра субкатегорий без функции" />
     <MESSAGE value="Исправлена ошибка с городом мастера" />
     <MESSAGE value="Исправлен баг в каунтере субкатегорий" />
@@ -832,17 +851,26 @@
     <MESSAGE value="Баг фикс" />
     <MESSAGE value="Тест после перевода на редакс" />
     <MESSAGE value="Прайс заполняется при регистрации" />
-    <option name="LAST_COMMIT_MESSAGE" value="Прайс заполняется при регистрации" />
+    <MESSAGE value="Проверка sign" />
+    <option name="LAST_COMMIT_MESSAGE" value="Проверка sign" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="858" y="332" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590825401880">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="858" y="332" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1590825401880" />
+    <state x="818" y="276" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1590825567886">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="818" y="276" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1590825567886" />
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1587851460059">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1590186972055">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1590360212625">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590186972055" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590360212625" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

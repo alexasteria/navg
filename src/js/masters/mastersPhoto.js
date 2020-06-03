@@ -31,12 +31,13 @@ class MastersCard extends React.Component {
                         this.state.images.map((image, index) => {
                             return (
                                 <Card
+                                    style={{padding: 2, borderRadius: 13, margin: 0}}
                                     size="s"
                                     mode="shadow"
                                     key={index}
                                     onClick={() => this.openShowImages(this.state.images, index)}
                                 >
-                                    <div style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover'}} />
+                                    <div style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover', borderRadius: 13}} />
                                 </Card>
                             )
                         })

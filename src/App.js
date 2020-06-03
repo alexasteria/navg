@@ -9,7 +9,7 @@ import {
     Root,
     Tabbar,
     TabbarItem,
-    View, Snackbar, Avatar, Tabs, TabsItem, Separator
+    View, Snackbar, Avatar, Tabs, TabsItem, Separator, ConfigProvider, Spinner
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
@@ -33,8 +33,8 @@ import Partners from "./js/lk/partners";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
-//import bridge from "@vkontakte/vk-bridge-mock";
-import bridge from '@vkontakte/vk-bridge';
+import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from '@vkontakte/vk-bridge';
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
@@ -63,7 +63,8 @@ class App extends React.Component {
             activeModal: null,
             modalHistory: [],
             targetCity: 'Не выбрано',
-            activeTabLk: 'about'
+            activeTabLk: 'about',
+            scheme: "bright_light"
 
         };
         this.onStoryChange = this.onStoryChange.bind(this);
@@ -76,10 +77,45 @@ class App extends React.Component {
     componentDidMount() {
         bridge.send('VKWebAppGetUserInfo', {})
             .then(data => {this.verificationUser(data)});
-        if (this.props.params) {postData(BACKEND.logs.params, this.props.params)}
         if (this.props.linkParams.masterid) {
-            console.log('В параметры пришел мастер');
-            this.openMasterOnLink(this.props.linkParams.masterid)
+            this.setState({activeMasterId: this.props.linkParams.masterid});
+            this.openMasterOnLink(this.props.linkParams.masterid);
+            //bridge.send("VKWebAppSetLocation", {"location": "masterid="+this.props.linkParams.masterid});
+        }
+        bridge.subscribe(({ detail: { type, data }}) => {
+            if (type === 'VKWebAppUpdateConfig'){
+                this.setState({scheme: data.scheme});
+            }
+            // if (type === 'VKWebAppViewRestore') { // Восстановление из кэша
+            //     if (this.props.linkParams.masterid) {
+            //         this.setState({activeMasterId: this.props.linkParams.masterid});
+            //     }
+            // }
+            // if (type === 'VKWebAppLocationChanged'){
+            //     let id = data.location.split('=');
+            //     console.log('В параметры пришел мастер', id[1]);
+            //     this.openMasterOnLink(id[1]);
+            // }
+            // if (type === 'VKWebAppUpdateConfig') { // Получаем тему клиента.
+            //     this.setState({scheme: data.scheme})
+            // }
+        });
+        if (this.props.params) {
+            fetch(BACKEND.logs.params, {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {'Content-Type': 'application/json',},
+                redirect: 'follow',
+                referrer: 'no-referrer',
+                body: JSON.stringify(this.props.params)
+            })
+                .then(res => res.json())
+                .then(res => {
+                    this.setState({validationParams: res.status})
+                })
+                .catch(e=>console.log(e));
         }
     }
 
@@ -234,6 +270,7 @@ class App extends React.Component {
     };
     openMasterOnLink = (masterId) => {
         this.setState({activeMasterId: masterId,activeStory: 'masters',activeViewMasters: 'mastersList',activePanelMasters: 'masterInfo'});
+        console.log(masterId);
     };
     openFavMasterOnId = (masterId) => {
         this.setState({activeMasterId: masterId, activePanelLk: 'masterInfo'});
@@ -262,20 +299,46 @@ class App extends React.Component {
         const {user, loginStatus} = this.props;
         if (loginStatus === false) {
             return (
-                <Placeholder icon={<img alt={'Загрузка'} src={spinner}/>}>
-                    Выполняется вход...
-                    {this.state.snackbar}
-                </Placeholder>
+                <ConfigProvider scheme={this.state.scheme}>
+                    <View id="auth" activePanel="auth">
+                        <Panel id="auth">
+                            <Placeholder
+                                stretched
+                                icon={<Spinner size="large" style={{ marginTop: 40 }} />}
+                                header="Выполняется вход..."
+                            >stretched
+                                Это может занять несколько секунд
+                                {this.state.snackbar}
+                            </Placeholder>
+                        </Panel>
+                    </View>
+                </ConfigProvider>
             )
-        } else {
+      } //if (this.state.validationParams === false) {
+        //     return (
+        //         <ConfigProvider scheme={this.state.scheme}>
+        //             <View id="warn" activePanel="warn">
+        //                 <Panel id="warn">
+        //                     <Placeholder
+        //                         icon={<Spinner size="large" style={{ marginTop: 40 }} />}
+        //                     >
+        //                         Все, беда. Кто-то лезет в параметры запуска :(
+        //                     </Placeholder>
+        //                 </Panel>
+        //             </View>
+        //         </ConfigProvider>
+        //     )
+        // }
+        else {
             return (
+                <ConfigProvider scheme={this.state.scheme}>
                 <Epic activeStory={this.state.activeStory} tabbar={
                     <Tabbar>
                         <TabbarItem
                             onClick={this.onStoryChange}
                             selected={this.state.activeStory === 'news'}
                             data-story="news"
-                            text="News"
+                            text="Новости"
                         ><Icon28FireOutline/></TabbarItem>
                         <TabbarItem
                             onClick={this.onStoryChange}
@@ -299,10 +362,11 @@ class App extends React.Component {
                 }>
                     <View id="news" activePanel="news">
                         <Panel id="news">
-                            <PanelHeader>Навигатор красоты</PanelHeader>
+                            <PanelHeader>Новости</PanelHeader>
                             <News
                                 openReg={() => this.setState({activeViewLk: 'registration', activeStory: 'lk'})}
                                 openStory={this.openStory}
+                                user={this.props.user}
                             />
                         </Panel>
                     </View>
@@ -390,7 +454,7 @@ class App extends React.Component {
                         }
                     >
                         <Panel id="findmodel">
-                            <PanelHeader>Мастер ищет модель</PanelHeader>
+                            <PanelHeader>Ишу модель</PanelHeader>
                             <FindModel
                                 openMasterOnId={(masterId)=>this.openMasterOnId(masterId)}
                                 changeCity={() => this.setActiveModal('cityList')}
@@ -436,7 +500,7 @@ class App extends React.Component {
                             />
                         }>
                             <Panel id="lk">
-                                <PanelHeader>Личный кабинет</PanelHeader>
+                                <PanelHeader>Кабинет</PanelHeader>
                                 <Tabs>
                                     <TabsItem
                                         onClick={() => this.setState({ activeTabLk: 'about' })}
@@ -523,6 +587,7 @@ class App extends React.Component {
                         </View>
                     </Root>
                 </Epic>
+                </ConfigProvider>
             )
         }
     }
