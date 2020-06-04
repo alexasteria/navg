@@ -40,7 +40,6 @@ class Invite extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
     componentDidMount() {
-        this.permMessage();
         this.getCategories();
     }
 

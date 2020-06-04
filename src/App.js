@@ -33,8 +33,9 @@ import Partners from "./js/lk/partners";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
-//import bridge from "@vkontakte/vk-bridge-mock";
-import bridge from '@vkontakte/vk-bridge';
+import Moder from "./js/news/moder";
+import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from '@vkontakte/vk-bridge';
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
@@ -65,7 +66,8 @@ class App extends React.Component {
             modalHistory: [],
             targetCity: 'Не выбрано',
             activeTabLk: 'about',
-            scheme: "bright_light"
+            scheme: "bright_light",
+            activePanelNews: 'news'
 
         };
         this.onStoryChange = this.onStoryChange.bind(this);
@@ -243,8 +245,8 @@ class App extends React.Component {
             .then(newMaster => {
                 this.props.setMaster(newMaster);
                 this.setState({activeViewLk: 'lk'});
-                this.openSnack('Вы успешно зарегистрированы. Не забудьте добавить фотографии в портфолио - так, шансы получить заказ намного выше.');
-                this.sendMessage('Благодарим за регистрацию. Не забудьте добавить фотографии в портфолио в разделе Кабинет->Портфолио. Так же, при необходимости, в разделе Кабинет->Поиск модели - можно создать объявление о поиске модели для пополнения портфолио, либо акционных предложений.');
+                this.openSnack('Ваш профиль отправлен на проверку. Не забудьте добавить фотографии в портфолио - так, шансы получить заказ намного выше.');
+                this.sendMessage('Благодарим за регистрацию. Ваш профиль будет проходить модерацию в течении часа. Не забудьте добавить фотографии в портфолио в разделе Кабинет->Портфолио. Так же, при необходимости, в разделе Кабинет->Поиск модели - можно создать объявление о поиске модели для пополнения портфолио, либо акционных предложений.');
             })
         .catch(e=>{
             console.log(e);
@@ -314,21 +316,21 @@ class App extends React.Component {
                     </View>
                 </ConfigProvider>
             )
-      } if (this.state.validationParams === false) {
-            return (
-                <ConfigProvider scheme={this.state.scheme}>
-                    <View id="warn" activePanel="warn">
-                        <Panel id="warn">
-                            <Placeholder
-                                icon={<Spinner size="large" style={{ marginTop: 40 }} />}
-                            >
-                                Все, беда. Кто-то лезет в параметры запуска :(
-                            </Placeholder>
-                        </Panel>
-                    </View>
-                </ConfigProvider>
-            )
-        }
+      } //if (this.state.validationParams === false) {
+        //     return (
+        //         <ConfigProvider scheme={this.state.scheme}>
+        //             <View id="warn" activePanel="warn">
+        //                 <Panel id="warn">
+        //                     <Placeholder
+        //                         icon={<Spinner size="large" style={{ marginTop: 40 }} />}
+        //                     >
+        //                         Все, беда. Кто-то лезет в параметры запуска :(
+        //                     </Placeholder>
+        //                 </Panel>
+        //             </View>
+        //         </ConfigProvider>
+        //     )
+        // }
         else {
             return (
                 <ConfigProvider scheme={this.state.scheme}>
@@ -360,13 +362,37 @@ class App extends React.Component {
                         ><Icon28More/></TabbarItem>
                     </Tabbar>
                 }>
-                    <View id="news" activePanel="news">
+                    <View id="news" activePanel={this.state.activePanelNews}>
                         <Panel id="news">
                             <PanelHeader>Новости</PanelHeader>
                             <News
                                 openReg={() => this.setState({activeViewLk: 'registration', activeStory: 'lk'})}
                                 openStory={this.openStory}
                                 user={this.props.user}
+                                openModer={() => this.setState({activePanelNews: 'moder'})}
+                            />
+                        </Panel>
+                        <Panel id="moder">
+                            <Head
+                                title={'Модерация'}
+                                goBack={() => this.setState({activePanelNews: 'news'})}
+                            />
+                            <Moder
+                                goBack={() => this.setState({activePanelNews: 'news'})}
+                                user={this.state.user}
+                                openMaster={(id) => this.setState({moderId: id, activePanelNews: 'masterInfo'})}
+                            />
+                        </Panel>
+                        <Panel id="masterInfo">
+                            <Head
+                                title={'О мастере'}
+                                goBack={() => this.setState({activePanelNews: 'moder'})}
+                            />
+                            <MasterCard
+                                openPhoto={() => 'null'}
+                                openComments={() => 'null'}
+                                activeMasterId={this.state.moderId}
+                                setActiveMaster={(master)=>this.setState({activeMaster: master})}
                             />
                         </Panel>
                     </View>
@@ -535,6 +561,7 @@ class App extends React.Component {
                                 {
                                     this.state.activeTabLk === 'about' ?
                                         <Lk
+                                            master={this.props.master}
                                             user={user}
                                             openSetting={() => this.setActiveModal('setting')}
                                             openFavourite={() => this.setState({activePanelLk: 'favourite'})}
@@ -623,7 +650,8 @@ const putStateToProps = (state) => {
         findModelsList: state.findModelsList,
         findModelsListScroll: state.findModelsListScroll,
         user: state.user,
-        loginStatus: state.loginStatus
+        loginStatus: state.loginStatus,
+        master: state.master
     };
 };
 

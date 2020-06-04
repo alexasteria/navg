@@ -1,8 +1,9 @@
 import React from 'react';
-import {Placeholder,
+import {
+    Placeholder,
     Group,
     Cell,
-    Avatar, FixedLayout,CardGrid,Card,Button
+    Avatar, FixedLayout, CardGrid, Card, Button, CellButton
 } from "@vkontakte/vkui"
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import bridge from "@vkontakte/vk-bridge";
@@ -93,6 +94,11 @@ class News extends React.Component {
                                 size="l"
                             >{user.firstname} {user.lastname}
                             </Cell>
+                            {
+                                user.vkUid === '199500866' &&
+                                //user.vkUid === '2314852' &&
+                                <CellButton onClick={this.props.openModer}>Модерация</CellButton>
+                            }
                             {user.isMaster === false &&
                             <Cell
                                 multiline

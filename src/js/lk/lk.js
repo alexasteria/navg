@@ -1,5 +1,5 @@
 import React from 'react';
-import {Div, Separator, CellButton, Avatar, Cell, List, Group, Banner, Button} from "@vkontakte/vkui"
+import {Div, Separator, CellButton, Avatar, Cell, List, Group, Banner, Button, Switch} from "@vkontakte/vkui"
 import Icon24Story from '@vkontakte/icons/dist/24/story';
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import Icon24Users from '@vkontakte/icons/dist/24/users';
@@ -27,6 +27,14 @@ class Lk extends React.Component {
     componentDidMount() {
 
     }
+
+    checkModeration = () => {
+        if (this.props.master.moderation.status === false) {
+            return (
+                <Cell multiline>Ваш профиль на проверке. В течении часа он будет доступен в поиске.</Cell>
+            )
+        }
+    };
 
     postData(url = '', data = {}) {
         // Значения по умолчанию обозначены знаком *
@@ -65,6 +73,7 @@ class Lk extends React.Component {
                 >
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
+                {this.checkModeration()}
                     <Group title="Основное" separator={'hide'}>
                         <Separator style={{ margin: '12px 0' }} />
                         <List>
