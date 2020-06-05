@@ -16,7 +16,7 @@ import {
     ModalPage,
     ModalPageHeader,
     ANDROID,
-    PanelHeaderButton, IOS, ModalRoot, platform, withModalRootContext
+    PanelHeaderButton, IOS, ModalRoot, platform, withModalRootContext, Snackbar
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from '../func/func';
@@ -26,6 +26,7 @@ import CityListModal from "../elements/cityListModal";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {setMaster} from "../store/actions";
+import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
 
 const osname = platform();
 
@@ -48,7 +49,8 @@ class Setting extends React.Component {
             },
             category: [],
             isLoad: false,
-            isMaster: false
+            isMaster: false,
+            snackbar: null
         };
     }
 
@@ -78,7 +80,6 @@ class Setting extends React.Component {
     saveChanges = () => {
         this.props.setMaster(this.state.master);
         this.patchData(BACKEND.masters.all + this.state.master._id, this.state.master);
-        this.props.snackbar('Изменения сохранены');
     };
 
     setActive(subcat){
@@ -149,46 +150,75 @@ class Setting extends React.Component {
         let master = this.state.master;
         master.priceList = [...this.state.master.priceList.slice(0, index), ...this.state.master.priceList.slice(index + 1)];
         this.setState({master: master});
-        this.patchData(BACKEND.masters.all + this.state.master._id, this.state.master);
+        //this.patchData(BACKEND.masters.all + this.state.master._id, this.state.master);
     };
     addProd = (status) => {
         this.setState({add: status})
     };
+
+    openSnackDismiss(text) {
+        if (this.state.snackbar) this.setState({snackbar: null});
+        this.setState({
+            snackbar:
+                <Snackbar
+                    before={<Icon24Dismiss/>}
+                    layout="vertical"
+                    onClose={() => this.setState({snackbar: null})}
+                >
+                    {text}
+                </Snackbar>
+        });
+    }
+    openSnack(text) {
+        if (this.state.snackbar) this.setState({snackbar: null});
+        this.setState({
+            snackbar:
+                <Snackbar
+                    layout="vertical"
+                    onClose={() => this.setState({snackbar: null})}
+                >
+                    {text}
+                </Snackbar>
+        });
+    }
     saveProd = () => {
         try {
             if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
+            if (this.state.newProdTitle.length > 20) throw 'Название длинее 20-ти символов необходимо сократить';
             if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
+            if (this.state.newProdBody.length > 250) throw 'Описание процедуры слишком длинное. Сейчас заполнено - '+this.state.newProdBody.length+" из "+250;
             if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
-            let priceList = this.state.priceList;
-            priceList.push({
-                title: this.state.newProdTitle,
-                body: this.state.newProdBody,
-                price: this.state.newProdPrice
-            });
-            this.setState({priceList: priceList, add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
-            this.props.snackbar('Процедура добавлена');
-        } catch (error) {
-            this.props.snackbar(error)
-        }
-    };
-    saveProd = () => {
-        try {
-            if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
-            if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
-            if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
+            if (this.state.newProdPrice.length > 5) throw 'Максимально допустимы 5-ти значные суммы';
             let master = this.state.master;
             master.priceList.push({
                 title: this.state.newProdTitle,
                 body: this.state.newProdBody,
                 price: this.state.newProdPrice
             });
-            this.setState({master: master});
-            this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
-            this.props.snackbar('Процедура добавлена');
+            this.setState({master: master, add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
+            this.openSnack('Процедура добавлена');
         } catch (error) {
-            this.props.snackbar(error)
+            this.openSnackDismiss(error)
         }
     };
+    // saveProd = () => {
+    //     try {
+    //         if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
+    //         if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
+    //         if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
+    //         let master = this.state.master;
+    //         master.priceList.push({
+    //             title: this.state.newProdTitle,
+    //             body: this.state.newProdBody,
+    //             price: this.state.newProdPrice
+    //         });
+    //         this.setState({master: master});
+    //         this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
+    //         this.props.snackbar('Процедура добавлена');
+    //     } catch (error) {
+    //         this.props.snackbar(error)
+    //     }
+    // };
 
     counter = (index) => {
         let countMass = this.state.categories[index].subcat.filter(
@@ -293,16 +323,23 @@ class Setting extends React.Component {
                                                     key={item}
                                                     multiline
                                                     //onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
-                                                    removable
-                                                    onRemove={() => {
-                                                        this.onRemove(index)
-                                                    }}>
+                                                    //removable
+                                                    // onRemove={() => {
+                                                    //     this.onRemove(index)
+                                                    // }}
+                                                >
                                                     <Cell
                                                         description="Название процедуры">{this.state.master.priceList[index].title}</Cell>
                                                     <Cell description="Краткое описание процедуры"
                                                           multiline>{this.state.master.priceList[index].body}</Cell>
                                                     <Cell
                                                         description="Минимальная цена за работу">{this.state.master.priceList[index].price}</Cell>
+                                                    <Button
+                                                        before={<Icon24Dismiss/>}
+                                                        onClick={() => {this.onRemove(index)}}
+                                                        size="xl"
+                                                        mode="destructive"
+                                                    >Удалить</Button>
                                                 </Cell>
                                             </Card>
                                         ))}
@@ -397,6 +434,7 @@ class Setting extends React.Component {
                                     </FormLayoutGroup>
                                 </Group>
                             </Div>
+                            {this.state.snackbar}
                         </ModalPage>
                         <ModalPage dynamicContentHeight
                                    id={'changeCity'}

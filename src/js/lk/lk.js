@@ -73,7 +73,7 @@ class Lk extends React.Component {
                 >
                     {this.state.user.firstname+' '+this.state.user.lastname}
                 </Cell>
-                {this.checkModeration()}
+                {this.state.user.isMaster && this.checkModeration()}
                     <Group title="Основное" separator={'hide'}>
                         <Separator style={{ margin: '12px 0' }} />
                         <List>
@@ -82,12 +82,12 @@ class Lk extends React.Component {
                                 before={<Icon24Like />}
                                 onClick={this.props.openFavourite}
                             >Избранное</Cell>
-                            <Cell
-                                expandable
-                                before={<Icon24Recent />}
-                                onClick={() => this.setState({ activePanel: 'nothing' })}
-                                indicator={'В разработке'}
-                            >Мои записи</Cell>
+                            {/*<Cell*/}
+                            {/*    expandable*/}
+                            {/*    before={<Icon24Recent />}*/}
+                            {/*    onClick={() => this.setState({ activePanel: 'nothing' })}*/}
+                            {/*    indicator={'В разработке'}*/}
+                            {/*>Мои записи</Cell>*/}
                         </List>
                     </Group>
                 {
@@ -103,18 +103,18 @@ class Lk extends React.Component {
                     <Group title="Меню мастера">
                     <Separator style={{ margin: '12px 0' }} />
                     <List>
-                    <Cell
-                        expandable
-                        before={<Icon24Users />}
-                        onClick={() => this.setState({ activePanel: 'nothing' })}
-                        indicator={'В разработке'}
-                    >Мои заявки</Cell>
-                    <Cell
-                        expandable
-                        before={<Icon24UserOutgoing />}
-                        onClick={() => this.setState({ activePanel: 'nothing' })}
-                        indicator={'В разработке'}
-                    >График</Cell>
+                    {/*<Cell*/}
+                    {/*    expandable*/}
+                    {/*    before={<Icon24Users />}*/}
+                    {/*    onClick={() => this.setState({ activePanel: 'nothing' })}*/}
+                    {/*    indicator={'В разработке'}*/}
+                    {/*>Мои заявки</Cell>*/}
+                    {/*<Cell*/}
+                    {/*    expandable*/}
+                    {/*    before={<Icon24UserOutgoing />}*/}
+                    {/*    onClick={() => this.setState({ activePanel: 'nothing' })}*/}
+                    {/*    indicator={'В разработке'}*/}
+                    {/*>График</Cell>*/}
                     <Cell
                         expandable
                         before={<Icon24Story />}

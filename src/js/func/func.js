@@ -24,7 +24,8 @@ export const BACKEND = {
     },
     comment: {
         new: BACK_LINK+'comment/master/',
-        onMasterId: BACK_LINK+'comment/master/'
+        onMasterId: BACK_LINK+'comment/master/',
+        moderation: BACK_LINK+'comment/moderation/'
     },
     vkapi: {
         uploadPhoto: BACK_LINK+'vkapi/uploadPhoto/',

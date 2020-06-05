@@ -34,8 +34,8 @@ import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
 import Moder from "./js/news/moder";
-import bridge from "@vkontakte/vk-bridge-mock";
-//import bridge from '@vkontakte/vk-bridge';
+//import bridge from "@vkontakte/vk-bridge-mock";
+import bridge from '@vkontakte/vk-bridge';
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
@@ -316,21 +316,21 @@ class App extends React.Component {
                     </View>
                 </ConfigProvider>
             )
-      } //if (this.state.validationParams === false) {
-        //     return (
-        //         <ConfigProvider scheme={this.state.scheme}>
-        //             <View id="warn" activePanel="warn">
-        //                 <Panel id="warn">
-        //                     <Placeholder
-        //                         icon={<Spinner size="large" style={{ marginTop: 40 }} />}
-        //                     >
-        //                         Все, беда. Кто-то лезет в параметры запуска :(
-        //                     </Placeholder>
-        //                 </Panel>
-        //             </View>
-        //         </ConfigProvider>
-        //     )
-        // }
+      } if (this.state.validationParams === false) {
+            return (
+                <ConfigProvider scheme={this.state.scheme}>
+                    <View id="warn" activePanel="warn">
+                        <Panel id="warn">
+                            <Placeholder
+                                icon={<Spinner size="large" style={{ marginTop: 40 }} />}
+                            >
+                                Все, беда. Кто-то лезет в параметры запуска :(
+                            </Placeholder>
+                        </Panel>
+                    </View>
+                </ConfigProvider>
+            )
+        }
         else {
             return (
                 <ConfigProvider scheme={this.state.scheme}>
@@ -366,6 +366,7 @@ class App extends React.Component {
                         <Panel id="news">
                             <PanelHeader>Новости</PanelHeader>
                             <News
+                                params={this.props.params}
                                 openReg={() => this.setState({activeViewLk: 'registration', activeStory: 'lk'})}
                                 openStory={this.openStory}
                                 user={this.props.user}
@@ -605,7 +606,7 @@ class App extends React.Component {
                                 <MasterComments user={user} activeMaster={this.state.activeMaster}/>
                             </Panel>
                             <Panel id='findModel'>
-                                <Head title={'Мастер ищет модель'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
+                                <Head title={'Ищу модель'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
                                 <FindModelMaster user={user} popout={this.openAlert}/>
                             </Panel>
                         </View>

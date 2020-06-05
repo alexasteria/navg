@@ -23,6 +23,7 @@ import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {connect} from "react-redux";
 import Icon16Down from '@vkontakte/icons/dist/16/down';
 import Icon16Up from '@vkontakte/icons/dist/16/up';
+import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
 
 class Invite extends React.Component {
     constructor(props) {
@@ -273,10 +274,11 @@ class Invite extends React.Component {
                                             <Cell
                                                 key={item}
                                                 multiline
-                                                removable
-                                                onRemove={() => {
-                                                    this.onRemove(index)
-                                                }}>
+                                                // removable
+                                                // onRemove={() => {
+                                                //     this.onRemove(index)
+                                                // }}
+                                                >
                                                 <Cell
                                                     description="Название процедуры">{this.state.priceList[index].title}</Cell>
                                                 <Cell description="Краткое описание процедуры"
@@ -284,6 +286,12 @@ class Invite extends React.Component {
                                                 <Cell
                                                     description="Минимальная цена за работу">{this.state.priceList[index].price}</Cell>
                                             </Cell>
+                                            <Button
+                                                before={<Icon24Dismiss/>}
+                                                onClick={() => {this.onRemove(index)}}
+                                                size="xl"
+                                                mode="destructive"
+                                            >Удалить</Button>
                                         </Card>
                                     ))}
                                 </CardGrid>

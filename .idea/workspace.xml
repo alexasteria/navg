@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Все кроме модерации">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Тест модерации">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/findmodel/components/findCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/components/findCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -461,14 +466,20 @@
       <workItem from="1591229715308" duration="930000" />
       <workItem from="1591230655215" duration="1796000" />
       <workItem from="1591232463237" duration="1921000" />
-      <workItem from="1591234404002" duration="567000" />
-    </task>
-    <task id="LOCAL-00046" summary="Фикс панелей">
-      <created>1586210767430</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1586210767430</updated>
+      <workItem from="1591234404002" duration="1682000" />
+      <workItem from="1591236210145" duration="1796000" />
+      <workItem from="1591238017627" duration="1731000" />
+      <workItem from="1591240228566" duration="1611000" />
+      <workItem from="1591242472888" duration="1834000" />
+      <workItem from="1591244325046" duration="348000" />
+      <workItem from="1591301391378" duration="1159000" />
+      <workItem from="1591302694554" duration="1353000" />
+      <workItem from="1591306057657" duration="1009000" />
+      <workItem from="1591373775416" duration="1934000" />
+      <workItem from="1591375722541" duration="2063000" />
+      <workItem from="1591377798495" duration="1785000" />
+      <workItem from="1591379611989" duration="1796000" />
+      <workItem from="1591381423681" duration="1007000" />
     </task>
     <task id="LOCAL-00047" summary="Подтягиваются категории в поиск из БД">
       <created>1586211182291</created>
@@ -806,7 +817,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591227973137</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="Тест модерации">
+      <created>1591235000111</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1591235000112</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -827,7 +845,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Исправлен баг с настройкой категорий мастера" />
     <MESSAGE value="Управление фильтром субкатегорий. Берется первый элемент фильтра." />
     <MESSAGE value="Фильтры субкатегорий работают корректно" />
     <MESSAGE value="Переписан мастерлист" />
@@ -852,7 +869,8 @@
     <MESSAGE value="До изменение выбора городов" />
     <MESSAGE value="Пользовательское соглашение" />
     <MESSAGE value="Все кроме модерации" />
-    <option name="LAST_COMMIT_MESSAGE" value="Все кроме модерации" />
+    <MESSAGE value="Тест модерации" />
+    <option name="LAST_COMMIT_MESSAGE" value="Тест модерации" />
   </component>
   <component name="WindowStateProjectService">
     <state x="858" y="332" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590825401880">
@@ -867,10 +885,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1591227972721">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1591234999674">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1591227972721" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1591234999674" />
     <state x="196" y="81" key="DiffContextDialog" timestamp="1582669181274">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

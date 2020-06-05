@@ -3,10 +3,10 @@ import {
     FormLayout,
     Button,
     Cell,
-    FormLayoutGroup,
+    Select,
     Textarea,
     Separator,
-    CardGrid, Card, File, Snackbar, Div, PanelSpinner
+    CardGrid, Card, File, Snackbar, Div, Banner
 } from "@vkontakte/vkui";
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 import {BACKEND} from "../func/func";
@@ -26,11 +26,15 @@ class FindModelMaster extends React.Component {
             isLoaded: false,
             isActive: false,
             error: '',
-            loading: false
+            loading: false,
+            images: [],
+            loadFind: {
+                images: []
+            }
         };
     }
     componentDidMount() {
-        this.getToken();
+        //this.getToken();
         fetch(BACKEND.masters.vkuid+this.props.user.vkUid)
             .then(res => res.json())
             .then(activeMaster => {
@@ -40,7 +44,7 @@ class FindModelMaster extends React.Component {
                     .then(find => {
                         if (find.length > 0) {
                             console.log(find);
-                            this.setState({loadFind: find[0], body:find[0].body, error: '', isLoaded: true, isActive: true});
+                            this.setState({loadFind: find[0], body:find[0].body, error: '', isLoaded: true, selectvalue: find[0].sale, isActive: true});
                         } else {
                             let error = <Cell>У вас нет активных поисков</Cell>;
                             this.setState({error: error, isLoaded: true});
@@ -64,68 +68,74 @@ class FindModelMaster extends React.Component {
         });
     }
 
-    getToken = () => {
-        bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
-            .then(data => {
-                this.getUploadServer(data.access_token);
-            })
-            .catch(error => console.log(error))
-    }
+    // getToken = () => {
+    //     bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
+    //         .then(data => {
+    //             this.getUploadServer(data.access_token);
+    //         })
+    //         .catch(error => console.log(error))
+    // };
 
-    getUploadServer = (token) => {
-        bridge.send("VKWebAppCallAPIMethod", {
-            "method": "photos.getUploadServer",
-            "params": {"group_id": "193179174","album_id": "269622026", "v":"5.103", "access_token": token}})
-            .then(result => {
-                this.setState({uploadUrl: result.response.upload_url, token: token});
-            })
-            .catch(e => console.log(e))
+    // getUploadServer = (token) => {
+    //     bridge.send("VKWebAppCallAPIMethod", {
+    //         "method": "photos.getUploadServer",
+    //         "params": {"group_id": "193179174","album_id": "269622026", "v":"5.103", "access_token": token}})
+    //         .then(result => {
+    //             this.setState({uploadUrl: result.response.upload_url, token: token});
+    //         })
+    //         .catch(e => console.log(e))
+    //
+    // };
 
-    };
+    // uploadPhoto = () =>{
+    //     try {
+    //         if (this.state.loadFind){
+    //             if (this.state.loadFind.images.length >= 3) throw 'Можно загрузить только 3 фотографии в разделе Мастер ищет модель';
+    //         }
+    //         this.setState({loading: true});
+    //         const formData = new FormData();
+    //         let selectedFile = document.getElementById('input').files[0];
+    //         formData.append('master', this.state.activeMaster.firstname+' '+this.state.activeMaster.lastname );
+    //         formData.append('uploadUrl', this.state.uploadUrl);
+    //         formData.append('token', this.state.token);
+    //         formData.append('file1', selectedFile);
+    //         fetch(BACKEND.vkapi.uploadPhoto, {
+    //             method: 'POST',
+    //             body: formData
+    //         })
+    //             .then(res => res.json())
+    //             .then(response => {
+    //                 fetchJsonp(response.saveUrl, {
+    //                     mode: 'no-cors',
+    //                     method: 'GET'
+    //                 })
+    //                     .then(result => result.json())
+    //                     .then(result => {
+    //                         console.log(result);
+    //                         let newImg = result.response[0].sizes[2].url;//адрес фото
+    //                         let imgArr = this.state.images;
+    //                         let data = {
+    //                             findId: this.state.loadFind,
+    //                             newImg: newImg
+    //                         };
+    //                         let loadFind = this.state.loadFind;
+    //                         loadFind.images.push(newImg);
+    //                         this.setState({loading: false, loadFind: loadFind}, ()=>this.save());
+    //                     })
+    //                     .catch(error => console.log(error))
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
+    //                 this.openSnack(error);
+    //             })
+    //     } catch (e) {
+    //         this.openSnack(e);
+    //     }
+    //
+    // };
 
-    uploadPhoto = () =>{
-        try {
-            if (this.state.loadFind.images.length >= 3) throw 'Можно загрузить только 3 фотографии в разделе Мастер ищет модель';
-            this.setState({loading: true});
-            const formData = new FormData();
-            let selectedFile = document.getElementById('input').files[0];
-            formData.append('master', this.state.activeMaster.firstname+' '+this.state.activeMaster.lastname );
-            formData.append('uploadUrl', this.state.uploadUrl);
-            formData.append('token', this.state.token);
-            formData.append('file1', selectedFile);
-            fetch(BACKEND.vkapi.uploadPhoto, {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => res.json())
-                .then(response => {
-                    fetchJsonp(response.saveUrl, {
-                        mode: 'no-cors',
-                        method: 'GET'
-                    })
-                        .then(result => result.json())
-                        .then(result => {
-                            console.log(result);
-                            let newImg = result.response[0].sizes[2].url;//адрес фото
-                            let imgArr = this.state.images;
-                            let data = {
-                                findId: this.state.loadFind,
-                                newImg: newImg
-                            };
-                            let loadFind = this.state.loadFind;
-                            loadFind.images.push(newImg);
-                            this.setState({loading: false, loadFind: loadFind}, ()=>this.save());
-                        })
-                        .catch(error => this.openSnack(error))
-                })
-                .catch(error => {
-                    console.log(error);
-                    this.openSnack(error);
-                })
-        } catch (e) {
-            this.openSnack(e);
-        }
-
+    handleChangeSelect = (event) => {
+        this.setState({selectvalue: event.target.value});
     };
 
     handleChange = (event) => {
@@ -133,9 +143,17 @@ class FindModelMaster extends React.Component {
         this.setState({[name]: value});
     };
     save=()=>{
+        let images = [];
+        this.state.activeMaster.photos.map((image,i)=> {
+            if (i < 3){
+                images.push(image)
+            }
+        });
         if (this.state.isActive === true) {
             let find =this.state.loadFind;
             find.body = this.state.body;
+            find.images = images;
+            find.sale = this.state.selectvalue;
             console.log('измененный',find);
             this.setState({loadFind: find});
             this.patchData(BACKEND.findModel.new+this.state.loadFind._id, find);
@@ -148,6 +166,8 @@ class FindModelMaster extends React.Component {
             find.firstname = this.state.activeMaster.firstname;
             find.lastname = this.state.activeMaster.lastname;
             find.avatarLink = this.state.activeMaster.avatarLink;
+            find.images = images;
+            find.sale = this.state.selectvalue;
             this.postData(BACKEND.findModel.new, find);
             this.openSnack('Информация о поиске успешно размещена.')
         }
@@ -211,13 +231,13 @@ class FindModelMaster extends React.Component {
 
     }
 
-    deleteImage(index){
-        let find = this.state.loadFind;
-        if (index > -1) {
-            find.images.splice(index, 1);
-        } else find.images.splice(0, index);
-        this.setState({activeFind: find}, ()=> this.save())
-    }
+    // deleteImage(index){
+    //     let find = this.state.loadFind;
+    //     if (index > -1) {
+    //         find.images.splice(index, 1);
+    //     } else find.images.splice(0, index);
+    //     this.setState({activeFind: find}, ()=> this.save())
+    // }
 
     render(){
         if (this.state.isLoaded === false){
@@ -225,46 +245,40 @@ class FindModelMaster extends React.Component {
         } else {
             return (
                 <React.Fragment>
-                {
-                    this.state.loading ? <Div><Cell multiline>Подождите немного... Фотография сохраняется</Cell><PanelSpinner /></Div> :
-                        <FormLayout>
-                            <FormLayoutGroup>
-                                <Cell>Добавить / изменить</Cell>
+                            <Banner
+                                header="Мастер ищет модель"
+                                subheader="Правила размещения"
+                                text="В данной категории можно разместиться, если вы предлагаете услуги по специальным условиям. Сейчас доступно три варианта: скидка 50%, оплата только за расходные материалы или полностью бесплатно, например, для пополнения портфолио."
+                            />
+                            <FormLayout>
                                 <Textarea
                                     name={'body'}
-                                    bottom={this.state.body ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                                    top="Основное сообщение"
                                     value={this.state.body}
                                     onChange={this.handleChange}
                                 />
                                 <CardGrid>
                                 {
-                                    this.state.isActive &&
-                                    this.state.loadFind.images.map((image,i)=>{
+                                    this.state.activeMaster.photos.length > 0 ?
+                                    this.state.activeMaster.photos.map((image,i)=>{
                                         return (
                                             <Card size='s' key={i}>
                                                 <div
                                                     style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover'}}
                                                 >
-                                                    <Icon24DismissSubstract
-                                                        onClick={()=>this.deleteImage(i)}
-                                                    />
                                                 </div>
                                             </Card>
                                         )
-                                    })
+                                    }) : 'У вас в портфолио нет фото'
                                 }
                                 </CardGrid>
-                                <File
-                                    top="Добавьте фото в портфолио"
-                                    before={<Icon24Camera />}
-                                    size="l"
-                                    onChange={this.uploadPhoto}
-                                    id="input"
-                                >
-                                    Добавить фото
-                                </File>
-                            </FormLayoutGroup>
+                                <Select value={this.state.selectvalue} onChange={this.handleChangeSelect} top="Тип акции" placeholder="Выберите тип акции">
+                                    <option value="Скидка 50%">Скидка 50%</option>
+                                    <option value="Оплата за материалы">Оплата за материалы</option>
+                                    <option value="Бесплатно">Бесплатно</option>
+                                </Select>
                             <Button size="xl" onClick={this.save}>Сохранить</Button>
+                            </FormLayout>
                             <Separator style={{ margin: '12px 0' }} />
                             {
                                 this.state.isActive &&
@@ -276,8 +290,6 @@ class FindModelMaster extends React.Component {
                                 />
                             }
                             {this.state.snackbar}
-                        </FormLayout>
-                }
                 </React.Fragment>
             );
         }

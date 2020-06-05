@@ -15,6 +15,7 @@ import {
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
 import bridge from "@vkontakte/vk-bridge";
+import Icon24CommentOutline from '@vkontakte/icons/dist/24/comment_outline';
 import {connect} from "react-redux";
 
 class MastersComments extends React.Component {
@@ -48,7 +49,8 @@ class MastersComments extends React.Component {
                     avatarLink: this.props.user.avatarLink
                 },
                 rating: Number(this.state.rating),
-                body: this.state.body
+                body: this.state.body,
+                moderation: false
             };
             this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
             this.setState({isCommended: true});
@@ -82,10 +84,17 @@ class MastersComments extends React.Component {
             .then(response => {
                 console.log(response.json());
                 let arr = this.state.commentsArr;
-                data.date = "Только что";
+                data.date = "Комментарий отправлен на проверку";
                 arr.push(data);
                 this.setState({commentsArr: arr});
-                this.sendMessage(data.body);
+                this.setState({ snackbar:
+                        <Snackbar
+                            layout="vertical"
+                            onClose={() => this.setState({ snackbar: null })}
+                        >
+                            Комментарий отправлен на модерацию. После проверки он появится в профиле мастера.
+                        </Snackbar>
+                });
             }); // парсит JSON ответ в Javascript объект
     }
     getDate(comDate) {
@@ -104,18 +113,6 @@ class MastersComments extends React.Component {
             return date1+'.'+month+'.'+date.getFullYear()+' в '+hours+':'+minutes;
         }
     }
-    sendMessage = (bodyComment) => {
-        let token = "f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf";
-        let message = "Привет! У тебя новый отзыв: "+bodyComment;
-        bridge.send("VKWebAppCallAPIMethod", {
-            "method": "messages.send",
-            "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.props.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
-            .then(result => {
-                console.log(result);
-
-            })
-            .catch(e => console.log(e))
-    };
     commentList() {
         if (this.state.isLoad === false) {
             return (
@@ -125,19 +122,23 @@ class MastersComments extends React.Component {
             )
         } else {
             return this.state.commentsArr.map(comment => {
-                return (
-                    <Group key={comment._id} separator={'hide'}>
-                        <Cell
-                            description={this.getDate(comment.date)}
-                            before={ <Avatar size={40} src={comment.user.avatarLink} /> }
-                        >
-                            {comment.user.firstname+' '+comment.user.lastname}
-                        </Cell>
-                        <Cell multiline>{comment.body}</Cell>
-                        <Cell><Counter mode="primary">Оценка: {comment.rating} из 5</Counter></Cell>
-                        <Separator/>
-                    </Group>
-                )
+                    return (
+                        <Group key={comment._id} separator={'hide'}>
+                            <Cell
+                                description={this.getDate(comment.date)}
+                                before={ <Avatar size={40} src={comment.user.avatarLink} /> }
+                            >
+                                {comment.user.firstname+' '+comment.user.lastname}
+                            </Cell>
+                            <Cell multiline>{
+                                comment.moderation === true ? comment.body :
+                                    <div><Icon24CommentOutline/>Отзыв находится на модерации</div>
+                            }
+                            </Cell>
+                            <Cell><Counter mode="primary">Оценка: {comment.rating} из 5</Counter></Cell>
+                            <Separator/>
+                        </Group>
+                    )
             });
         }
     };
