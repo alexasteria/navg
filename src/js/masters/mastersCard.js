@@ -7,7 +7,7 @@ import {
     Avatar,
     Counter,
     Snackbar,
-    Spinner, Header, Card, CardGrid, CardScroll, Button, FormLayout, RichCell, CellButton
+    Spinner, Header, Card, CardGrid, CardScroll, Button, FormLayout, RichCell, CellButton, Placeholder
 } from "@vkontakte/vkui"
 import InputMask from 'react-input-mask';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
@@ -16,7 +16,9 @@ import {BACKEND} from '../func/func';
 import bridge from "@vkontakte/vk-bridge";
 import {patchData} from "../elements/functions";
 import {connect} from "react-redux";
+import Icon56GalleryOutline from '@vkontakte/icons/dist/56/gallery_outline';
 import Icon24Phone from '@vkontakte/icons/dist/24/phone';
+import Icon20UserOutline from '@vkontakte/icons/dist/20/user_outline';
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -29,6 +31,9 @@ class MastersCard extends React.Component {
     }
 
     componentDidMount() {
+        if (window.history.length === 2){
+            window.history.pushState({}, window.location.hash);
+        }
         fetch(BACKEND.masters.onID + this.props.activeMasterId)
             .then(res => res.json())
             .then(master => {
@@ -231,6 +236,10 @@ class MastersCard extends React.Component {
             return (
                 <Spinner size="large" style={{ marginTop: 20 }} />
             )
+        } if (this.state.activeMaster.visible === false) {
+            return (
+                <Cell>Мастер скрыт</Cell>
+            )
         } else {
             return (
                 <Div style={{padding: 0}}>
@@ -241,10 +250,14 @@ class MastersCard extends React.Component {
                                 this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type
                             }
                             bottomContent={
-                                <Cell>
-                                    {this.favStatus()}
-                                    <Button onClick={() => this.share()}>Поделиться</Button>
-                                </Cell>
+                                this.props.user.vkUid === this.state.activeMaster.vkUid
+                                    ?
+                                    <Cell before={<Icon20UserOutline />}>Да, это Вы</Cell>
+                                    :
+                                    <Cell>
+                                        {this.favStatus()}
+                                        <Button onClick={() => this.share()}>Поделиться</Button>
+                                    </Cell>
                             }
                             before={<Avatar src={this.state.activeMaster.avatarLink} size={90}/>}
                             size="l"
@@ -264,7 +277,7 @@ class MastersCard extends React.Component {
                     </Group>
                     <Group title="Портфолио">
                         {
-                            this.state.activeMaster.photos.length > 0 &&
+                            this.state.activeMaster.photos.length > 0 ?
                                 <Div>
                                     <Cell>Выполненые работы мастера</Cell>
                                     <CardScroll>
@@ -290,7 +303,11 @@ class MastersCard extends React.Component {
                                         description={this.state.activeMaster.photos.length+' фото в портфолио'}
                                         indicator={this.state.activeMaster.photos.length}
                                     >Посмотреть сеткой</Cell>
-                                </Div>
+                                </Div> :
+                                <Placeholder
+                                    icon={<Icon56GalleryOutline />}
+                                    header="Нет фотографий"
+                                ></Placeholder>
                         }
                     </Group>
                     <Group separator="hide">

@@ -10,25 +10,30 @@ import {
     Spinner,
     Separator,
     Slider,
-    Counter, FormLayout, Snackbar
+    Counter, FormLayout, Snackbar, FormLayoutGroup, Banner
 } from "@vkontakte/vkui"
 import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
 import bridge from "@vkontakte/vk-bridge";
 import Icon24CommentOutline from '@vkontakte/icons/dist/24/comment_outline';
 import {connect} from "react-redux";
+import Icon24FavoriteOutline from '@vkontakte/icons/dist/24/favorite_outline';
+import Icon24Favorite from '@vkontakte/icons/dist/24/favorite';
 
 class MastersComments extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rating: 3,
+            rating: 0,
             body: '',
             isLoad: false,
-            snackbar: null
+            snackbar: null,
+            stars: []
         };
     }
     componentDidMount() {
+        console.log(window.history);
+        this.changeStars();
         this.props.activeMaster.comments.map(comment => {
             if (comment.user.userId === this.props.user._id) {
                 this.setState({isCommended: true})
@@ -37,8 +42,28 @@ class MastersComments extends React.Component {
         let count = this.props.activeMaster.comments.length;
         this.setState({commentsArr: this.props.activeMaster.comments, countComments: count, isLoad: true});
     }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.rating !== this.state.rating){
+            this.changeStars()
+        }
+    }
+
+    changeStars = () => {
+        let stars = [];
+        for(let i=1; i<=5; i++){
+            if (i <= this.state.rating){
+                stars.push(<Icon24Favorite width={36} height={36} id={i} onClick={()=>this.setState({rating: i})} fill={'ffbb00'} />);
+            } else {
+                stars.push(<Icon24FavoriteOutline width={36} height={36} id={i} onClick={()=>this.setState({rating: i})} fill={'ffbb00'} />);
+            }
+        }
+        this.setState({stars: stars});
+    };
+
     sendComment = () => {
         try {
+            if (this.state.rating === 0) throw 'Укажите оценку работы мастера';
             if (this.state.body.length < 20) throw 'Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.';
             if (this.state.body.length > 100) throw 'Длина отзыва ограничена 100 символами.';
             let comment = {
@@ -52,6 +77,7 @@ class MastersComments extends React.Component {
                 body: this.state.body,
                 moderation: false
             };
+            console.log(comment);
             this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
             this.setState({isCommended: true});
         } catch (e) {
@@ -98,7 +124,7 @@ class MastersComments extends React.Component {
             }); // парсит JSON ответ в Javascript объект
     }
     getDate(comDate) {
-        if (comDate === 'Только что') {
+        if (comDate === "Комментарий отправлен на проверку") {
             return comDate;
         } else {
             let date = new Date(comDate);
@@ -132,10 +158,10 @@ class MastersComments extends React.Component {
                             </Cell>
                             <Cell multiline>{
                                 comment.moderation === true ? comment.body :
-                                    <div><Icon24CommentOutline/>Отзыв находится на модерации</div>
+                                    <Cell before={<Icon24CommentOutline/>}>Отзыв находится на модерации</Cell>
                             }
                             </Cell>
-                            <Cell><Counter mode="primary">Оценка: {comment.rating} из 5</Counter></Cell>
+                            <Cell indicator={comment.rating+` из 5`}>Оценка</Cell>
                             <Separator/>
                         </Group>
                     )
@@ -156,15 +182,28 @@ class MastersComments extends React.Component {
             } else {
                 return (
                     <FormLayout>
-                        <Slider
-                            step={1}
-                            min={1}
-                            max={5}
-                            value={Number(this.state.rating)}
-                            onChange={rating=>this.setState({rating})}
-                            top={"Моя оценка работы мастера: "+this.state.rating}
-                            bottom='Перемещайте ползунок влево или вправо для изменения оценки'
-                        />
+                        <FormLayoutGroup>
+                            <Cell
+                                description={'Поставьте оценку мастеру'}
+                            >
+                                    <Div style={{display: 'inline-flex'}}>
+                                        {
+                                            this.state.stars.map(star=> {
+                                                return star
+                                            })
+                                        }
+                                    </Div>
+                            </Cell>
+                        </FormLayoutGroup>
+                        {/*<Slider*/}
+                        {/*    step={1}*/}
+                        {/*    min={1}*/}
+                        {/*    max={5}*/}
+                        {/*    value={Number(this.state.rating)}*/}
+                        {/*    onChange={rating=>this.setState({rating})}*/}
+                        {/*    top={"Моя оценка работы мастера: "+this.state.rating}*/}
+                        {/*    bottom='Перемещайте ползунок влево или вправо для изменения оценки'*/}
+                        {/*/>*/}
                         <Textarea
                             name={'body'}
                             value={this.state.body}
@@ -174,9 +213,7 @@ class MastersComments extends React.Component {
                             onChange={this.handleChange}
                         />
                         <Button
-                            stretched
-                            mode="outline"
-                            before={<Icon24Add />}
+                            mode="primary"
                             onClick={() => this.sendComment()}
                         >
                             Добавить отзыв

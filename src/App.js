@@ -34,8 +34,8 @@ import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Modal from './js/elements/modalPage'
 import Moder from "./js/news/moder";
-//import bridge from "@vkontakte/vk-bridge-mock";
-import bridge from '@vkontakte/vk-bridge';
+import bridge from "@vkontakte/vk-bridge-mock";
+//import bridge from '@vkontakte/vk-bridge';
 import {postData, patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
 import CategoriesList from './js/elements/categoriesList'
@@ -67,7 +67,8 @@ class App extends React.Component {
             targetCity: 'Не выбрано',
             activeTabLk: 'about',
             scheme: "bright_light",
-            activePanelNews: 'news'
+            activePanelNews: 'news',
+            history: ['main']
 
         };
         this.onStoryChange = this.onStoryChange.bind(this);
@@ -78,6 +79,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        console.log(window.history);
         bridge.send('VKWebAppGetUserInfo', {})
             .then(data => {this.verificationUser(data)});
         if (this.props.linkParams.masterid) {
@@ -316,21 +318,21 @@ class App extends React.Component {
                     </View>
                 </ConfigProvider>
             )
-      } if (this.state.validationParams === false) {
-            return (
-                <ConfigProvider scheme={this.state.scheme}>
-                    <View id="warn" activePanel="warn">
-                        <Panel id="warn">
-                            <Placeholder
-                                icon={<Spinner size="large" style={{ marginTop: 40 }} />}
-                            >
-                                Все, беда. Кто-то лезет в параметры запуска :(
-                            </Placeholder>
-                        </Panel>
-                    </View>
-                </ConfigProvider>
-            )
-        }
+      } //if (this.state.validationParams === false) {
+        //     return (
+        //         <ConfigProvider scheme={this.state.scheme}>
+        //             <View id="warn" activePanel="warn">
+        //                 <Panel id="warn">
+        //                     <Placeholder
+        //                         icon={<Spinner size="large" style={{ marginTop: 40 }} />}
+        //                     >
+        //                         Все, беда. Кто-то лезет в параметры запуска :(
+        //                     </Placeholder>
+        //                 </Panel>
+        //             </View>
+        //         </ConfigProvider>
+        //     )
+        // }
         else {
             return (
                 <ConfigProvider scheme={this.state.scheme}>
@@ -436,6 +438,7 @@ class App extends React.Component {
                                     goBack={() => this.setState({activePanelMasters: 'mastersList'})}
                                 />
                                 <MasterCard
+                                    onSwipeBack={() => this.setState({activePanelMasters: 'mastersList'})}
                                     openPhoto={() => this.setState({activePanelMasters: 'masterPhoto'})}
                                     openComments={() => this.setState({activePanelMasters: 'masterComments'})}
                                     activeMasterId={this.state.activeMasterId}
@@ -543,7 +546,7 @@ class App extends React.Component {
                             />
                         }>
                             <Panel id="lk">
-                                <PanelHeader>Кабинет</PanelHeader>
+                                <PanelHeader separator={false}>Кабинет</PanelHeader>
                                 <Tabs>
                                     <TabsItem
                                         onClick={() => this.setState({ activeTabLk: 'about' })}

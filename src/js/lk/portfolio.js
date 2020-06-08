@@ -1,5 +1,5 @@
 import React from 'react';
-import {Group, Div, File, FormLayout, CardGrid, Card, Snackbar, Cell, PanelSpinner} from "@vkontakte/vkui"
+import {Group, Div, File, FormLayout, CardGrid, Card, Snackbar, Cell, PanelSpinner, Spinner} from "@vkontakte/vkui"
 import {BACKEND} from '../func/func.js';
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 import bridge from '@vkontakte/vk-bridge';
@@ -19,7 +19,6 @@ class MastersCard extends React.Component {
         };
     }
     componentDidMount() {
-        this.getToken();
         fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
             .then(res => res.json())
             .then(activeMaster => {
@@ -118,7 +117,7 @@ class MastersCard extends React.Component {
                 this.getUploadServer(data.access_token);
             })
             .catch(error => console.log(error))
-    }
+    };
     gridPhoto() {
         if (this.state.images.length > 0) {
             return (
@@ -127,12 +126,13 @@ class MastersCard extends React.Component {
                         this.state.images.map((image, index) => {
                             return (
                                 <Card
+                                    style={{padding: 2, borderRadius: 13, margin: 0}}
                                     size="s"
                                     mode="shadow"
                                     key={index}
                                     onClick={() => this.openShowImages(this.state.images, index)}
                                 >
-                                    <div style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover'}} />
+                                    <div style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover', borderRadius: 13}} />
                                 </Card>
                             )
                         })
@@ -147,7 +147,7 @@ class MastersCard extends React.Component {
     render(){
         if(this.state.isLoad===false){
             return (
-                <Spin/>
+                <Spinner size="large" style={{ marginTop: 20 }} />
             )
         } else {
             return (
@@ -160,6 +160,7 @@ class MastersCard extends React.Component {
                                     before={<Icon24Camera />}
                                     size="l"
                                     onChange={this.uploadPhoto}
+                                    onClick={this.getToken}
                                     id="input"
                                 >
                                     Открыть галерею

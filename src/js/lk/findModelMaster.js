@@ -6,7 +6,7 @@ import {
     Select,
     Textarea,
     Separator,
-    CardGrid, Card, File, Snackbar, Div, Banner
+    CardGrid, Card, File, Snackbar, Spinner, Banner
 } from "@vkontakte/vkui";
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 import {BACKEND} from "../func/func";
@@ -30,7 +30,8 @@ class FindModelMaster extends React.Component {
             images: [],
             loadFind: {
                 images: []
-            }
+            },
+            selectvalue: 'Укажите тип акции'
         };
     }
     componentDidMount() {
@@ -143,33 +144,39 @@ class FindModelMaster extends React.Component {
         this.setState({[name]: value});
     };
     save=()=>{
-        let images = [];
-        this.state.activeMaster.photos.map((image,i)=> {
-            if (i < 3){
-                images.push(image)
+        try {
+            if(this.state.selectvalue === 'Укажите тип акции') throw 'Вы не выбрали акцию. Размещение не акционных предложений недоступно.';
+            if (this.state.body.length === 0) throw 'Пустое сообщение недопустимо';
+            let images = [];
+            this.state.activeMaster.photos.map((image,i)=> {
+                if (i < 3){
+                    images.push(image)
+                }
+            });
+            if (this.state.isActive === true) {
+                let find =this.state.loadFind;
+                find.body = this.state.body;
+                find.images = images;
+                find.sale = this.state.selectvalue;
+                console.log('измененный',find);
+                this.setState({loadFind: find});
+                this.patchData(BACKEND.findModel.new+this.state.loadFind._id, find);
+                this.openSnack('Информация успешно обновлена.')
+            } else {
+                let find =this.state.loadFind;
+                find.body = this.state.body;
+                find.masterId = this.state.activeMaster._id;
+                find.location = this.state.activeMaster.location;
+                find.firstname = this.state.activeMaster.firstname;
+                find.lastname = this.state.activeMaster.lastname;
+                find.avatarLink = this.state.activeMaster.avatarLink;
+                find.images = images;
+                find.sale = this.state.selectvalue;
+                this.postData(BACKEND.findModel.new, find);
+                this.openSnack('Информация о поиске успешно размещена.')
             }
-        });
-        if (this.state.isActive === true) {
-            let find =this.state.loadFind;
-            find.body = this.state.body;
-            find.images = images;
-            find.sale = this.state.selectvalue;
-            console.log('измененный',find);
-            this.setState({loadFind: find});
-            this.patchData(BACKEND.findModel.new+this.state.loadFind._id, find);
-            this.openSnack('Информация успешно обновлена.')
-        } else {
-            let find =this.state.loadFind;
-            find.body = this.state.body;
-            find.masterId = this.state.activeMaster._id;
-            find.location = this.state.activeMaster.location;
-            find.firstname = this.state.activeMaster.firstname;
-            find.lastname = this.state.activeMaster.lastname;
-            find.avatarLink = this.state.activeMaster.avatarLink;
-            find.images = images;
-            find.sale = this.state.selectvalue;
-            this.postData(BACKEND.findModel.new, find);
-            this.openSnack('Информация о поиске успешно размещена.')
+        } catch(e) {
+            this.openSnack(e)
         }
     };
     patchData(url = '', data = {}) {
@@ -241,7 +248,7 @@ class FindModelMaster extends React.Component {
 
     render(){
         if (this.state.isLoaded === false){
-            return (<Spin />)
+            return (<Spinner size="large" style={{ marginTop: 20 }} />)
         } else {
             return (
                 <React.Fragment>

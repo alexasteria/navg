@@ -1,6 +1,6 @@
 import React from 'react';
 import HeadCity from "../elements/headCity";
-import {PanelHeader, SelectMimicry, Spinner} from "@vkontakte/vkui";
+import {PanelHeader, SelectMimicry, Spinner, Div} from "@vkontakte/vkui";
 import MastersList from './mastersList';
 import ScrollSubcat from '../elements/scrollSubcat'
 import {BACKEND} from "../func/func";
@@ -19,6 +19,7 @@ class Masters extends React.Component{
     }
 
     componentDidMount() {
+        console.log(window.history);
         if (this.props.mastersList.length === 0) {
             this.loadList()
         } else {
@@ -98,23 +99,25 @@ class Masters extends React.Component{
                 <React.Fragment>
                     <PanelHeader>Мастера</PanelHeader>
                     <HeadCity changeCity={()=>this.props.changeCity()}/>
-                    <SelectMimicry
-                        top="Выберите категорию"
-                        placeholder="Показаны мастера всех категорий"
-                        onClick={user.location.city === 'Не определено' ?
-                            this.props.openSnack('Сначала выберите город') :
-                            this.props.changeCategory
+                    <Div>
+                        <SelectMimicry
+                            top="Выберите категорию"
+                            placeholder="Показаны мастера всех категорий"
+                            onClick={user.location.city === 'Не определено' ?
+                                this.props.openSnack('Сначала выберите город') :
+                                this.props.changeCategory
+                            }
+                        >{targetCategory.label}</SelectMimicry>
+                        {
+                            targetCategory && this.state.isLoad &&
+                            <ScrollSubcat
+                                targetCategory={targetCategory}
+                                mastersList={this.props.mastersList}
+                                checkSubcat={(e)=>this.checkSubcat(e)}
+                                filter={this.state.filter}
+                            />
                         }
-                    >{targetCategory.label}</SelectMimicry>
-                    {
-                        targetCategory && this.state.isLoad &&
-                        <ScrollSubcat
-                            targetCategory={targetCategory}
-                            mastersList={this.props.mastersList}
-                            checkSubcat={(e)=>this.checkSubcat(e)}
-                            filter={this.state.filter}
-                        />
-                    }
+                    </Div>
                     {
                         this.state.isLoad ?
                             <MastersList

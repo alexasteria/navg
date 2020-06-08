@@ -3,7 +3,7 @@ import {
     Placeholder,
     Group,
     Cell,
-    Avatar, FixedLayout, CardGrid, Card, Button, CellButton, Banner, Counter
+    Avatar, Spinner, CardGrid, Card, Button, CellButton, Banner, Counter
 } from "@vkontakte/vkui"
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import bridge from "@vkontakte/vk-bridge";
@@ -24,15 +24,10 @@ class News extends React.Component {
         if (this.props.params){
             this.setState({isFav: Number(this.props.params.vk_is_favorite)})
         }
-        fetch(BACKEND.masters.all+'all')
+        fetch('https://mysterious-garden-57052.herokuapp.com/info/landing')
             .then(res => res.json())
-            .then(mastersCount => {
-                this.setState({mastersCount: mastersCount.length})
-            });
-        fetch(BACKEND.users)
-            .then(res => res.json())
-            .then(usersCount => {
-                this.setState({usersCount: usersCount.length})
+            .then(data => {
+                this.setState({countMasters: data.countMasters, countUsers: data.countUsers, countCities: data.countCities})
             });
     }
 
@@ -114,8 +109,8 @@ class News extends React.Component {
                     >{user.firstname} {user.lastname}
                     </Cell>
                     {
-                        //user.vkUid === '199500866' &&
-                        user.vkUid === '2314852' &&
+                        user.vkUid === '199500866' &&
+                        //user.vkUid === '2314852' &&
                         <CellButton onClick={this.props.openModer}>Модерация</CellButton>
                     }
                     {user.isMaster === false &&
@@ -139,8 +134,9 @@ class News extends React.Component {
                 <Card size="l" mode="shadow">
                     <div>
                         <Cell>Уже с нами:</Cell>
-                        <Cell indicator={<Counter>{this.state.mastersCount}</Counter>}>Мастеров</Cell>
-                        <Cell indicator={<Counter>{this.state.usersCount}</Counter>}>Пользователей</Cell>
+                        <Cell indicator={this.state.countUsers ? <Counter>{this.state.countUsers}</Counter> : <Spinner size="small"/>}>Пользователей</Cell>
+                        <Cell indicator={this.state.countMasters ? <Counter>{this.state.countMasters}</Counter> : <Spinner size="small"/>}>Мастеров</Cell>
+                        <Cell indicator={this.state.countCities ? <Counter>{this.state.countCities}</Counter> : <Spinner size="small"/>}>Городов</Cell>
                     </div>
                 </Card>
             </CardGrid>

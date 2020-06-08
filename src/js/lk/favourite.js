@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Avatar, RichCell, Spinner, Placeholder
+    Avatar, RichCell, Spinner, Placeholder, Card, Cell, CardGrid
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from "../func/func";
@@ -66,16 +66,20 @@ class Favourite extends React.Component {
                     this.state.mastersArr.map(master => {
                         if ((master !== null)) { //если мастер не удален
                             return (
-                                <RichCell
-                                    key={master._id}
-                                    before={<Avatar size={72} src={master.avatarLink} />}
-                                    text={master.type}
-                                    caption={master.location.city.title}
-                                    after={<Icon16Chevron/>}
-                                    onClick={() => this.props.openFavMasterOnId(master._id)}
-                                >
-                                    {master.firstname} {master.lastname}
-                                </RichCell>
+                                <CardGrid key={master.vkUid}>
+                                    <Card size="l" mode="shadow">
+                                        <RichCell
+                                            key={master._id}
+                                            before={<Avatar size={72} src={master.avatarLink} />}
+                                            text={master.type}
+                                            caption={master.location.city.title}
+                                            after={<Icon16Chevron/>}
+                                            onClick={() => this.props.openFavMasterOnId(master._id)}
+                                        >
+                                            {master.firstname} {master.lastname}
+                                        </RichCell>
+                                    </Card>
+                                </CardGrid>
 
                                 // <CardGrid key={master._id}>
                                 //     <Card size="l" mode="shadow">

@@ -287,7 +287,7 @@ class Invite extends React.Component {
                                                     description="Минимальная цена за работу">{this.state.priceList[index].price}</Cell>
                                             </Cell>
                                             <Button
-                                                before={<Icon24Dismiss/>}
+                                                //before={<Icon24Dismiss/>}
                                                 onClick={() => {this.onRemove(index)}}
                                                 size="xl"
                                                 mode="destructive"

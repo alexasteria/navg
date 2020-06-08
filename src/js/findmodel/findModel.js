@@ -18,6 +18,7 @@ class FindModel extends React.Component {
         };
     }
     componentDidMount() {
+        console.log(window.history);
         if(this.props.findModelsList.length === 0){
             this.loadFind()
         } else {
@@ -30,7 +31,7 @@ class FindModel extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.targetCity !== this.props.targetCity) {
+        if(prevProps.targetCity.id !== this.props.targetCity.id) {
             this.setState({isLoad: false},()=>this.loadFind())
         }
     }

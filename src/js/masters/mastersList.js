@@ -48,7 +48,7 @@ export default class MastersList extends React.Component {
             let sum = ratingArr.reduce((a, b) => a + b, 0);
             let rating = sum / ratingArr.length;
             return (
-                <CardGrid key={master.vkUid} style={{padding: 0}}>
+                <CardGrid key={master.vkUid}>
                     <Card size="l" mode="shadow">
                         <Cell expandable
                               photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
