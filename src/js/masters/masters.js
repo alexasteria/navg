@@ -19,7 +19,6 @@ class Masters extends React.Component{
     }
 
     componentDidMount() {
-        console.log(window.history);
         if (this.props.mastersList.length === 0) {
             this.loadList()
         } else {

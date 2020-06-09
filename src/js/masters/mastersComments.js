@@ -32,7 +32,6 @@ class MastersComments extends React.Component {
         };
     }
     componentDidMount() {
-        console.log(window.history);
         this.changeStars();
         this.props.activeMaster.comments.map(comment => {
             if (comment.user.userId === this.props.user._id) {

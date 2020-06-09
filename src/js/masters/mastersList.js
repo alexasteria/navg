@@ -62,7 +62,7 @@ export default class MastersList extends React.Component {
                               }
                               before={<Avatar src={master.avatarLink} size={70}/>}
                               size="l"
-                              onClick={() => this.props.openPanelMaster('masterInfo', master)}
+                              onClick={() => this.props.openPanelMaster('masterInfo',master)}
                         >{master.firstname} {master.lastname}
                         </Cell>
                     </Card>

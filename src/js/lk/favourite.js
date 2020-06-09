@@ -19,6 +19,12 @@ class Favourite extends React.Component {
     }
 
     componentDidMount() {
+        window.history.replaceState({}, '', '#init');
+        window.history.pushState({}, '', '#router');
+        window.addEventListener('popstate', event => {
+            window.history.pushState({}, '', '#router-back');
+            this.props.goBack();
+        });
         this.loadFavsMasters(this.props.user.favs);
     }
 

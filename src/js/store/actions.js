@@ -5,6 +5,9 @@ import {
     ACTION_CHANGE_MASTERSLIST_SCROLL,
     ACTION_CHANGE_FINDMODELS_LIST,
     ACTION_CHANGE_FINDMODELS_SCROLL,
+    ACTION_CHANGE_ACTIVE_MASTER_ON_MASTERS,
+    ACTION_CHANGE_ACTIVE_MASTER_ON_FINDMODELS,
+    ACTION_CHANGE_ACTIVE_MASTER_ON_FAVS,
     LOGIN_USER,
     SET_MASTER
 } from "./reducers";
@@ -70,5 +73,29 @@ export const changeFindModelsListScroll = (newFindModelsListScroll) => {
     return {
         type: ACTION_CHANGE_FINDMODELS_SCROLL,
         payload: newFindModelsListScroll
+    };
+};
+
+export const changeActiveMasterOnMasters = (NewActiveMaster) => {
+    console.log('in ACTION_CHANGE_ACTIVE_MASTER_ON_MASTERS', NewActiveMaster);
+    return {
+        type: ACTION_CHANGE_ACTIVE_MASTER_ON_MASTERS,
+        payload: NewActiveMaster
+    };
+};
+
+export const changeActiveMasterOnFindModels = (NewActiveMaster) => {
+    console.log('in ACTION_CHANGE_ACTIVE_MASTER_ON_FINDMODELS', NewActiveMaster);
+    return {
+        type: ACTION_CHANGE_ACTIVE_MASTER_ON_FINDMODELS,
+        payload: NewActiveMaster
+    };
+};
+
+export const changeActiveMasterOnFavs = (NewActiveMaster) => {
+    console.log('in ACTION_CHANGE_ACTIVE_MASTER_ON_FAVS', NewActiveMaster);
+    return {
+        type: ACTION_CHANGE_ACTIVE_MASTER_ON_FAVS,
+        payload: NewActiveMaster
     };
 };

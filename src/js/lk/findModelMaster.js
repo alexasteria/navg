@@ -6,7 +6,7 @@ import {
     Select,
     Textarea,
     Separator,
-    CardGrid, Card, File, Snackbar, Spinner, Banner
+    CardGrid, Card, File, Snackbar, Spinner, Banner, Switch
 } from "@vkontakte/vkui";
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 import {BACKEND} from "../func/func";
@@ -31,11 +31,12 @@ class FindModelMaster extends React.Component {
             loadFind: {
                 images: []
             },
-            selectvalue: 'Укажите тип акции'
+            selectvalue: 'Укажите тип акции',
+            visible: true
         };
     }
     componentDidMount() {
-        //this.getToken();
+        
         fetch(BACKEND.masters.vkuid+this.props.user.vkUid)
             .then(res => res.json())
             .then(activeMaster => {
@@ -45,7 +46,7 @@ class FindModelMaster extends React.Component {
                     .then(find => {
                         if (find.length > 0) {
                             console.log(find);
-                            this.setState({loadFind: find[0], body:find[0].body, error: '', isLoaded: true, selectvalue: find[0].sale, isActive: true});
+                            this.setState({loadFind: find[0], body:find[0].body, visible:find[0].visible,  error: '', isLoaded: true, selectvalue: find[0].sale, isActive: true});
                         } else {
                             let error = <Cell>У вас нет активных поисков</Cell>;
                             this.setState({error: error, isLoaded: true});
@@ -146,6 +147,7 @@ class FindModelMaster extends React.Component {
     save=()=>{
         try {
             if(this.state.selectvalue === 'Укажите тип акции') throw 'Вы не выбрали акцию. Размещение не акционных предложений недоступно.';
+            if(this.state.selectvalue === '') throw 'Вы не выбрали акцию. Размещение не акционных предложений недоступно.';
             if (this.state.body.length === 0) throw 'Пустое сообщение недопустимо';
             let images = [];
             this.state.activeMaster.photos.map((image,i)=> {
@@ -158,6 +160,7 @@ class FindModelMaster extends React.Component {
                 find.body = this.state.body;
                 find.images = images;
                 find.sale = this.state.selectvalue;
+                find.visible = this.state.visible;
                 console.log('измененный',find);
                 this.setState({loadFind: find});
                 this.patchData(BACKEND.findModel.new+this.state.loadFind._id, find);
@@ -172,6 +175,7 @@ class FindModelMaster extends React.Component {
                 find.avatarLink = this.state.activeMaster.avatarLink;
                 find.images = images;
                 find.sale = this.state.selectvalue;
+                find.visible = this.state.visible;
                 this.postData(BACKEND.findModel.new, find);
                 this.openSnack('Информация о поиске успешно размещена.')
             }
@@ -284,6 +288,12 @@ class FindModelMaster extends React.Component {
                                     <option value="Оплата за материалы">Оплата за материалы</option>
                                     <option value="Бесплатно">Бесплатно</option>
                                 </Select>
+                                <Cell
+                                    asideContent={<Switch
+                                        onChange={()=>this.setState({visible: !this.state.visible})}
+                                        checked={this.state.visible}/>}>
+                                    Показывать объявление в поиске
+                                </Cell>
                             <Button size="xl" onClick={this.save}>Сохранить</Button>
                             </FormLayout>
                             <Separator style={{ margin: '12px 0' }} />

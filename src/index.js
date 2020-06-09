@@ -2,16 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Warn from './Warn';
 import * as serviceWorker from './serviceWorker';
-//import bridge from '@vkontakte/vk-bridge-mock';
 import bridge from '@vkontakte/vk-bridge';
 import {createStore} from "redux";
 import {Provider} from "react-redux"
 import {rootReducer} from "./js/store/reducers";
-import {BACKEND} from "./js/func/func";
-const qs = require('query-string');
-const crypto = require('crypto');
 
 const store = createStore(rootReducer);
 
@@ -44,7 +39,9 @@ let params = window
         {}
     );
 
-ReactDOM.render(<Provider store={store}><App linkParams={linkParams} params={params} /></Provider>, document.getElementById('root'));
+ReactDOM.render(<Provider store={store}>
+    <App linkParams={linkParams} params={params} />
+</Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

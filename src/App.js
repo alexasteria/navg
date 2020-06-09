@@ -12,6 +12,7 @@ import {
     View, Snackbar, Avatar, Tabs, TabsItem, Separator, ConfigProvider, Spinner
 } from '@vkontakte/vkui';
 import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
+import { RouteNode } from 'react-router5'
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
 import '@vkontakte/vkui/dist/vkui.css';
 import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
@@ -43,8 +44,10 @@ import spinner from './js/elements/img/spinner.svg'
 import Rules from './js/lk/rules';
 import {connect} from "react-redux";
 import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll,
-    loginUser, setMaster} from "./js/store/actions";
+    loginUser, setMaster, changeActiveMasterOnMasters, changeActiveMasterOnFindModels, changeActiveMasterOnFavs} from "./js/store/actions";
 import {bindActionCreators} from "redux";
+import createRouter from 'router5'
+import browserPlugin from 'router5-plugin-browser'
 
 class App extends React.Component {
     constructor(props) {
@@ -68,7 +71,7 @@ class App extends React.Component {
             activeTabLk: 'about',
             scheme: "bright_light",
             activePanelNews: 'news',
-            history: ['main']
+            newsHistory: ['news']
 
         };
         this.onStoryChange = this.onStoryChange.bind(this);
@@ -79,7 +82,9 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        console.log(window.history);
+        window.onpopstate = () => {
+            window.history.pushState(null, null);
+        };
         bridge.send('VKWebAppGetUserInfo', {})
             .then(data => {this.verificationUser(data)});
         if (this.props.linkParams.masterid) {
@@ -123,6 +128,25 @@ class App extends React.Component {
                 .catch(e=>console.log(e));
         }
     }
+
+    goBackNews = () => {
+            const newsHistory = [...this.state.newsHistory];
+            newsHistory.pop();
+            const activePanelNews = newsHistory[newsHistory.length - 1];
+            if (activePanelNews === 'news') {
+                bridge.send('VKWebAppDisableSwipeBack');
+            }
+            this.setState({ newsHistory, activePanelNews });
+    };
+
+    goForwardNews = (activePanelNews) => {
+        const newsHistory = [...this.state.newsHistory];
+        newsHistory.push(activePanelNews);
+        if (this.state.activePanelNews === 'news') {
+            bridge.send('VKWebAppEnableSwipeBack');
+        }
+        this.setState({ newsHistory, activePanelNews });
+    };
 
     verificationUser = (vkUser) => {
          fetch(BACKEND.users + '/vkuid/' + vkUser.id)
@@ -267,18 +291,29 @@ class App extends React.Component {
     };
 
     openPanelMaster = (panelName, master) => {
-        this.setState({activeMaster: master, activeMasterId: master._id, activePanelMasters: panelName});
+        this.props.changeActiveMasterOnMasters(master);
+        this.setState({activePanelMasters: panelName});
     };
 
     openMasterOnId = (masterId) => {
-        this.setState({activePanelFindModels: 'masterInfo', activeMasterId: masterId});
+        fetch(BACKEND.masters.onID + masterId)
+            .then(res => res.json())
+            .then(master => {
+                this.props.changeActiveMasterOnFindModels(master);
+                this.setState({activePanelFindModels: 'masterInfo'});
+            });
     };
     openMasterOnLink = (masterId) => {
         this.setState({activeMasterId: masterId,activeStory: 'masters',activeViewMasters: 'mastersList',activePanelMasters: 'masterInfo'});
         console.log(masterId);
     };
     openFavMasterOnId = (masterId) => {
-        this.setState({activeMasterId: masterId, activePanelLk: 'masterInfo'});
+        fetch(BACKEND.masters.onID + masterId)
+            .then(res => res.json())
+            .then(master => {
+                this.props.changeActiveMasterOnFavs(master);
+                this.setState({activePanelLk: 'masterInfo'});
+            });
     };
     activePanelMasters = (name) => {
         this.setState({activePanelMasters: name});
@@ -364,7 +399,7 @@ class App extends React.Component {
                         ><Icon28More/></TabbarItem>
                     </Tabbar>
                 }>
-                    <View id="news" activePanel={this.state.activePanelNews}>
+                    <View id="news" history={this.state.newsHistory} activePanel={this.state.activePanelNews} onSwipeBack={() => this.goBackNews()}>
                         <Panel id="news">
                             <PanelHeader>Новости</PanelHeader>
                             <News
@@ -372,26 +407,30 @@ class App extends React.Component {
                                 openReg={() => this.setState({activeViewLk: 'registration', activeStory: 'lk'})}
                                 openStory={this.openStory}
                                 user={this.props.user}
-                                openModer={() => this.setState({activePanelNews: 'moder'})}
+                                openModer={() => this.goForwardNews('moder')}
                             />
                         </Panel>
                         <Panel id="moder">
                             <Head
                                 title={'Модерация'}
-                                goBack={() => this.setState({activePanelNews: 'news'})}
+                                goBack={() => this.goBackNews()}
                             />
                             <Moder
-                                goBack={() => this.setState({activePanelNews: 'news'})}
+                                goBack={() => this.goBackNews()}
                                 user={this.state.user}
-                                openMaster={(id) => this.setState({moderId: id, activePanelNews: 'masterInfo'})}
+                                openMaster={(id) => {
+                                    this.setState({moderId: id});
+                                    this.goForwardNews('masterInfo');
+                                }}
                             />
                         </Panel>
                         <Panel id="masterInfo">
                             <Head
                                 title={'О мастере'}
-                                goBack={() => this.setState({activePanelNews: 'moder'})}
+                                goBack={() => this.goBackNews()}
                             />
                             <MasterCard
+                                goBack={() => this.goBackNews()}
                                 openPhoto={() => 'null'}
                                 openComments={() => 'null'}
                                 activeMasterId={this.state.moderId}
@@ -420,6 +459,7 @@ class App extends React.Component {
                                     changeCity={()=>this.setState({activePanelMasters: 'changeCity'})}
                                     openSnack={(title)=>this.openSnack(title)}
                                     changeCategory={()=>this.setState({activeViewMasters: 'masterCat'})}
+                                    //openPanelMaster={this.openPanelMaster}
                                     openPanelMaster={this.openPanelMaster}
                                 />
                                 {this.state.snackbar}
@@ -438,11 +478,13 @@ class App extends React.Component {
                                     goBack={() => this.setState({activePanelMasters: 'mastersList'})}
                                 />
                                 <MasterCard
+                                    goBack={() => this.setState({activePanelMasters: 'mastersList'})}
                                     onSwipeBack={() => this.setState({activePanelMasters: 'mastersList'})}
                                     openPhoto={() => this.setState({activePanelMasters: 'masterPhoto'})}
                                     openComments={() => this.setState({activePanelMasters: 'masterComments'})}
-                                    activeMasterId={this.state.activeMasterId}
-                                    setActiveMaster={(master)=>this.setState({activeMaster: master})}
+                                    activeMaster={this.props.activeMasterOnMasters}
+                                    //activeMasterId={this.state.activeMasterId}
+                                    //setActiveMaster={(master)=>this.setState({activeMaster: master})}
                                 />
                             </Panel>
                             <Panel id="masterPhoto">
@@ -450,7 +492,11 @@ class App extends React.Component {
                                     title={'Портфолио'}
                                     goBack={() => this.setState({activePanelMasters: 'masterInfo'})}
                                 />
-                                <MasterPhoto activeMaster={this.state.activeMaster}/>
+                                <MasterPhoto
+                                    goBack={() => this.setState({activePanelMasters: 'masterInfo'})}
+                                    activeMaster={this.props.activeMasterOnMasters}
+                                    //activeMaster={this.state.activeMaster}
+                                />
                             </Panel>
                             <Panel id="masterComments">
                                 <Head
@@ -458,7 +504,9 @@ class App extends React.Component {
                                     goBack={() => this.setState({activePanelMasters: 'masterInfo'})}
                                 />
                                 <MasterComments
-                                    activeMaster={this.state.activeMaster}
+                                    goBack={() => this.setState({activePanelMasters: 'masterInfo'})}
+                                    activeMaster={this.props.activeMasterOnMasters}
+                                    //activeMaster={this.state.activeMaster}
                                 />
                             </Panel>
                         </View>
@@ -479,17 +527,6 @@ class App extends React.Component {
                     <View
                         id="findmodel"
                         activePanel={this.state.activePanelFindModels}
-                        // modal={
-                        //     <Modal
-                        //         header={'Выбор города'}
-                        //         activeModal={this.state.activeModal}
-                        //         pageId={'cityList'}
-                        //         onClose={()=>this.setActiveModal(null)}
-                        //         content={<CityList changeCity={(city)=>this.changeTargetCity(city)}/>}
-                        //         leftButton={false}
-                        //         rightButton={false}
-                        //     />
-                        // }
                     >
                         <Panel id="findmodel">
                             <PanelHeader>Ишу модель</PanelHeader>
@@ -502,8 +539,8 @@ class App extends React.Component {
                             <Head title={'Выбор города'}
                                   goBack={() => this.setState({activePanelFindModels: 'findmodel'})}/>
                             <CityList changeCity={(city) => {
+                                this.setState({activePanelFindModels: 'findmodel'});
                                 this.changeTargetCity(city);
-                                this.setState({activePanelFindModels: 'findmodel'})
                             }}/>
                         </Panel>
                         <Panel id="masterInfo">
@@ -512,10 +549,11 @@ class App extends React.Component {
                                 goBack={() => this.setState({activePanelFindModels: 'findmodel'})}
                             />
                             <MasterCard
+                                goBack={() => this.setState({activePanelFindModels: 'findmodel'})}
                                 openPhoto={() => this.setState({activePanelFindModels: 'masterPhoto'})}
-                                activeMasterId={this.state.activeMasterId}
+                                activeMaster={this.props.activeMasterOnFindModels}
                                 openComments={() => this.setState({activePanelFindModels: 'masterComments'})}
-                                setActiveMaster={(master)=>this.setState({activeMaster: master})}
+                                //setActiveMaster={(master)=>this.setState({activeMaster: master})}
                             />
                         </Panel>
                         <Panel id="masterPhoto">
@@ -523,7 +561,11 @@ class App extends React.Component {
                                 title={'Портфолио'}
                                 goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}
                             />
-                            <MasterPhoto activeMaster={this.state.activeMaster}/>
+                            <MasterPhoto
+                                goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}
+                                activeMaster={this.props.activeMasterOnFindModels}
+                                //activeMaster={this.state.activeMaster}
+                            />
                         </Panel>
                         <Panel id="masterComments">
                             <Head
@@ -531,7 +573,9 @@ class App extends React.Component {
                                 goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}
                             />
                             <MasterComments
-                                activeMaster={this.state.activeMaster}
+                                goBack={() => this.setState({activePanelFindModels: 'masterInfo'})}
+                                activeMaster={this.props.activeMasterOnFindModels}
+                                //activeMaster={this.state.activeMaster}
                             />
                         </Panel>
                     </View>
@@ -570,7 +614,7 @@ class App extends React.Component {
                                             openSetting={() => this.setActiveModal('setting')}
                                             openFavourite={() => this.setState({activePanelLk: 'favourite'})}
                                             openFindModel={() => this.setState({activePanelLk: 'findModel'})}
-                                            openMasterPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
+                                            openMasterPhoto={() => this.setState({activePanelLk: 'portfolio'})}
                                             isFavourite={this.props.params.vk_is_favorite}
                                         /> :
                                         <Partners />
@@ -583,6 +627,7 @@ class App extends React.Component {
                                     goBack={() => this.setState({activePanelLk: 'lk'})}
                                 />
                                 <Favourite
+                                    goBack={() => this.setState({activePanelLk: 'lk'})}
                                     user={user}
                                     openFavMasterOnId={this.openFavMasterOnId}
                                 />
@@ -593,30 +638,66 @@ class App extends React.Component {
                                     goBack={() => this.setState({activePanelLk: 'favourite'})}
                                 />
                                 <MasterCard
+                                    goBack={() => this.setState({activePanelLk: 'favourite'})}
                                     openPhoto={() => this.setState({activePanelLk: 'masterPhoto'})}
                                     user={user}
-                                    activeMasterId={this.state.activeMasterId}
+                                    activeMaster={this.props.activeMasterOnFavs}
                                     openComments={() => this.setState({activePanelLk: 'masterComments'})}
                                     setActiveMaster={(master)=>this.setState({activeMaster: master})}
                                 />
                             </Panel>
                             <Panel id="masterPhoto">
-                                <Head title={'Портфолио'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <Portfolio user={user}/>
+                                <Head
+                                    title={'Портфолио'}
+                                    goBack={() => this.setState({activePanelLk: 'masterInfo'})}
+                                />
+                                <MasterPhoto
+                                    goBack={() => this.setState({activePanelLk: 'masterInfo'})}
+                                    activeMaster={this.props.activeMasterOnFavs}
+                                    //activeMaster={this.state.activeMaster}
+                                />
+                            </Panel>
+                            <Panel id="portfolio">
+                                <Head
+                                    title={'Портфолио'}
+                                    goBack={() => this.setState({activePanelLk: 'lk'})}
+                                />
+                                <Portfolio
+                                    goBack={() => this.setState({activePanelLk: 'lk'})}
+                                    user={user}
+                                />
                             </Panel>
                             <Panel id="masterComments">
-                                <Head title={'Отзывы'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <MasterComments user={user} activeMaster={this.state.activeMaster}/>
+                                <Head
+                                    title={'Отзывы'}
+                                    goBack={() => this.setState({activePanelLk: 'masterInfo'})}
+                                />
+                                <MasterComments
+                                    goBack={() => this.setState({activePanelLk: 'masterInfo'})}
+                                    user={user}
+                                    activeMaster={this.props.activeMasterOnFavs}
+                                    //activeMaster={this.state.activeMaster}
+                                />
                             </Panel>
                             <Panel id='findModel'>
-                                <Head title={'Ищу модель'} goBack={() => this.setState({activePanelLk: 'lk'})}/>
-                                <FindModelMaster user={user} popout={this.openAlert}/>
+                                <Head
+                                    title={'Ищу модель'}
+                                    goBack={() => this.setState({activePanelLk: 'lk'})}
+                                />
+                                <FindModelMaster
+                                    goBack={() => this.setState({activePanelLk: 'lk'})}
+                                    user={user} popout={this.openAlert}
+                                />
                             </Panel>
                         </View>
                         <View activePanel={this.state.activePanelReg} id='registration'>
                             <Panel id='registration'>
-                                <Head title={'Регистрация'} goBack={() => this.setState({activeViewLk: 'lk'})}/>
+                                <Head
+                                    title={'Регистрация'}
+                                    goBack={() => this.setState({activeViewLk: 'lk'})}
+                                />
                                 <Invite
+                                    goBack={() => this.setState({activeViewLk: 'lk'})}
                                     closeReg={this.closeReg}
                                     changeCity={() => this.setState({activePanelReg: 'changeCity'})}
                                     openRules={() => this.setState({activePanelReg: 'rules'})}
@@ -625,8 +706,13 @@ class App extends React.Component {
                                 {this.state.snackbar}
                             </Panel>
                             <Panel id='rules'>
-                                <Head title={'Соглашение'} goBack={() => this.setState({activePanelReg: 'registration'})}/>
-                                <Rules />
+                                <Head
+                                    title={'Соглашение'}
+                                    goBack={() => this.setState({activePanelReg: 'registration'})}
+                                />
+                                <Rules
+                                    goBack={() => this.setState({activePanelReg: 'registration'})}
+                                />
                             </Panel>
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}
@@ -655,7 +741,10 @@ const putStateToProps = (state) => {
         findModelsListScroll: state.findModelsListScroll,
         user: state.user,
         loginStatus: state.loginStatus,
-        master: state.master
+        master: state.master,
+        activeMasterOnMasters: state.activeMasterOnMasters,
+        activeMasterOnFindModels: state.activeMasterOnFindModels,
+        activeMasterOnFavs: state.activeMasterOnFavs
     };
 };
 
@@ -668,7 +757,10 @@ const putActionsToProps = (dispatch) => {
         changeFindModelsList: bindActionCreators(changeFindModelsList, dispatch),
         changeFindModelsListScroll: bindActionCreators(changeFindModelsListScroll, dispatch),
         loginUser: bindActionCreators(loginUser, dispatch),
-        setMaster: bindActionCreators(setMaster, dispatch)
+        setMaster: bindActionCreators(setMaster, dispatch),
+        changeActiveMasterOnMasters: bindActionCreators(changeActiveMasterOnMasters, dispatch),
+        changeActiveMasterOnFindModels: bindActionCreators(changeActiveMasterOnFindModels, dispatch),
+        changeActiveMasterOnFavs: bindActionCreators(changeActiveMasterOnFavs, dispatch)
     };
 };
 

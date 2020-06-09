@@ -18,7 +18,6 @@ class FindModel extends React.Component {
         };
     }
     componentDidMount() {
-        console.log(window.history);
         if(this.props.findModelsList.length === 0){
             this.loadFind()
         } else {
@@ -31,7 +30,7 @@ class FindModel extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.targetCity.id !== this.props.targetCity.id) {
+        if(prevProps.targetCity !== this.props.targetCity) {
             this.setState({isLoad: false},()=>this.loadFind())
         }
     }
@@ -44,8 +43,9 @@ class FindModel extends React.Component {
             fetch(BACKEND.findModel.onCity+this.props.targetCity.id)//ловим обьявления по городу юзера
                 .then(res => res.json())
                 .then(find => {
-                    this.setState({findArr: find, isLoad: true});
+                    console.log(find);
                     this.props.changeFindModelsList(find);
+                    this.setState({findArr: find, isLoad: true});
                 });
     };
 

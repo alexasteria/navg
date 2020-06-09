@@ -31,15 +31,12 @@ class MastersCard extends React.Component {
     }
 
     componentDidMount() {
-        if (window.history.length === 2){
-            window.history.pushState({}, window.location.hash);
-        }
-        fetch(BACKEND.masters.onID + this.props.activeMasterId)
-            .then(res => res.json())
-            .then(master => {
-                this.props.setActiveMaster(master);
-                this.setState({activeMaster: master}, ()=> this.loadFavs())
-            });
+       this.setState({activeMaster: this.props.activeMaster}, ()=> this.loadFavs())
+       //  fetch(BACKEND.masters.onID + this.props.activeMasterId)
+       //      .then(res => res.json())
+       //      .then(master => {
+       //          this.setState({activeMaster: master}, ()=> this.loadFavs())
+       //      });
     }
 
     // componentDidUpdate(prevProps, prevState, snapshot) {

@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Мастер ищет модель">
+    <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Баг фиксы">
+      <change afterPath="$PROJECT_DIR$/src/create-router.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/panelHeader.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/panelHeader.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/store/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/store/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/reducers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,19 +90,19 @@
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PhpStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Алексей\Desktop\navg\src" />
-      <recent name="C:\Users\Алексей\Desktop\navg\src\js\lk" />
-      <recent name="C:\Users\Алексей\Desktop\navg\src\js\elements" />
-      <recent name="C:\Users\Алексей\Desktop\navg\src\js\news" />
-      <recent name="C:\Users\Алексей\Desktop\navg\src\js\masters" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\elements" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\img" />
       <recent name="C:\Users\Алексей\Desktop\navg\src" />
       <recent name="D:\automaster\src\js\sale" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Алексей\Desktop\navg\src" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js\lk" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js\elements" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js\news" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js\masters" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -496,14 +499,22 @@
       <workItem from="1591565921444" duration="1120000" />
       <workItem from="1591567756002" duration="455000" />
       <workItem from="1591611154045" duration="515000" />
-      <workItem from="1591629555588" duration="861000" />
-    </task>
-    <task id="LOCAL-00048" summary="Причесан дизайн">
-      <created>1586290653086</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1586290653086</updated>
+      <workItem from="1591629555588" duration="1942000" />
+      <workItem from="1591650405447" duration="1630000" />
+      <workItem from="1591652214549" duration="1865000" />
+      <workItem from="1591654094142" duration="2247000" />
+      <workItem from="1591656529220" duration="637000" />
+      <workItem from="1591658090336" duration="1154000" />
+      <workItem from="1591660897393" duration="1304000" />
+      <workItem from="1591662245277" duration="1814000" />
+      <workItem from="1591664076305" duration="602000" />
+      <workItem from="1591664744979" duration="1740000" />
+      <workItem from="1591666496703" duration="765000" />
+      <workItem from="1591668085254" duration="772000" />
+      <workItem from="1591706523278" duration="1794000" />
+      <workItem from="1591708329034" duration="1345000" />
+      <workItem from="1591719509889" duration="1897000" />
+      <workItem from="1591721426479" duration="1481000" />
     </task>
     <task id="LOCAL-00049" summary="Тест">
       <created>1586295280107</created>
@@ -841,7 +852,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591382449849</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="Баг фиксы">
+      <created>1591630518732</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1591630518732</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -862,7 +880,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
-    <MESSAGE value="Фильтры субкатегорий работают корректно" />
     <MESSAGE value="Переписан мастерлист" />
     <MESSAGE value="categorylist is a component" />
     <MESSAGE value="Начало работы над сохранением стэйта при ререндере" />
@@ -887,7 +904,8 @@
     <MESSAGE value="Все кроме модерации" />
     <MESSAGE value="Тест модерации" />
     <MESSAGE value="Мастер ищет модель" />
-    <option name="LAST_COMMIT_MESSAGE" value="Мастер ищет модель" />
+    <MESSAGE value="Баг фиксы" />
+    <option name="LAST_COMMIT_MESSAGE" value="Баг фиксы" />
   </component>
   <component name="WindowStateProjectService">
     <state x="858" y="332" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590825401880">
@@ -902,10 +920,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
-    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1591382449436">
+    <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1591630518270">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1591382449436" />
+    <state x="142" y="115" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1591630518270" />
     <state x="953" y="276" key="FileChooserDialogImpl" timestamp="1586112648478">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -13,7 +13,7 @@ class CityList extends React.Component {
             isLoad: true,
             cities: [
                 {id: 621, title: 'Дзержинск'},
-                {id: 1, title: 'Другой город'}
+                {id: 49, title: 'Екатеринбург'}
             ]
         };
         this.onChange = this.onChange.bind(this);
