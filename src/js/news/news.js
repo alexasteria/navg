@@ -27,7 +27,7 @@ class News extends React.Component {
         fetch('https://mysterious-garden-57052.herokuapp.com/info/landing')
             .then(res => res.json())
             .then(data => {
-                this.setState({countMasters: data.countMasters, countUsers: data.countUsers, countCities: data.countCities})
+                this.setState({countMasters: data.countMasters, countUsers: data.countUsers, countCities: data.countCities, cities: data.cities.sort()})
             });
     }
 
@@ -137,6 +137,14 @@ class News extends React.Component {
                         <Cell indicator={this.state.countUsers ? <Counter>{this.state.countUsers}</Counter> : <Spinner size="small"/>}>Пользователей</Cell>
                         <Cell indicator={this.state.countMasters ? <Counter>{this.state.countMasters}</Counter> : <Spinner size="small"/>}>Мастеров</Cell>
                         <Cell indicator={this.state.countCities ? <Counter>{this.state.countCities}</Counter> : <Spinner size="small"/>}>Городов</Cell>
+                        <Cell multiline>
+                            {
+                                this.state.cities &&
+                                this.state.cities.map(city=>{
+                                    return city+' '
+                                })
+                            }
+                        </Cell>
                     </div>
                 </Card>
             </CardGrid>
