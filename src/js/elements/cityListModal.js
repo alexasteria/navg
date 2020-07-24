@@ -2,6 +2,7 @@ import React from 'react';
 import {Cell, List, Search, withModalRootContext } from '@vkontakte/vkui';
 import bridge from '@vkontakte/vk-bridge';
 import PropTypes from 'prop-types'
+import {BACKEND} from "../func/func";
 
 class CityListModal extends React.Component {
 
@@ -23,21 +24,32 @@ class CityListModal extends React.Component {
     }
 
     getCities() {
-        const search = this.state.search.toLowerCase();
-        const token = '17e5eb3d17e5eb3d17e5eb3dee17888047117e517e5eb3d4a4130ddab66ef8955df224b';
-        bridge.send("VKWebAppCallAPIMethod", {
-            "method": "database.getCities",
-            "params": {
-                "country_id": 1,
-                "q": search,
-                "v": "5.103",
-                "access_token": token
-            }
+        const data = {
+            search: this.state.search.toLowerCase(),
+            country_id: 1,
+        };
+        fetch(BACKEND.vkapi.getCities,{
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data),
         })
-            .then(result => {
-                this.setState({cities: result.response.items}, () => this.props.updateModalHeight())
+            .then(res=>res.json())
+            .then(res=>{
+                if (res.error){
+                    console.log(res.error)
+                } else {
+                    this.setState({cities: res.cityList, isLoad: true})
+                }
             })
-            .catch(e => console.log(e))
+            .catch(e=>console.log(e));
     }
 
     onChange(e) {

@@ -3,7 +3,6 @@ import {BACKEND} from "../func/func";
 import FindList from './components/findList';
 import HeadCity from '../elements/headCity'
 import {Spinner} from '@vkontakte/vkui';
-import Spin from '../elements/spinner'
 import bridge from "@vkontakte/vk-bridge";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";

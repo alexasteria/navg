@@ -3,7 +3,7 @@ import {
     Placeholder,
     Group,
     Cell,
-    Avatar, Spinner, CardGrid, Card, Button, CellButton, Banner, Counter
+    Avatar, Spinner, CardGrid, Card, Button, CellButton, Banner, Counter, PanelHeader, Panel
 } from "@vkontakte/vkui"
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import bridge from "@vkontakte/vk-bridge";
@@ -53,11 +53,25 @@ class News extends React.Component {
     };
 
     isMember = () => {
-        bridge.send("VKWebAppCallAPIMethod", {
-            "method": "groups.isMember",
-            "params": {"group_id": "193179174","user_id": this.props.user.vkUid, "v":"5.103", "access_token": BACKEND.keyGroup}})
-            .then(result => {
-                if (result.response === 1){
+        const data = {
+            user_id: this.props.user.vkUid
+        };
+        fetch(BACKEND.vkapi.isMember,{
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data),
+        })
+            .then(res=>res.json())
+            .then(res=>{
+                if (res.ingroup === 1){
                     return null
                 } else {
                     return (
@@ -69,7 +83,7 @@ class News extends React.Component {
                     )
                 }
             })
-            .catch(e => console.log(e))
+            .catch(e=>console.log(e));
     };
 
     joinGroup = () => {
@@ -101,7 +115,7 @@ class News extends React.Component {
                     <Cell
                         photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
                         description={
-                            user.isMaster === false ? 'Пользователь' : 'Авторизованный мастер'
+                            this.props.master === null ? 'Пользователь' : 'Авторизованный мастер'
                         }
                         //bottomContent={}
                         before={<Avatar src={user.avatarLink} size={50}/>}
@@ -113,7 +127,7 @@ class News extends React.Component {
                         //user.vkUid === '2314852' &&
                         <CellButton onClick={this.props.openModer}>Модерация</CellButton>
                     }
-                    {user.isMaster === false &&
+                    {this.props.master === null &&
                     <Cell
                         multiline
                         onClick={this.props.openReg}
@@ -154,32 +168,36 @@ class News extends React.Component {
     render(){
         const {user} = this.props;
         return (
-            <Group>
-                <Placeholder
-                    icon={<Avatar src="https://sun1-28.userapi.com/O4KZM7zfdhZ-zHP-LtRj_xrYiNSRdraBcCQe6Q/PLqKmK-NWTY.jpg?ava=1" size={70}/>}
-                    header="Привет!"
-                >
-                    У нас ты можешь найти бьюти-мастера или предложить свои услуги. База мастеров в разных городах пополняется ежедневно.
-                </Placeholder>
-                {this.userInfo(user)}
-                {this.nowCounter()}
-                {this.isMember()}
-                {this.favApp()}
-                {/*{this.feedList()}*/}
-                {/*<FixedLayout*/}
-                {/*    vertical="bottom"*/}
-                {/*    style={{marginBottom: 5}}*/}
-                {/*>*/}
-                {/*    */}
-                {/*</FixedLayout>*/}
-            </Group>
+            <Panel id="news">
+                <PanelHeader>Новости</PanelHeader>
+                    <Group>
+                        <Placeholder
+                            icon={<Avatar src="https://sun1-28.userapi.com/O4KZM7zfdhZ-zHP-LtRj_xrYiNSRdraBcCQe6Q/PLqKmK-NWTY.jpg?ava=1" size={70}/>}
+                            header="Привет!"
+                        >
+                            У нас ты можешь найти бьюти-мастера или предложить свои услуги. База мастеров в разных городах пополняется ежедневно.
+                        </Placeholder>
+                        {this.userInfo(user)}
+                        {this.nowCounter()}
+                        {this.isMember()}
+                        {this.favApp()}
+                        {/*{this.feedList()}*/}
+                        {/*<FixedLayout*/}
+                        {/*    vertical="bottom"*/}
+                        {/*    style={{marginBottom: 5}}*/}
+                        {/*>*/}
+                        {/*    */}
+                        {/*</FixedLayout>*/}
+                    </Group>
+            </Panel>
         );
     }
 }
 
 const putStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.user,
+        master: state.master
     };
 };
 
@@ -189,4 +207,4 @@ const putActionsToProps = (dispatch) => {
     };
 };
 
-export default connect(putStateToProps, putActionsToProps)(News);;
+export default connect(putStateToProps, putActionsToProps)(News);

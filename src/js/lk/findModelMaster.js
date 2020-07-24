@@ -14,6 +14,7 @@ import Spin from '../elements/spinner'
 import fetchJsonp from "fetch-jsonp";
 import bridge from "@vkontakte/vk-bridge";
 import FindCard from "../findmodel/components/findCard";
+import {connect} from "react-redux";
 import Icon24DismissSubstract from '@vkontakte/icons/dist/24/dismiss_substract';
 
 
@@ -36,29 +37,20 @@ class FindModelMaster extends React.Component {
         };
     }
     componentDidMount() {
-        
-        fetch(BACKEND.masters.vkuid+this.props.user.vkUid)
+        fetch(BACKEND.findModel.onMasterId+this.props.master._id)
             .then(res => res.json())
-            .then(activeMaster => {
-                this.setState({activeMaster: activeMaster[0]});
-                fetch(BACKEND.findModel.onMasterId+activeMaster[0]._id)
-                    .then(res => res.json())
-                    .then(find => {
-                        if (find.length > 0) {
-                            console.log(find);
-                            this.setState({loadFind: find[0], body:find[0].body, visible:find[0].visible,  error: '', isLoaded: true, selectvalue: find[0].sale, isActive: true});
-                        } else {
-                            let error = <Cell>У вас нет активных поисков</Cell>;
-                            this.setState({error: error, isLoaded: true});
-                        }
-                    });
+            .then(find => {
+                if (find.length > 0) {
+                    console.log(find);
+                    this.setState({loadFind: find[0], body:find[0].body, visible:find[0].visible,  error: '', isLoaded: true, selectvalue: find[0].sale, isActive: true});
+                } else {
+                    let error = <Cell>У вас нет активных поисков</Cell>;
+                    this.setState({error: error, isLoaded: true});
+                }
             });
     }
 
     openSnack (text) {
-        const blueBackground = {
-            backgroundColor: 'var(--accent)'
-        };
         if (this.state.snackbar) return;
         this.setState({ snackbar:
                 <Snackbar
@@ -70,72 +62,6 @@ class FindModelMaster extends React.Component {
         });
     }
 
-    // getToken = () => {
-    //     bridge.send("VKWebAppGetAuthToken", {"app_id": 7170938, "scope": "photos"})
-    //         .then(data => {
-    //             this.getUploadServer(data.access_token);
-    //         })
-    //         .catch(error => console.log(error))
-    // };
-
-    // getUploadServer = (token) => {
-    //     bridge.send("VKWebAppCallAPIMethod", {
-    //         "method": "photos.getUploadServer",
-    //         "params": {"group_id": "193179174","album_id": "269622026", "v":"5.103", "access_token": token}})
-    //         .then(result => {
-    //             this.setState({uploadUrl: result.response.upload_url, token: token});
-    //         })
-    //         .catch(e => console.log(e))
-    //
-    // };
-
-    // uploadPhoto = () =>{
-    //     try {
-    //         if (this.state.loadFind){
-    //             if (this.state.loadFind.images.length >= 3) throw 'Можно загрузить только 3 фотографии в разделе Мастер ищет модель';
-    //         }
-    //         this.setState({loading: true});
-    //         const formData = new FormData();
-    //         let selectedFile = document.getElementById('input').files[0];
-    //         formData.append('master', this.state.activeMaster.firstname+' '+this.state.activeMaster.lastname );
-    //         formData.append('uploadUrl', this.state.uploadUrl);
-    //         formData.append('token', this.state.token);
-    //         formData.append('file1', selectedFile);
-    //         fetch(BACKEND.vkapi.uploadPhoto, {
-    //             method: 'POST',
-    //             body: formData
-    //         })
-    //             .then(res => res.json())
-    //             .then(response => {
-    //                 fetchJsonp(response.saveUrl, {
-    //                     mode: 'no-cors',
-    //                     method: 'GET'
-    //                 })
-    //                     .then(result => result.json())
-    //                     .then(result => {
-    //                         console.log(result);
-    //                         let newImg = result.response[0].sizes[2].url;//адрес фото
-    //                         let imgArr = this.state.images;
-    //                         let data = {
-    //                             findId: this.state.loadFind,
-    //                             newImg: newImg
-    //                         };
-    //                         let loadFind = this.state.loadFind;
-    //                         loadFind.images.push(newImg);
-    //                         this.setState({loading: false, loadFind: loadFind}, ()=>this.save());
-    //                     })
-    //                     .catch(error => console.log(error))
-    //             })
-    //             .catch(error => {
-    //                 console.log(error);
-    //                 this.openSnack(error);
-    //             })
-    //     } catch (e) {
-    //         this.openSnack(e);
-    //     }
-    //
-    // };
-
     handleChangeSelect = (event) => {
         this.setState({selectvalue: event.target.value});
     };
@@ -146,11 +72,12 @@ class FindModelMaster extends React.Component {
     };
     save=()=>{
         try {
+            if(this.props.master.photos.length < 3) throw 'В портфолио должно быть не менее 3-х фотографий';
             if(this.state.selectvalue === 'Укажите тип акции') throw 'Вы не выбрали акцию. Размещение не акционных предложений недоступно.';
             if(this.state.selectvalue === '') throw 'Вы не выбрали акцию. Размещение не акционных предложений недоступно.';
             if (this.state.body.length === 0) throw 'Пустое сообщение недопустимо';
             let images = [];
-            this.state.activeMaster.photos.map((image,i)=> {
+            this.props.master.photos.map((image,i)=> {
                 if (i < 3){
                     images.push(image)
                 }
@@ -161,23 +88,45 @@ class FindModelMaster extends React.Component {
                 find.images = images;
                 find.sale = this.state.selectvalue;
                 find.visible = this.state.visible;
-                console.log('измененный',find);
-                this.setState({loadFind: find});
+                find.params = this.props.params;
                 this.patchData(BACKEND.findModel.new+this.state.loadFind._id, find);
                 this.openSnack('Информация успешно обновлена.')
             } else {
                 let find =this.state.loadFind;
                 find.body = this.state.body;
-                find.masterId = this.state.activeMaster._id;
-                find.location = this.state.activeMaster.location;
-                find.firstname = this.state.activeMaster.firstname;
-                find.lastname = this.state.activeMaster.lastname;
-                find.avatarLink = this.state.activeMaster.avatarLink;
+                // find.masterId = this.state.activeMaster._id;
+                // find.location = this.state.activeMaster.location;
+                // find.firstname = this.state.activeMaster.firstname;
+                // find.lastname = this.state.activeMaster.lastname;
+                // find.avatarLink = this.state.activeMaster.avatarLink;
                 find.images = images;
                 find.sale = this.state.selectvalue;
                 find.visible = this.state.visible;
-                this.postData(BACKEND.findModel.new, find);
-                this.openSnack('Информация о поиске успешно размещена.')
+                find.params = this.props.params;
+                    fetch(BACKEND.findModel.new, {
+                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                        mode: 'cors', // no-cors, cors, *same-origin
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        redirect: 'follow', // manual, *follow, error
+                        referrer: 'no-referrer', // no-referrer, *client
+                        body: JSON.stringify(find), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+                    })
+                        .then(res => res.json())
+                        .then(res=>{
+                            this.setState({loadFind: res.find, isActive: true});
+                            if (res.mStatus === false){
+                                this.setState({visible: false});
+                                this.openSnack('Объявление о поиске модели создано, но пока не показывается. Его можно активировать сразу после прохождения модерации профиля мастера.')
+                            } else {
+                                this.openSnack('Объявление о поиске модели успешно создано.')
+                            }
+                        })
+                        .catch(e=>console.log(e));
+                //this.postData(BACKEND.findModel.new, find);
             }
         } catch(e) {
             this.openSnack(e)
@@ -270,8 +219,8 @@ class FindModelMaster extends React.Component {
                                 />
                                 <CardGrid>
                                 {
-                                    this.state.activeMaster.photos.length > 0 ?
-                                    this.state.activeMaster.photos.map((image,i)=>{
+                                    this.props.master.photos.length > 0 ?
+                                    this.props.master.photos.map((image,i)=>{
                                         return (
                                             <Card size='s' key={i}>
                                                 <div
@@ -280,7 +229,7 @@ class FindModelMaster extends React.Component {
                                                 </div>
                                             </Card>
                                         )
-                                    }) : 'У вас в портфолио нет фото'
+                                    }) : 'У вас в портфолио нет фото, разместить объявление о поиске можно, имея в портфолио не менее 3-х фотографий'
                                 }
                                 </CardGrid>
                                 <Select value={this.state.selectvalue} onChange={this.handleChangeSelect} top="Тип акции" placeholder="Выберите тип акции">
@@ -290,8 +239,14 @@ class FindModelMaster extends React.Component {
                                 </Select>
                                 <Cell
                                     asideContent={<Switch
-                                        onChange={()=>this.setState({visible: !this.state.visible})}
-                                        checked={this.state.visible}/>}>
+                                        onChange={()=>{
+                                            if (this.props.master.moderation.status === true){
+                                                this.setState({visible: !this.state.visible})
+                                            } else {
+                                                this.openSnack('Ваш профиль находится на модерации. Вы можете создать объявление уже сейчас, но до завершения проверки пользователи его не увидят.')
+                                            }
+                                        }}
+                                        checked={this.props.master.moderation.status === true ? this.state.visible : false}/>}>
                                     Показывать объявление в поиске
                                 </Cell>
                             <Button size="xl" onClick={this.save}>Сохранить</Button>
@@ -314,4 +269,18 @@ class FindModelMaster extends React.Component {
     }
 }
 
-export default FindModelMaster;
+const putStateToProps = (state) => {
+    return {
+        user: state.user,
+        master: state.master,
+        params: state.params
+    };
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(FindModelMaster);

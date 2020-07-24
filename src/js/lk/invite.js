@@ -23,7 +23,6 @@ import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {connect} from "react-redux";
 import Icon16Down from '@vkontakte/icons/dist/16/down';
 import Icon16Up from '@vkontakte/icons/dist/16/up';
-import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
 
 class Invite extends React.Component {
     constructor(props) {
@@ -59,8 +58,8 @@ class Invite extends React.Component {
         try {
             if (this.props.targetCity=== 'Не выбрано') throw 'Город не выбран. Вас не смогут найти.';
             if (this.state.checkLicense === false) throw 'Примите условия пользовательского соглашения, если желаете зарегистрироваться.';
-            if (this.state.statusMessage === false) throw 'Предоставьте доступ на получение сообщений, чтобы мы уведомили вас о заказе.';
-            if (this.state.description.length < 50) throw 'Блок "О себе" должен содержать более 50-ти символов.';
+            //if (this.state.statusMessage === false) throw 'Предоставьте доступ на получение сообщений, чтобы мы уведомили вас о заказе.';
+            if (this.state.description.replace(/ +/g, ' ').trim().length < 20) throw 'Блок "О себе" должен содержать более 20-ти символов.';
             if (this.state.priceList.length < 1) throw 'Добавьте как минимум одну процедуру, чтобы клиенты смогли записаться к вам.';
             if (!this.state.type) throw 'Укажите тип исполнителя работ: Частное лицо или Организация.';
             let cat = {
@@ -87,22 +86,16 @@ class Invite extends React.Component {
                 }
             });
             let master = {
-                firstname: this.props.user.firstname,
-                lastname: this.props.user.lastname,
                 description: this.state.description,
-                vkUid: this.props.user.vkUid,
                 type: this.state.type,
-                avatarLink: this.props.user.avatarLink,
-                sex: this.props.user.sex,
                 location: {
                     country: this.props.user.location.country,
                     city: this.props.targetCity
                 },
                 categories: cat,
                 brand: this.state.brand,
-                banned: {status: false},
                 priceList: this.state.priceList,
-                visible: true
+                params: this.props.params
             };
             this.props.closeReg(master);
         } catch (error) {
@@ -116,11 +109,11 @@ class Invite extends React.Component {
     saveProd = () => {
         try {
             if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
-            if (this.state.newProdTitle.length > 20) throw 'Название длинее 20-ти символов необходимо сократить';
+            if (this.state.newProdTitle.replace(/ +/g, ' ').trim().length > 20) throw 'Название длинее 20-ти символов необходимо сократить';
             if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
-            if (this.state.newProdBody.length > 250) throw 'Описание процедуры слишком длинное. Сейчас заполнено - '+this.state.newProdBody.length+" из "+250;
+            if (this.state.newProdBody.replace(/ +/g, ' ').trim().length > 250) throw 'Описание процедуры слишком длинное. Сейчас заполнено - '+this.state.newProdBody.replace(/ +/g, ' ').trim().length+" из "+250;
             if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
-            if (this.state.newProdPrice.length > 5) throw 'Максимально допустимы 5-ти значные суммы';
+            if (this.state.newProdPrice.replace(/ +/g, ' ').trim().length > 5) throw 'Максимально допустимы 5-ти значные суммы';
             let priceList = this.state.priceList;
             priceList.push({
                 title: this.state.newProdTitle,
@@ -195,7 +188,6 @@ class Invite extends React.Component {
                                 </Card>
                             </CardGrid>
                             <CardGrid>
-                                <Card size="l" mode="shadow">
                                     <Cell
                                         multiline
                                         asideContent={
@@ -206,15 +198,6 @@ class Invite extends React.Component {
                                         bottom={this.state.statusMessage === false && 'Доступ обязателен для регистрации'}
                                     >Доступ на получение личных сообщений от приложения, для получения уведомлений о заявках
                                     </Cell>
-                                    {/*<Cell*/}
-                                    {/*    expandable*/}
-                                    {/*    multiline*/}
-                                    {/*    onClick={this.permMessage}*/}
-                                    {/*    description="Для получения уведомлений о заявках"*/}
-                                    {/*    status={this.state.statusMessage === true ? 'valid' : 'error'}*/}
-                                    {/*>Доступ на получение личных сообщений от приложения - {this.state.statusMessage=== true ? <span style={{color: 'green'}}>Разрешен</span> : <span style={{color: 'red'}}>Не разрешен</span>}*/}
-                                    {/*</Cell>*/}
-                                </Card>
                             </CardGrid>
                             <Textarea
                                 name={'description'}
@@ -298,25 +281,28 @@ class Invite extends React.Component {
                                 {this.state.add ?
                                 <Div>
                                     <Cell description="Добавления нового элемента" multiline>
-                                        <Input
+                                        <Cell description={this.state.newProdTitle.replace(/ +/g, ' ').trim().length+"/20"}><Input
                                             require
                                             name="newProdTitle"
+                                            status={this.state.newProdTitle.replace(/ +/g, ' ').trim().length <= 20 ? 'valid' : 'error'}
                                             type="text"
                                             value={this.state.newProdTitle}
                                             placeholder={'Введите название'}
-                                            onChange={this.handleChange}/>
-                                        <Textarea
+                                            onChange={this.handleChange}/></Cell>
+                                        <Cell description={this.state.newProdBody.replace(/ +/g, ' ').trim().length+"/250"}><Textarea
                                             require
                                             name="newProdBody"
+                                            status={this.state.newProdBody.replace(/ +/g, ' ').trim().length <= 250 ? 'valid' : 'error'}
                                             value={this.state.newProdBody}
                                             placeholder={'Укажите описание'}
-                                            onChange={this.handleChange}/>
-                                        <Input
+                                            onChange={this.handleChange}/></Cell>
+                                        <Cell description={this.state.newProdPrice.replace(/ +/g, ' ').trim().length+"/5"}><Input
                                             require
                                             name="newProdPrice"
+                                            status={this.state.newProdPrice.replace(/ +/g, ' ').trim().length <= 5 ? 'valid' : 'error'}
                                             type="number" value={this.state.newProdPrice}
                                             placeholder={'Укажите цену'}
-                                            onChange={this.handleChange}/>
+                                            onChange={this.handleChange}/></Cell>
                                     </Cell>
                                     <Div style={{display: 'flex'}}>
                                         <Button size="l" stretched style={{marginRight: 8}}
@@ -358,7 +344,8 @@ class Invite extends React.Component {
 const putStateToProps = (state) => {
     return {
         targetCity: state.targetCity,
-        user: state.user
+        user: state.user,
+        params: state.params
     };
 };
 

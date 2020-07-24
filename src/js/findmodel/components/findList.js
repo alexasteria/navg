@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Placeholder,Card} from "@vkontakte/vkui";
+import {Button, Placeholder} from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 import FindCard from "./findCard";
 
@@ -20,21 +20,21 @@ function getDate(comDate) {
     }
 }
 
-function renderLastPhoto(arr){
-    for (let i =0; i<arr.length; i++){
-        if (!arr[i]) break;
-        return (
-            <Card
-                size="s"
-                mode="shadow"
-                key={i}
-                //onClick={() => this.openShowImages(this.state.images, index)}
-            >
-                <div style={{height: 96, backgroundImage: 'url('+arr[i]+')', backgroundSize: 'cover'}} />
-            </Card>
-        )
-    }
-}
+// function renderLastPhoto(arr){
+//     for (let i =0; i<arr.length; i++){
+//         if (!arr[i]) break;
+//         return (
+//             <Card
+//                 size="s"
+//                 mode="shadow"
+//                 key={i}
+//                 //onClick={() => this.openShowImages(this.state.images, index)}
+//             >
+//                 <div style={{height: 96, backgroundImage: 'url('+arr[i]+')', backgroundSize: 'cover'}} />
+//             </Card>
+//         )
+//     }
+// }
 
 export default function FindList(props){
     if (props.findArr.length === 0) {

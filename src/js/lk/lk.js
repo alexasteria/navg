@@ -1,20 +1,17 @@
 import React from 'react';
-import {Div, Separator, CellButton, Avatar, Cell, List, Group, Banner, Button, Switch} from "@vkontakte/vkui"
+import {Div, Separator, CellButton, Avatar, Cell, List, Group, Banner, Button, Card} from "@vkontakte/vkui"
 import Icon24Story from '@vkontakte/icons/dist/24/story';
-import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
-import Icon24Users from '@vkontakte/icons/dist/24/users';
 import Icon24Like from '@vkontakte/icons/dist/24/like';
-import Icon24Recent from '@vkontakte/icons/dist/24/recent';
 import Icon24Search from '@vkontakte/icons/dist/24/search';
 import Icon24Write from '@vkontakte/icons/dist/24/write';
 import bridge from "@vkontakte/vk-bridge";
+import {connect} from "react-redux";
 
 class Lk extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             connection: false,
-            user: this.props.user,
             tmpUser: [],
             isMaster: false,
             isUser: false,
@@ -30,9 +27,24 @@ class Lk extends React.Component {
 
     checkModeration = () => {
         if (this.props.master.moderation.status === false) {
-            return (
-                <Cell multiline>Ваш профиль на проверке. В течении часа он будет доступен в поиске.</Cell>
-            )
+            if (this.props.master.moderation.reasons.length > 0) {
+                return (
+                    <Card>
+                        <Cell description={'Их необходимо исправить'}>При модерации обнаружены ошибки:</Cell>
+                        {
+                            this.props.master.moderation.reasons.map((reason, index)=>{
+                                return <Cell key={index}>{reason}</Cell>
+                            })
+                        }
+                    </Card>
+                )
+            } else {
+                return (
+                    <Card>
+                        <Cell multiline>Ваш профиль на проверке. В течении часа он будет доступен в поиске.</Cell>
+                    </Card>
+                )
+            }
         }
     };
 
@@ -64,16 +76,16 @@ class Lk extends React.Component {
             <Div>
                 <Cell
                     size="l"
-                    description={this.state.user.status}
-                    bottomContent={this.state.user.isMaster && <CellButton
+                    description={this.props.master === null ? 'Пользователь' : 'Авторизованный мастер'}
+                    bottomContent={this.props.master !== null && <CellButton
                         onClick={this.props.openSetting}
                         before={<Icon24Write />}
                     >Редактировать</CellButton>}
-                    before={<Avatar src={this.state.user.avatarLink} size={80}/>}
+                    before={<Avatar src={this.props.user.avatarLink} size={80}/>}
                 >
-                    {this.state.user.firstname+' '+this.state.user.lastname}
+                    {this.props.user.firstname+' '+this.props.user.lastname}
                 </Cell>
-                {this.state.user.isMaster && this.checkModeration()}
+                {this.props.master !== null && this.checkModeration()}
                     <Group title="Основное" separator={'hide'}>
                         <Separator style={{ margin: '12px 0' }} />
                         <List>
@@ -99,7 +111,7 @@ class Lk extends React.Component {
                         /> :
                         null
                 }
-                {this.state.user.isMaster &&
+                {this.props.master !== null &&
                     <Group title="Меню мастера">
                     <Separator style={{ margin: '12px 0' }} />
                     <List>
@@ -133,4 +145,17 @@ class Lk extends React.Component {
     }
 }
 
-export default Lk;
+const putStateToProps = (state) => {
+    return {
+        user: state.user,
+        master: state.master
+    };
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(Lk);

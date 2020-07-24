@@ -7,24 +7,26 @@ import bridge from '@vkontakte/vk-bridge';
 import {createStore} from "redux";
 import {Provider} from "react-redux"
 import {rootReducer} from "./js/store/reducers";
+import {BACKEND} from "./js/func/func";
+require('dotenv').config();
+
 
 const store = createStore(rootReducer);
-
 bridge.send("VKWebAppInit", {});
 
-let linkParams =  window
-    .location
-    .hash
-    .replace('#','')
-    .split('&')
-    .reduce(
-        function(p,e){
-            let a = e.split('=');
-            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
-            return p;
-        },
-        {}
-    );
+// let linkParams =  window
+//     .location
+//     .hash
+//     .replace('#','')
+//     .split('&')
+//     .reduce(
+//         function(p,e){
+//             let a = e.split('=');
+//             p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+//             return p;
+//         },
+//         {}
+//     );
 let params = window
     .location
     .search
@@ -40,7 +42,7 @@ let params = window
     );
 
 ReactDOM.render(<Provider store={store}>
-                    <App linkParams={linkParams} params={params} />
+                    <App launchParams={params} />
                 </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

@@ -1,12 +1,11 @@
 import React from 'react';
 import {
-    Avatar, RichCell, Spinner, Placeholder, Card, Cell, CardGrid
+    Avatar, RichCell, Spinner, Placeholder, Card, CardGrid
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from "../func/func";
 import Icon56LikeOutline from '@vkontakte/icons/dist/56/like_outline';
 import Icon16Chevron from '@vkontakte/icons/dist/16/chevron';
-import Spin from '../elements/spinner'
 
 class Favourite extends React.Component {
     constructor(props) {

@@ -7,18 +7,32 @@ import {
     Avatar,
     Counter,
     Snackbar,
-    Spinner, Header, Card, CardGrid, CardScroll, Button, FormLayout, RichCell, CellButton, Placeholder
+    Spinner,
+    Header,
+    Card,
+    CardGrid,
+    CardScroll,
+    Button,
+    FormLayout,
+    RichCell,
+    CellButton,
+    Placeholder,
+    Panel,
+    SimpleCell
 } from "@vkontakte/vkui"
 import InputMask from 'react-input-mask';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
 import Icon16LikeOutline from '@vkontakte/icons/dist/16/like_outline';
 import {BACKEND} from '../func/func';
 import bridge from "@vkontakte/vk-bridge";
-import {patchData} from "../elements/functions";
+import {patchData, postData} from "../elements/functions";
 import {connect} from "react-redux";
 import Icon56GalleryOutline from '@vkontakte/icons/dist/56/gallery_outline';
 import Icon24Phone from '@vkontakte/icons/dist/24/phone';
 import Icon20UserOutline from '@vkontakte/icons/dist/20/user_outline';
+import Head from "../elements/panelHeader";
+import {bindActionCreators} from "redux";
+import {loginUser} from "../store/actions";
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -31,6 +45,7 @@ class MastersCard extends React.Component {
     }
 
     componentDidMount() {
+        //console.log(this.props.activeMaster);
        this.setState({activeMaster: this.props.activeMaster}, ()=> this.loadFavs())
        //  fetch(BACKEND.masters.onID + this.props.activeMasterId)
        //      .then(res => res.json())
@@ -52,16 +67,7 @@ class MastersCard extends React.Component {
 
     componentWillUnmount() {
         if (this.state.isChange){ //если были изменения пишем в бд при разрушении ДОМ дерева
-            patchData(BACKEND.users+'/'+this.state.user._id, this.state.user);
-            if (this.state.isFavourite === true) {
-                let count = {count: 1};
-                patchData(BACKEND.masters.subscribers+this.state.activeMaster._id, count);
-                //прибавляем счетчик мастера
-            } else {
-                let count = {count: -1};
-                patchData(BACKEND.masters.subscribers+this.state.activeMaster._id, count);
-                //убавляем счетчик
-            }
+            postData(BACKEND.users.like+this.state.activeMaster._id, this.props.params);
         }
     }
 
@@ -76,16 +82,42 @@ class MastersCard extends React.Component {
         }).then(data => console.log(data));
     }
 
+    sendMessage = () => {
+        let data = {
+            params: this.props.params,
+            title: this.state.sendtitle,
+            phone: this.state.phone
+        };
+        fetch(BACKEND.masters.connect+this.state.activeMaster._id, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
+        })
+            .then(res=>res.json())
+            .then(res=>{
+                this.openSnackAvatar('Мы уведомили мастера, что вы хотите с ним связаться. Ожидайте.', this.state.activeMaster.avatarLink)
+            })
+            .catch(e=>console.log(e));
+    };
+
     favStatus = () => {
         if(this.state.isFavourite === false) {
             return (
-                            <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
+                            <Div style={{float: 'right', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                                 <Icon16LikeOutline width={30} height={30} fill="red"/>
                             </Div>
             )
         } else {
             return (
-                    <Div style={{float: 'left', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
+                    <Div style={{float: 'right', padding: 0, marginRight: 20}} onClick={this.checkFavs}>
                         <Icon16Like width={30} height={30} fill="red"/>
                     </Div>
             )
@@ -135,7 +167,8 @@ class MastersCard extends React.Component {
         if (this.state.isFavourite === false) {
             let user = this.props.user;
             user.favs.push(this.state.activeMaster._id);
-            this.setState({isFavourite: true, countFavs: this.state.countFavs+1, isChange: !this.state.isChange, user: user}, ()=>
+            this.props.loginUser(user);
+            this.setState({isFavourite: true, countFavs: this.state.countFavs+1, isChange: !this.state.isChange}, ()=>
                 this.openSnackAvatar('Мастер добавлен в список избранных.', this.state.activeMaster.avatarLink));
         } else {
             let user = this.props.user;
@@ -144,30 +177,13 @@ class MastersCard extends React.Component {
             if (index > -1) {
                 favs.splice(index, 1);
             } else favs.splice(0, index);
-            this.setState({isFavourite: false, countFavs: this.state.countFavs-1, isChange: !this.state.isChange, user: user}, ()=>
+            this.props.loginUser(user);
+            this.setState({isFavourite: false, countFavs: this.state.countFavs-1, isChange: !this.state.isChange}, ()=>
                 this.openSnackAvatar('Мастер удален из списка избранных.', this.state.activeMaster.avatarLink));
         }
 
     };
-    sendMessage = () => {
-        let message = "Привет! "+this.props.user.firstname+' '+this.props.user.lastname+' хочет записаться на '+this.state.sendtitle+'! Информация для связи: Телефон - +'+this.state.phone+', страница VK - http://vk.com/id'+this.props.user.vkUid;
-        let token = BACKEND.keyGroup;
-        bridge.send("VKWebAppCallAPIMethod", {
-            "method": "messages.send",
-            "params": {"random_id": Math.random(), "peer_id": "-193179174", "user_id": this.state.activeMaster.vkUid,"message": message, "v":"5.103", "access_token": token}})
-            .then(result => {
-                this.setState({ snackbar: null });
-                let mess = {
-                    userId: this.props.user._id,
-                    userVkUid: this.props.user.vkUid,
-                    masterId: this.state.activeMaster._id,
-                    masterVkUid: this.state.activeMaster.vkUid
-                };
-                this.postData(BACKEND.message, mess, 'POST');
-                this.openSnackAvatar('Мы уведомили мастера, что вы хотите с ним связаться. Ожидайте.', this.state.activeMaster.avatarLink);
-            })
-            .catch(e => console.log(e))
-    };
+
     getPhone = (title) => {
         this.setState({sendtitle: title});
         bridge.send("VKWebAppGetPhoneNumber", {"group_id": 193179174, "key": "dBuBKe1kFcdemzB"})
@@ -239,32 +255,57 @@ class MastersCard extends React.Component {
             )
         } else {
             return (
+                <Panel id="masterInfo">
+                    <Head
+                        title={'О мастере'}
+                        goBack={() => this.props.goBack()}
+                    />
                 <Div style={{padding: 0}}>
                     <Group title="">
-                        <Cell
-                            photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
-                            description={
-                                this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type
-                            }
-                            bottomContent={
-                                this.props.user.vkUid === this.state.activeMaster.vkUid
-                                    ?
-                                    <Cell before={<Icon20UserOutline />}>Да, это Вы</Cell>
-                                    :
-                                    <Cell>
-                                        {this.favStatus()}
-                                        <Button onClick={() => this.share()}>Поделиться</Button>
-                                    </Cell>
-                            }
+                        <RichCell
+                            disabled
                             before={<Avatar src={this.state.activeMaster.avatarLink} size={90}/>}
-                            size="l"
+                            bottom={
+                                    <Div style={{marginLeft: 10, padding: 0}}>
+                                                <Button onClick={() => this.share()}>Поделиться</Button>
+                                        {
+                                            this.props.user.vkUid === this.state.activeMaster.vkUid
+                                                ?
+                                                null
+                                                :
+                                                this.favStatus()
+                                        }
+                                    </Div>
+                            }
                         >
-                            {this.state.activeMaster.firstname} {this.state.activeMaster.lastname}
-                        </Cell>
+                            <SimpleCell description={this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type}>{this.state.activeMaster.firstname} {this.state.activeMaster.lastname}</SimpleCell>
+                        </RichCell>
+
+                        {/*<Cell*/}
+                        {/*    photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"*/}
+                        {/*    description={*/}
+                        {/*        this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type*/}
+                        {/*    }*/}
+                        {/*    bottomContent={*/}
+                        {/*        this.props.user.vkUid === this.state.activeMaster.vkUid*/}
+                        {/*            ?*/}
+                        {/*            {null}*/}
+                        {/*            :*/}
+                        {/*            <Cell>*/}
+                        {/*                {this.favStatus()}*/}
+                        {/*                <Button onClick={() => this.share()}>Поделиться</Button>*/}
+                        {/*            </Cell>*/}
+                        {/*    }*/}
+                        {/*    before={<Avatar src={this.state.activeMaster.avatarLink} size={90}/>}*/}
+                        {/*    size="l"*/}
+                        {/*>*/}
+                        {/*    {this.state.activeMaster.firstname} {this.state.activeMaster.lastname}*/}
+                        {/*</Cell>*/}
+
                         <Separator/>
                         <Cell
                             expandable
-                            onClick={() => this.props.openComments()} indicator={this.state.activeMaster.comments.length}
+                            onClick={() => this.props.openComments()} indicator={this.state.activeMaster.comments.filter(Boolean).length}
                             description={'Подписчиков: ' + this.state.countFavs}
                         >
                             Отзывы
@@ -348,6 +389,7 @@ class MastersCard extends React.Component {
                     </Group>
                     {this.state.snackbar}
                 </Div>
+                </Panel>
             )
         }
     }
@@ -355,8 +397,15 @@ class MastersCard extends React.Component {
 
 const putStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.user,
+        params: state.params
     };
 };
 
-export default connect(putStateToProps)(MastersCard);
+const putActionsToProps = (dispatch) => {
+    return {
+        loginUser: bindActionCreators(loginUser, dispatch)
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(MastersCard);

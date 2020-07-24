@@ -13,7 +13,7 @@ import {
     Input,
     CardGrid,
     Card,
-    ModalPage,
+    List,
     ModalPageHeader,
     ANDROID,
     PanelHeaderButton, IOS, ModalRoot, platform, withModalRootContext, Snackbar
@@ -50,7 +50,10 @@ class Setting extends React.Component {
             category: [],
             isLoad: false,
             isMaster: false,
-            snackbar: null
+            snackbar: null,
+            newProdTitle: '',
+            newProdBody: '',
+            newProdPrice: ''
         };
     }
 
@@ -69,6 +72,10 @@ class Setting extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.saveChanges()
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.targetCity !== this.props.targetCity){
             let master = this.state.master;
@@ -78,8 +85,10 @@ class Setting extends React.Component {
     }
 
     saveChanges = () => {
+        const master = this.state.master;
+        master.params = this.props.params;
+        this.patchData(BACKEND.masters.all + this.state.master._id, master);
         this.props.setMaster(this.state.master);
-        this.patchData(BACKEND.masters.all + this.state.master._id, this.state.master);
     };
 
     setActive(subcat){
@@ -133,10 +142,11 @@ class Setting extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(activeMaster), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
-            .then(response => {
-                this.props.modalBack();
+            .then(res => res.json())
+            .then(res => {
                 this.props.snackbar('Изменения сохранены');
-            }); // парсит JSON ответ в Javascript объект
+            })
+            .catch(e=>console.log(e.message))
     }
 
     visible = event => {
@@ -184,11 +194,11 @@ class Setting extends React.Component {
     saveProd = () => {
         try {
             if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
-            if (this.state.newProdTitle.length > 20) throw 'Название длинее 20-ти символов необходимо сократить';
+            if (this.state.newProdTitle.replace(/ +/g, ' ').trim().length > 20 || this.state.newProdTitle.replace(/ +/g, ' ').trim().length < 2) throw 'Недопустимая длина заголовка';
             if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
-            if (this.state.newProdBody.length > 250) throw 'Описание процедуры слишком длинное. Сейчас заполнено - '+this.state.newProdBody.length+" из "+250;
+            if (this.state.newProdBody.replace(/ +/g, ' ').trim().length > 250 || this.state.newProdBody.replace(/ +/g, ' ').trim().length < 5) throw 'Недопустимая длина описания';
             if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
-            if (this.state.newProdPrice.length > 5) throw 'Максимально допустимы 5-ти значные суммы';
+            if (this.state.newProdPrice.replace(/ +/g, ' ').trim().length > 5 || this.state.newProdPrice.replace(/ +/g, ' ').trim().length < 1) throw 'Недопустимая длина суммы';
             let master = this.state.master;
             master.priceList.push({
                 title: this.state.newProdTitle,
@@ -274,25 +284,7 @@ class Setting extends React.Component {
             return null
         } else {
                 return (
-                    <ModalRoot
-                        activeModal={this.props.activeModal}
-                        onClose={this.saveChanges}
-                    >
-                        <ModalPage dynamicContentHeight
-                                   id={'setting'}
-                                   onClose={this.saveChanges}
-                                   header={
-                                       <ModalPageHeader
-                                           left={osname === ANDROID &&
-                                           <PanelHeaderButton onClick={this.saveChanges}>{'Сохранить'}</PanelHeaderButton>}
-                                           right={<PanelHeaderButton onClick={this.saveChanges}>{osname === IOS ? 'Сохранить' :
-                                               <Icon24Done/>}</PanelHeaderButton>}
-                                       >
-                                           Настройки
-                                       </ModalPageHeader>
-                                   }
-                        >
-                            <Div>
+                    <Div>
                                 <Cell
                                     size="l"
                                     description={
@@ -318,9 +310,8 @@ class Setting extends React.Component {
                                     }
                                     <CardGrid>
                                         {this.state.master.priceList.map((item, index) => (
-                                            <Card size="l" mode="shadow">
+                                            <Card size="l" mode="shadow" key={index}>
                                                 <Cell
-                                                    key={item}
                                                     multiline
                                                     //onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
                                                     //removable
@@ -347,25 +338,36 @@ class Setting extends React.Component {
                                     {this.state.add &&
                                     <Div>
                                         <Cell description="Добавления нового элемента" multiline>
-                                            <Input
-                                                require
-                                                name="newProdTitle"
-                                                type="text"
-                                                value={this.state.newProdTitle}
-                                                placeholder={'Введите название'}
-                                                onChange={this.handleChange}/>
-                                            <Textarea
-                                                require
-                                                name="newProdBody"
-                                                value={this.state.newProdBody}
-                                                placeholder={'Укажите описание'}
-                                                onChange={this.handleChange}/>
-                                            <Input
-                                                require
-                                                name="newProdPrice"
-                                                type="number" value={this.state.newProdPrice}
-                                                placeholder={'Укажите цену'}
-                                                onChange={this.handleChange}/>
+                                            <List>
+                                                <Cell description={this.state.newProdTitle.replace(/ +/g, ' ').trim().length+"/20"}>
+                                                    <Input
+                                                        require
+                                                        status={this.state.newProdTitle.replace(/ +/g, ' ').trim().length <= 20 ? 'valid' : 'error'}
+                                                        name="newProdTitle"
+                                                        type="text"
+                                                        value={this.state.newProdTitle}
+                                                        placeholder={'Введите название'}
+                                                        onChange={this.handleChange}/>
+                                                </Cell>
+                                                <Cell description={this.state.newProdBody.replace(/ +/g, ' ').trim().length+"/250"}>
+                                                    <Textarea
+                                                        require
+                                                        status={this.state.newProdBody.replace(/ +/g, ' ').trim().length <= 250 ? 'valid' : 'error'}
+                                                        name="newProdBody"
+                                                        value={this.state.newProdBody}
+                                                        placeholder={'Укажите описание'}
+                                                        onChange={this.handleChange}/>
+                                                </Cell>
+                                                <Cell description={this.state.newProdPrice.replace(/ +/g, ' ').trim().length+"/5"}>
+                                                    <Input
+                                                        require
+                                                        status={this.state.newProdPrice.replace(/ +/g, ' ').trim().length <= 5 ? 'valid' : 'error'}
+                                                        name="newProdPrice"
+                                                        type="number" value={this.state.newProdPrice}
+                                                        placeholder={'Укажите цену'}
+                                                        onChange={this.handleChange}/>
+                                                </Cell>
+                                            </List>
                                         </Cell>
                                         <Div style={{display: 'flex'}}>
                                             <Button size="l" stretched style={{marginRight: 8}}
@@ -433,28 +435,8 @@ class Setting extends React.Component {
                                         }
                                     </FormLayoutGroup>
                                 </Group>
+                        {this.state.snackbar}
                             </Div>
-                            {this.state.snackbar}
-                        </ModalPage>
-                        <ModalPage dynamicContentHeight
-                                   id={'changeCity'}
-                                   onClose={() => this.props.changeModal('setting')}
-                                   header={
-                                       <ModalPageHeader
-                                           left={osname === ANDROID &&
-                                           <PanelHeaderButton onClick={() => this.props.changeModal('setting')}>{'Назад'}</PanelHeaderButton>}
-                                           right={<PanelHeaderButton onClick={() => this.props.changeModal('setting')}>{osname === IOS ? 'Назад' :
-                                               <Icon24Done/>}</PanelHeaderButton>}
-                                       >
-                                           Выбор города
-                                       </ModalPageHeader>
-                                   }
-                        >
-                            <CityListModal dynamicContentHeight
-                                           changeTargetCity={(city) => this.changeCity(city)}
-                            />
-                        </ModalPage>
-                    </ModalRoot>
                 )
 
         }
@@ -466,7 +448,8 @@ const putStateToProps = (state) => {
     return {
         targetCity: state.targetCity,
         user: state.user,
-        master: state.master
+        master: state.master,
+        params: state.params
     };
 };
 

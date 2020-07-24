@@ -10,7 +10,6 @@ export default class MastersList extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.mastersList);
         this.setTitle(this.props.mastersList.length);
         try {
             if (this.props.city === 'Не выбрано') throw 'Нет города';
@@ -42,9 +41,10 @@ export default class MastersList extends React.Component {
 
     renderMasters() {
         return this.props.mastersList.map(master => {
-            let ratingArr = master.comments.map(comment => {
-                return Number(comment.rating)
+            let ratingArrNew = master.comments.map(comment => {
+                if (comment !== null) return Number(comment.rating)
             });
+            let ratingArr = ratingArrNew.filter(Boolean);
             let sum = ratingArr.reduce((a, b) => a + b, 0);
             let rating = sum / ratingArr.length;
             return (
@@ -62,7 +62,7 @@ export default class MastersList extends React.Component {
                               }
                               before={<Avatar src={master.avatarLink} size={70}/>}
                               size="l"
-                              onClick={() => this.props.openPanelMaster('masterInfo',master)}
+                              onClick={() => this.props.openPanelMaster(master)}
                         >{master.firstname} {master.lastname}
                         </Cell>
                     </Card>

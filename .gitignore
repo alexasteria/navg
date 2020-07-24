@@ -6,6 +6,7 @@
 .pnp.js
 /src/js/func/func.js
 /src/stat.js
+.env
 
 # testing
 /coverage

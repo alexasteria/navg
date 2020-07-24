@@ -1,5 +1,3 @@
-import React from "react";
-
 function postData(url = '', data = {}) {
     fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -14,6 +12,7 @@ function postData(url = '', data = {}) {
         body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
     })
         .then(res => res.json())
+        .catch(e=>console.log(e));
 }
 
 function patchData(url = '', data = {}) {

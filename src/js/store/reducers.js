@@ -9,11 +9,15 @@ export const ACTION_CHANGE_ACTIVE_MASTER_ON_FINDMODELS = 'ACTION_CHANGE_ACTIVE_M
 export const ACTION_CHANGE_ACTIVE_MASTER_ON_FAVS = 'ACTION_CHANGE_ACTIVE_MASTER_ON_FAVS';
 export const LOGIN_USER = 'LOGIN_USER';
 export const SET_MASTER = 'SET_MASTER';
+export const SET_LAUNCH_PARAMS = 'SET_LAUNCH_PARAMS';
+export const GO_TO = 'GO_TO';
+export const GO_FORWARD = 'GO_FORWARD';
+export const CHANGE_STORY = 'CHANGE_STORY';
 
 const initialState = {
     loginStatus: false,
     user: {},
-    master: {},
+    master: null,
     mastersList: [],
     mastersListScroll: 0,
     targetCategory: '',
@@ -22,7 +26,17 @@ const initialState = {
     findModelsListScroll: 0,
     activeMasterOnMasters: {},
     activeMasterOnFindModels: {},
-    activeMasterOnFavs: {}
+    activeMasterOnFavs: {},
+    params: null,
+    activePanelnews: 'news',
+    activePanelmasters: 'mastersList',
+    activePanelfindmodel: 'findmodel',
+    activePanellk: 'lk',
+    newsHistory: ['news'],
+    mastersHistory: ['mastersList'],
+    findmodelHistory: ['findmodel'],
+    lkHistory: ['lk'],
+    activeStory: 'news'
 };
 
 export const rootReducer = (state = initialState, action) => {
@@ -54,6 +68,18 @@ export const rootReducer = (state = initialState, action) => {
             return {...state, activeMasterOnFindModels: action.payload};
         case ACTION_CHANGE_ACTIVE_MASTER_ON_FAVS:
             return {...state, activeMasterOnFavs: action.payload};
+        case SET_LAUNCH_PARAMS:
+            return {...state, params: action.payload};
+        case GO_TO:
+            const history = state[action.payload.story+'History'];
+            history.push(action.payload.panel);
+            return {...state, ['activePanel'+action.payload.story]: action.payload.panel, [action.payload.story+'History']: history};
+        case GO_FORWARD:
+            let newhistory = state[action.payload.story+'History'];
+            newhistory.pop();
+            return {...state, [action.payload.story+'History']: newhistory, ['activePanel'+action.payload.story]: newhistory[newhistory.length -1]};
+        case CHANGE_STORY:
+            return {...state, activeStory: action.payload}
     }
     return state;
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import HeadCity from "../elements/headCity";
-import {PanelHeader, SelectMimicry, Spinner, Div} from "@vkontakte/vkui";
+import {PanelHeader, SelectMimicry, Spinner, Div, Panel, View} from "@vkontakte/vkui";
 import MastersList from './mastersList';
 import ScrollSubcat from '../elements/scrollSubcat'
 import {BACKEND} from "../func/func";
@@ -95,8 +95,9 @@ class Masters extends React.Component{
     render() {
         const {targetCategory, user} = this.props;
             return (
-                <React.Fragment>
+                <Panel id="mastersList">
                     <PanelHeader>Мастера</PanelHeader>
+                <React.Fragment>
                     <HeadCity changeCity={()=>this.props.changeCity()}/>
                     <Div>
                         <SelectMimicry
@@ -129,6 +130,8 @@ class Masters extends React.Component{
                             <Spinner size="large" style={{ marginTop: 20 }} />
                     }
                 </React.Fragment>
+                    {this.props.snackbar}
+                </Panel>
             )
     }
 }

@@ -9,12 +9,9 @@ import {
     Textarea,
     Spinner,
     Separator,
-    Slider,
-    Counter, FormLayout, Snackbar, FormLayoutGroup, Banner
+    FormLayout, Snackbar, FormLayoutGroup
 } from "@vkontakte/vkui"
-import Icon24Add from '@vkontakte/icons/dist/24/add';
 import {BACKEND} from "../func/func";
-import bridge from "@vkontakte/vk-bridge";
 import Icon24CommentOutline from '@vkontakte/icons/dist/24/comment_outline';
 import {connect} from "react-redux";
 import Icon24FavoriteOutline from '@vkontakte/icons/dist/24/favorite_outline';
@@ -34,12 +31,18 @@ class MastersComments extends React.Component {
     componentDidMount() {
         this.changeStars();
         this.props.activeMaster.comments.map(comment => {
-            if (comment.user.userId === this.props.user._id) {
+            if (comment !== null && comment.user === this.props.user._id) {
                 this.setState({isCommended: true})
             }
         });
         let count = this.props.activeMaster.comments.length;
-        this.setState({commentsArr: this.props.activeMaster.comments, countComments: count, isLoad: true});
+        fetch(BACKEND.comment.onMasterId+this.props.activeMaster._id)
+            .then(res=>res.json())
+            .then(res=>{
+                console.log(res);
+                this.setState({commentsArr: res, countComments: count, isLoad: true});
+            })
+            .catch(e=>console.log(e));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -63,22 +66,15 @@ class MastersComments extends React.Component {
     sendComment = () => {
         try {
             if (this.state.rating === 0) throw 'Укажите оценку работы мастера';
-            if (this.state.body.length < 20) throw 'Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.';
-            if (this.state.body.length > 100) throw 'Длина отзыва ограничена 100 символами.';
+            if (this.state.body.replace(/ /g, "").length < 20) throw 'Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.';
+            if (this.state.body.replace(/ /g, "").length > 100) throw 'Длина отзыва ограничена 100 символами.';
             let comment = {
-                user: {
-                    userId: this.props.user._id,
-                    firstname: this.props.user.firstname,
-                    lastname: this.props.user.lastname,
-                    avatarLink: this.props.user.avatarLink
-                },
                 rating: Number(this.state.rating),
                 body: this.state.body,
-                moderation: false
+                moderation: false,
+                params: this.props.params
             };
-            console.log(comment);
             this.postData(BACKEND.comment.new+this.props.activeMaster._id, comment, 'POST');
-            this.setState({isCommended: true});
         } catch (e) {
             console.log(e);
             this.setState({ snackbar:
@@ -106,21 +102,27 @@ class MastersComments extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
-            .then(response => {
-                console.log(response.json());
+            .then(res => res.json())
+            .then(data=>{
                 let arr = this.state.commentsArr;
                 data.date = "Комментарий отправлен на проверку";
                 arr.push(data);
-                this.setState({commentsArr: arr});
-                this.setState({ snackbar:
+                this.setState({commentsArr: arr, isCommended: true, snackbar:
                         <Snackbar
                             layout="vertical"
                             onClose={() => this.setState({ snackbar: null })}
                         >
                             Комментарий отправлен на модерацию. После проверки он появится в профиле мастера.
-                        </Snackbar>
-                });
-            }); // парсит JSON ответ в Javascript объект
+                        </Snackbar>});
+            })
+            .catch(e=>this.setState({ snackbar:
+                    <Snackbar
+                        layout="vertical"
+                        onClose={() => this.setState({ snackbar: null })}
+                    >
+                        {e.message}
+                    </Snackbar>
+            }));
     }
     getDate(comDate) {
         if (comDate === "Комментарий отправлен на проверку") {
@@ -206,7 +208,7 @@ class MastersComments extends React.Component {
                         <Textarea
                             name={'body'}
                             value={this.state.body}
-                            bottom={this.state.body.length > 20 ? '' : 'Опишите подробнее. Отзыв должен состоять от 20 до 100 символов. Сейчас '+this.state.body.replace(/ /g, "").length+' из 100.' }
+                            bottom={this.state.body.replace(/ /g, "").length > 20 ? '' : 'Опишите подробнее. Отзыв должен состоять от 20 до 100 символов. Сейчас '+this.state.body.replace(/ /g, "").length+' из 100.' }
                             top={"Добавление отзыва"}
                             placeholder="Опишите, что вам понравилось или не понравилось в работе мастера"
                             onChange={this.handleChange}
@@ -239,7 +241,8 @@ class MastersComments extends React.Component {
 
 const putStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.user,
+        params: state.params
     };
 };
 

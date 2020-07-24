@@ -3,14 +3,13 @@ import {Group, Div, File, FormLayout, CardGrid, Card, Snackbar, Cell, PanelSpinn
 import {BACKEND} from '../func/func.js';
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 import bridge from '@vkontakte/vk-bridge';
-import Spin from '../elements/spinner'
 import fetchJsonp from "fetch-jsonp";
+import {connect} from "react-redux";
 
-class MastersCard extends React.Component {
+class Portfolio extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeMasterId: this.props.activeMasterId,
             activeMaster: {},
             photoArr: [],
             isLoad: false,
@@ -19,16 +18,9 @@ class MastersCard extends React.Component {
         };
     }
     componentDidMount() {
-        fetch(BACKEND.masters.vkuid + this.props.user.vkUid)
-            .then(res => res.json())
-            .then(activeMaster => {
-               this.setState({activeMaster: activeMaster[0], images: activeMaster[0].photos.reverse(), isLoad: true});
-            });
+        this.setState({images: this.props.master.photos.reverse(), isLoad: true});
     }
     openSnack (text) {
-        const blueBackground = {
-            backgroundColor: 'var(--accent)'
-        };
         if (this.state.snackbar) return;
         this.setState({ snackbar:
                 <Snackbar
@@ -46,61 +38,67 @@ class MastersCard extends React.Component {
         }).then(data => console.log(data));
     }
     uploadPhoto = () =>{
-        this.setState({loading: true});
-        const formData = new FormData();
-        let selectedFile = document.getElementById('input').files[0];
-        formData.append('master', this.state.activeMaster.firstname+' '+this.state.activeMaster.lastname );
-        formData.append('uploadUrl', this.state.uploadUrl);
-        formData.append('token', this.state.token);
-        formData.append('file1', selectedFile);
-        fetch(BACKEND.vkapi.uploadPhoto, {
+        try {
+            if (this.state.uploadUrl === undefined) throw 'Ошибка. Не получена ссылка на загрузку фото.';
+            if (this.state.token === undefined) throw 'Ошибка. Не получен токен пользователя.';
+            this.setState({loading: true});
+            const formData = new FormData();
+            let selectedFile = document.getElementById('input').files[0];
+            formData.append('master', this.props.master.firstname+' '+this.props.master.lastname );
+            formData.append('uploadUrl', this.state.uploadUrl);
+            formData.append('token', this.state.token);
+            formData.append('file1', selectedFile);
+            formData.append('masterId', this.props.master._id);
+            fetch(BACKEND.vkapi.uploadPhoto, {
                 method: 'POST',
                 body: formData
             })
                 .then(res => res.json())
-                .then(response => {
-                    this.openSnack(response.message);
-                    fetchJsonp(response.saveUrl, {
+                .then(res => {
+                    fetchJsonp(res.saveUrl, {
                         mode: 'no-cors',
                         method: 'GET'
                     })
                         .then(result => result.json())
-                        .then(result => {
-                            //console.log(result);
-                            let newImg = result.response[0].sizes[2].url;
-                            let imgArr = this.state.images;
-                            imgArr.unshift(newImg);
-                            this.setState({images: imgArr});
-                            let data = {
-                                masterId: this.state.activeMaster._id,
-                                newImg: newImg
-                            };
+                        .then(result =>{
+                        const savePh = {
+                            url: result.response[0].sizes[2].url,
+                            params: this.props.params
+                        };
                             fetch(BACKEND.vkapi.savePhoto, {
+                                method: 'POST', // *GET, POST, PUT, DELETE, etc.
                                 mode: 'cors', // no-cors, cors, *same-origin
                                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
                                 credentials: 'same-origin', // include, *same-origin, omit
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    // 'Content-Type': 'application/x-www-form-urlencoded',
                                 },
-                                method: 'POST',
-                                body: JSON.stringify(data),
                                 redirect: 'follow', // manual, *follow, error
                                 referrer: 'no-referrer', // no-referrer, *client
+                                body: JSON.stringify(savePh)
                             })
-                                .then(result => result.json())
-                                .then(result => {
-                                    this.openSnack(result.message);
-                                    this.setState({loading: false});
+                                .then(res => res.json())
+                                .then(res =>{
+                                    let imgArr = this.state.images;
+                                    imgArr.unshift(res.img);
+                                    this.openSnack('Фото успешно загружено');
+                                    this.setState({images: imgArr, loading: false});
                                 })
-                                .catch(error => this.openSnack(error))
-
-                            })
-                            .catch(error => this.openSnack(error))
+                                .catch(e=>console.log(e))
+                        })
+                        .catch(e=>console.log(e))
+                    // console.log(res);
+                    // let imgArr = this.state.images;
+                    // imgArr.unshift(res.img);
+                    // this.openSnack('Фото успешно загружено');
+                    // this.setState({images: imgArr, loading: false});
                 })
                 .catch(error => this.openSnack(error))
+        } catch(e){
+            this.openSnack(e);
+        }
 
-    }
+    };
     getUploadServer = (token) => {
         bridge.send("VKWebAppCallAPIMethod", {
             "method": "photos.getUploadServer",
@@ -156,6 +154,7 @@ class MastersCard extends React.Component {
                         this.state.loading ? <Div><Cell multiline>Подождите немного... Фотография сохраняется</Cell><PanelSpinner /></Div>: <Group title="">
                             <FormLayout>
                                 <File
+                                    accept="image/*"
                                     top="Добавьте фото в портфолио"
                                     before={<Icon24Camera />}
                                     size="l"
@@ -178,4 +177,18 @@ class MastersCard extends React.Component {
     }
 }
 
-export default MastersCard;
+const putStateToProps = (state) => {
+    return {
+        user: state.user,
+        master: state.master,
+        params: state.params
+    };
+};
+
+const putActionsToProps = (dispatch) => {
+    return {
+
+    };
+};
+
+export default connect(putStateToProps, putActionsToProps)(Portfolio);

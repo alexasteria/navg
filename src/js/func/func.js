@@ -1,8 +1,10 @@
-//const BACK_LINK = 'http://localhost:3030/';
-const BACK_LINK = 'https://mysterious-garden-57052.herokuapp.com/';
+const BACK_LINK = process.env.REACT_APP_BACK_LINK;
 
 export const BACKEND = {
-    users: BACK_LINK+'users',
+    users: {
+        auth: BACK_LINK+'users/auth/',
+        like: BACK_LINK+'users/like/'
+    },
     message: BACK_LINK+'users/message/',
     masters: {
         all: BACK_LINK+'masters/',
@@ -10,7 +12,8 @@ export const BACKEND = {
         category: BACK_LINK+'masters/category/',
         vkuid: BACK_LINK+'masters/vkuid/',
         subscribers: BACK_LINK+'masters/subscribe/',
-        onarrayid: BACK_LINK+'masters/onarrayid/'
+        onarrayid: BACK_LINK+'masters/onarrayid/',
+        connect: BACK_LINK+'masters/connect/'
     },
     favs: {
         new: BACK_LINK+'favs/',
@@ -30,7 +33,9 @@ export const BACKEND = {
     vkapi: {
         uploadPhoto: BACK_LINK+'vkapi/uploadPhoto/',
         savePhoto: BACK_LINK+'vkapi/savePhoto/',
-        savePhotoFindModels: BACK_LINK+'vkapi/savePhotoFindModels/'
+        savePhotoFindModels: BACK_LINK+'vkapi/savePhotoFindModels/',
+        getCities: BACK_LINK+'vkapi/getCities',
+        isMember: BACK_LINK+'vkapi/isMember'
     },
     category: {
         getAll: BACK_LINK+'category/'
@@ -39,7 +44,6 @@ export const BACKEND = {
         params: BACK_LINK+'logs/params/'
     },
     sendmessage: BACK_LINK+'sendmessage',
-    keyGroup: 'f663eda6fd8aa562fdfc872f13411acc87a73fe01a5d9b8de8c99557a1ecb9a34d9b0aaced498c8daecdf', //'17e5eb3d17e5eb3d17e5eb3dee17888047117e517e5eb3d4a4130ddab66ef8955df224b'
-    secretKey: 'eb8wUDGs1LQoSKPsIS9i',
-    moder: BACK_LINK+'masters/moderation'
+    moder: BACK_LINK+'masters/moderation/',
+    moderCom: BACK_LINK+'comment/moderation/',
 };
