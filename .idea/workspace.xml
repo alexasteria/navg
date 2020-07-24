@@ -3,32 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Для отката">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/cityListModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityListModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/panelHeader.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/panelHeader.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/scrollSubcat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/store/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/store/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/reducers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -571,7 +545,7 @@
       <workItem from="1595157797369" duration="195000" />
       <workItem from="1595158940968" duration="504000" />
       <workItem from="1595184001211" duration="417000" />
-      <workItem from="1595600629035" duration="20325000" />
+      <workItem from="1595600629035" duration="20429000" />
     </task>
     <task id="LOCAL-00051" summary="Комментарии, баг фикс интерфейса для 5s">
       <created>1586378089329</created>
