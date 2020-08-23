@@ -35,7 +35,9 @@ export const BACKEND = {
         savePhoto: BACK_LINK+'vkapi/savePhoto/',
         savePhotoFindModels: BACK_LINK+'vkapi/savePhotoFindModels/',
         getCities: BACK_LINK+'vkapi/getCities',
-        isMember: BACK_LINK+'vkapi/isMember'
+        isMember: BACK_LINK+'vkapi/isMember',
+        getAlbum: BACK_LINK+'vkapi/getAlbum',
+        delPhoto: BACK_LINK+'vkapi/delPhoto/',
     },
     category: {
         getAll: BACK_LINK+'category/'

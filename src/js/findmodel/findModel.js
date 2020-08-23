@@ -2,11 +2,12 @@ import React from 'react';
 import {BACKEND} from "../func/func";
 import FindList from './components/findList';
 import HeadCity from '../elements/headCity'
-import {Spinner} from '@vkontakte/vkui';
+import {Button, ConfigProvider, Footer, Panel, Placeholder, Spinner, View} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {changeFindModelsList, changeFindModelsListScroll,} from "../store/actions";
+import Icon56WifiOutline from '@vkontakte/icons/dist/56/wifi_outline';
 
 
 class FindModel extends React.Component {
@@ -22,7 +23,8 @@ class FindModel extends React.Component {
         } else {
             this.setState({findArr: this.props.findModelsList, isLoad: true}, ()=>{
                 if (this.props.findModelsListScroll){
-                    window.scrollTo(0, this.props.findModelsListScroll)
+                    //window.scrollTo(0, this.props.findModelsListScroll)
+                    bridge.send("VKWebAppScroll", {"top": this.props.findModelsListScroll, "speed": 600});
                 }
             })
         }
@@ -42,18 +44,37 @@ class FindModel extends React.Component {
             fetch(BACKEND.findModel.onCity+this.props.targetCity.id)//ловим обьявления по городу юзера
                 .then(res => res.json())
                 .then(find => {
-                    console.log(find);
                     this.props.changeFindModelsList(find);
                     this.setState({findArr: find, isLoad: true});
-                });
+                })
+                .catch(e=>this.setState({warnConnection: true}))
     };
 
     share = () => {
         bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938'})
-            .then(result => this.openSnackAvatar('Ссылка на приложение отправлена.', this.state.activeMaster.avatarLink))
+            .then(result => {
+                if (result.type === 'VKWebAppShareResult'){
+                    this.openSnackAvatar('Ссылка на приложение отправлена.', this.state.activeMaster.avatarLink)
+                }
+            })
     };
     render(){
-        if (this.state.isLoad === false){
+        if (this.state.warnConnection){
+            return (
+                <React.Fragment>
+                    <HeadCity changeCity={()=>this.props.changeCity()}/>
+                            <Placeholder
+                                stretched
+                                icon={<Icon56WifiOutline />}
+                                header={'Что-то не так!'}
+                                //action={<Button size="l" onClick={()=>this.auth(this.props.launchParams)}>Повторить</Button>}
+                            >
+                                Проверьте интернет-соединение.
+                            </Placeholder>
+                            {this.state.snackbar}
+                </React.Fragment>
+            )
+        } else if (this.state.isLoad === false){
             return (
                 <React.Fragment>
                     <HeadCity
@@ -74,6 +95,7 @@ class FindModel extends React.Component {
                         user={this.props.user}
                         openMasterOnId={this.props.openMasterOnId}
                     />
+                    <Footer/>
                 </React.Fragment>
             );
         }

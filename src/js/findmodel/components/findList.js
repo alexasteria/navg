@@ -44,7 +44,7 @@ export default function FindList(props){
                 header="Не расстраивайтесь"
                 action={<Button onClick={props.share} size="l">Поделиться</Button>}
             >
-                В данный момент в городе {props.user.location.city.title} нет поиска моделей. Мы расширяем базу мастеров, и скоро - предложения появятся.
+                В данный момент в городе {props.user.location.city.title} нет поиска моделей. Мы расширяем базу мастеров, и скоро предложения появятся.
                 Поделитесь приложением с мастерами, которых Вы знаете.
             </Placeholder>
         )

@@ -18,7 +18,7 @@ import {
     CellButton,
     Placeholder,
     Panel,
-    SimpleCell
+    SimpleCell, Input, ModalCard, ModalRoot, Caption
 } from "@vkontakte/vkui"
 import InputMask from 'react-input-mask';
 import Icon16Like from '@vkontakte/icons/dist/16/like';
@@ -32,7 +32,10 @@ import Icon24Phone from '@vkontakte/icons/dist/24/phone';
 import Icon20UserOutline from '@vkontakte/icons/dist/20/user_outline';
 import Head from "../elements/panelHeader";
 import {bindActionCreators} from "redux";
-import {loginUser} from "../store/actions";
+import {loginUser, changeMastersList, changeActiveMasterOnFindModels} from "../store/actions";
+import Icon56AccessibilityOutline from '@vkontakte/icons/dist/56/accessibility_outline';
+import Icon16Down from '@vkontakte/icons/dist/16/down';
+import Icon16Up from '@vkontakte/icons/dist/16/up';
 
 class MastersCard extends React.Component {
     constructor(props) {
@@ -40,13 +43,21 @@ class MastersCard extends React.Component {
         this.state = {
             isLoad: false,
             snackbar: null,
-            isChange: false
+            isChange: false,
+            activeMaster: {},
+            phone: ''
         };
+        this.handleChange = this.handleChange.bind(this);
     }
 
+
     componentDidMount() {
-        //console.log(this.props.activeMaster);
-       this.setState({activeMaster: this.props.activeMaster}, ()=> this.loadFavs())
+        window.scrollTo(0,0);
+        this.setState({activeMaster: this.props.activeMaster}, ()=> {
+           if (this.props.activeMaster !== null){
+               this.loadFavs()
+           }
+       })
        //  fetch(BACKEND.masters.onID + this.props.activeMasterId)
        //      .then(res => res.json())
        //      .then(master => {
@@ -66,13 +77,43 @@ class MastersCard extends React.Component {
     // }
 
     componentWillUnmount() {
+        //this.props.openModal(null);
         if (this.state.isChange){ //если были изменения пишем в бд при разрушении ДОМ дерева
+            let mastersList = this.props.mastersList;
+            let newMastersList = mastersList.map(master=>{
+                if (master._id === this.state.activeMaster._id){
+                    if (master.subscribers.includes(this.props.user._id)){
+                        master.subscribers = master.subscribers.filter(item => item !== this.props.user._id)
+                    } else {
+                        master.subscribers.push(this.props.user._id)
+                    }
+                    return master
+                } else {
+                    return master
+                }
+            });
+            this.props.changeMastersList(newMastersList);
+            if (this.props.activeMasterOnFindModels._id === this.state.activeMaster._id){
+                let master = this.props.activeMasterOnFindModels;
+                if (master.subscribers.includes(this.props.user._id)){
+                    master.subscribers = master.subscribers.filter(item => item !== this.props.user._id)
+                } else {
+                    master.subscribers.push(this.props.user._id)
+                }
+                this.props.changeActiveMasterOnFindModels(master);
+            }
             postData(BACKEND.users.like+this.state.activeMaster._id, this.props.params);
         }
     }
 
     handleChange = (event) => {
+
         this.setState({[event.target.name]: event.target.value});
+    };
+
+    changeNumber = (event) => {
+
+        this.setState({[event.target.name]: event.target.value}, this.openModal);
     };
 
     openShowImages(images, index) {
@@ -103,9 +144,18 @@ class MastersCard extends React.Component {
         })
             .then(res=>res.json())
             .then(res=>{
-                this.openSnackAvatar('Мы уведомили мастера, что вы хотите с ним связаться. Ожидайте.', this.state.activeMaster.avatarLink)
+                if (res.error){
+                    this.props.openModal(null)
+                    this.openSnackAvatar(res.error, this.state.activeMaster.avatarLink)
+                } else {
+                    this.props.openModal(null)
+                    this.openSnackAvatar('Мы уведомили мастера, что вы хотите с ним связаться. Ожидайте.', this.state.activeMaster.avatarLink)
+                }
             })
-            .catch(e=>console.log(e));
+            .catch(e=> {
+                this.props.openModal(null)
+                this.openSnackAvatar(e.message, this.state.activeMaster.avatarLink)
+            });
     };
 
     favStatus = () => {
@@ -125,23 +175,26 @@ class MastersCard extends React.Component {
     };
     connectStatus = (title) => {
         return (
-            <Button
+            <CellButton
                 before={<Icon24Phone/>}
-                onClick={() => this.getPhone(title)}
-                mode="outline"
-            >
-                Записаться
-            </Button>
+                onClick={() => this.enterNumber(title)}
+            >Записаться
+            </CellButton>
         )
     };
     share = () => {
-        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866#masterid='+this.state.activeMaster._id})
-            .then(result => this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink))
+        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938#masterid='+this.state.activeMaster._id})
+            .then(result => {
+                if (result.type === 'VKWebAppShareResult'){
+                    this.openSnackAvatar('Карточка мастера отправлена.', this.state.activeMaster.avatarLink)
+                }
+            });
     };
     openSnackAvatar (text, avatarLink) {
         if (this.state.snackbar) this.setState({snackbar: null});
         this.setState({ snackbar:
                 <Snackbar
+                    duration='3000'
                     layout="vertical"
                     onClose={() => this.setState({ snackbar: null })}
                     after={<Avatar src={avatarLink} size={32} />}
@@ -158,7 +211,7 @@ class MastersCard extends React.Component {
                 this.setState({isFavourite: false});
             }
         }
-        this.setState({countFavs: this.state.activeMaster.subscribers, isLoad: true});
+        this.setState({countFavs: this.state.activeMaster.subscribers.length, isLoad: true});
     };
     changeVisible = (index) => {
         this.setState({[index]: !this.state[index]})
@@ -184,49 +237,99 @@ class MastersCard extends React.Component {
 
     };
 
-    getPhone = (title) => {
-        this.setState({sendtitle: title});
-        bridge.send("VKWebAppGetPhoneNumber", {"group_id": 193179174, "key": "dBuBKe1kFcdemzB"})
+    getPhone = () => {
+       console.log('Запрашиваю номер');
+       bridge.send("VKWebAppGetPhoneNumber", {"group_id": 193179174, "key": "dBuBKe1kFcdemzB"})
             .then(result => {
-                this.setState({phone: result.phone_number});
-                this.enterNumber(result.phone_number)
+                this.setState({phone: result.phone_number}, ()=> this.openModal());
             })
             .catch(e => {
                 console.log(e);
-                if (e.error_data.error_reason==='User denied') {
-                    this.enterNumber()
-                }
+                this.openModal();
             })
     };
-    enterNumber = (number) => {
-        if (this.state.snackbar) return;
-        this.setState({ snackbar:
-                <Snackbar
-                    duration='99999999999999'
-                    layout="vertical"
-                    onClose={() => this.setState({ snackbar: null })}
-                >
-                    <h2>Укажите номер телефона</h2>
-                    <FormLayout>
-                    <Div className="FormField Input Input--center">
-                        <InputMask
-                            className="Input__el"
-                            mask="7 (999) 999-99-99"
-                            name='phone'
-                            type="text"
-                            defaultValue={number || ''}
-                            align="center"
-                            value={this.state.phone}
-                            onChange={this.handleChange}
-                        />
-                        <Div className="FormField__border"></Div>
-                    </Div>
-                    <p>Укажите номер телефона. Если мастер не сможет ответить прямо сейчас, он свяжется с вами.</p>
-                    <Button onClick={this.sendMessage}>Отправить</Button>
-                    </FormLayout>
-                </Snackbar>
-        });
+
+    enterNumber = async (title) => {
+        this.setState({sendtitle: title});
+        this.openModal()
     };
+
+    openModal = () => {
+        console.log('Открываю модалку')
+
+        this.props.openModal(
+            <ModalRoot
+                activeModal={'phoneNumber'}
+                onClose={()=>this.props.openModal(null)}
+            >
+                <ModalCard
+                    id={'phoneNumber'}
+                    onClose={() => this.props.openModal(null)}
+                    header="Укажите номер телефона"
+                    caption={
+                        <FormLayout>
+                            <Div className="FormField Input Input--center">
+                                <InputMask
+                                    className="Input__el"
+                                    //mask="7 (999) 999-99-99"
+                                    name="phone"
+                                    type="number"
+                                    //defaultValue={number || ''}
+                                    align="center"
+                                    value={this.state.phone}
+                                    onChange={this.changeNumber}
+                                />
+                                <Div className="FormField__border"></Div>
+                            </Div>
+                            {
+                                this.state.phone === '' &&
+                                <CellButton onClick={()=>{
+                                    this.getPhone();
+                                }}>Запросить номер</CellButton>
+                            }
+                            <p>Укажите номер телефона, начиная с 7 (в формате 7ХХХХХХХХХХ). Если мастер не сможет ответить прямо сейчас, он свяжется с вами.</p>
+                            <Button onClick={this.sendMessage}>Отправить</Button>
+                        </FormLayout>
+                    }
+                >
+
+                </ModalCard>
+            </ModalRoot>
+        )
+    }
+    // enterNumber = (number) => {
+    //     if (number){
+    //         this.setState({phone: number})
+    //     } else {
+    //         this.setState({phone: null})
+    //     }
+    //     this.setState({ snackbar:
+    //             <Snackbar
+    //                 duration='99999999999999'
+    //                 layout="vertical"
+    //                 onClose={() => this.setState({ snackbar: null })}
+    //             >
+    //                 <h2>Укажите номер телефона</h2>
+    //                 <FormLayout>
+    //                 <Div className="FormField Input Input--center">
+    //                     <InputMask
+    //                         className="Input__el"
+    //                         //mask="7 (999) 999-99-99"
+    //                         name="phone"
+    //                         type="number"
+    //                         //defaultValue={number || ''}
+    //                         align="center"
+    //                         value={this.state.phone}
+    //                         onChange={this.handleChange}
+    //                     />
+    //                     <Div className="FormField__border"></Div>
+    //                 </Div>
+    //                 <p>Укажите номер телефона начиная с 7 (в формате 7ХХХХХХХХХХ). Если мастер не сможет ответить прямо сейчас, он свяжется с вами.</p>
+    //                 <Button onClick={this.sendMessage}>Отправить</Button>
+    //                 </FormLayout>
+    //             </Snackbar>
+    //     });
+    // };
     postData(url = '', data = {}, method) {
         // Значения по умолчанию обозначены знаком *
         return fetch(url, {
@@ -242,16 +345,61 @@ class MastersCard extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
-            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+            .then(response => console.log('ok')); // парсит JSON ответ в Javascript объект
     }
     render(){
+        if (this.props.activeMaster === null){
+            return (
+                <Panel id="masterInfo">
+                    <Head
+                        title={'О мастере'}
+                        goBack={() => this.props.goBack()}
+                    />
+                    <Placeholder
+                        icon={<Icon56AccessibilityOutline />}
+                        header="Мы не знаем таких мастеров."
+                        //action={<Button size="l">На главную</Button>}
+                    >
+                        Мастер с таким идентификатором не найден.
+                    </Placeholder>
+                </Panel>
+            )
+        } else if (this.props.activeMaster.error){
+            return (
+                <Panel id="masterInfo">
+                    <Head
+                        title={'О мастере'}
+                        goBack={() => this.props.goBack()}
+                    />
+                    <Placeholder
+                        icon={<Icon56AccessibilityOutline />}
+                        header="Тут никого нет :)"
+                        //action={<Button size="l">На главную</Button>}
+                    >
+                        Мастер с таким идентификатором не найден.
+                    </Placeholder>
+                </Panel>
+            )
+        }
         if(this.state.isLoad===false){
             return (
                 <Spinner size="large" style={{ marginTop: 20 }} />
             )
         } if (this.state.activeMaster.visible === false) {
             return (
-                <Cell>Мастер скрыт</Cell>
+                <Panel id="masterInfo">
+                    <Head
+                        title={'О мастере'}
+                        goBack={() => this.props.goBack()}
+                    />
+                    <Placeholder
+                        icon={<Icon56AccessibilityOutline />}
+                        header="Тут никого нет :)"
+                        //action={<Button size="l">На главную</Button>}
+                    >
+                        Мастер предпочел скрыть свой профиль.
+                    </Placeholder>
+                </Panel>
             )
         } else {
             return (
@@ -260,64 +408,73 @@ class MastersCard extends React.Component {
                         title={'О мастере'}
                         goBack={() => this.props.goBack()}
                     />
-                <Div style={{padding: 0}}>
-                    <Group title="">
-                        <RichCell
-                            disabled
-                            before={<Avatar src={this.state.activeMaster.avatarLink} size={90}/>}
-                            bottom={
-                                    <Div style={{marginLeft: 10, padding: 0}}>
-                                                <Button onClick={() => this.share()}>Поделиться</Button>
-                                        {
-                                            this.props.user.vkUid === this.state.activeMaster.vkUid
-                                                ?
-                                                null
-                                                :
-                                                this.favStatus()
-                                        }
-                                    </Div>
-                            }
-                        >
-                            <SimpleCell description={this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type}>{this.state.activeMaster.firstname} {this.state.activeMaster.lastname}</SimpleCell>
-                        </RichCell>
-
-                        {/*<Cell*/}
-                        {/*    photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"*/}
-                        {/*    description={*/}
-                        {/*        this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type*/}
-                        {/*    }*/}
-                        {/*    bottomContent={*/}
-                        {/*        this.props.user.vkUid === this.state.activeMaster.vkUid*/}
-                        {/*            ?*/}
-                        {/*            {null}*/}
-                        {/*            :*/}
-                        {/*            <Cell>*/}
-                        {/*                {this.favStatus()}*/}
-                        {/*                <Button onClick={() => this.share()}>Поделиться</Button>*/}
-                        {/*            </Cell>*/}
-                        {/*    }*/}
+                <React.Fragment>
+                        {/*<RichCell*/}
+                        {/*    disabled*/}
+                        {/*    multiline*/}
                         {/*    before={<Avatar src={this.state.activeMaster.avatarLink} size={90}/>}*/}
-                        {/*    size="l"*/}
+                        {/*    bottom={*/}
+                        {/*            <React.Fragment style={{marginLeft: 10, padding: 0}}>*/}
+                        {/*                        <Button onClick={() => this.share()}>Поделиться</Button>*/}
+                        {/*                {*/}
+                        {/*                    this.props.user.vkUid === this.state.activeMaster.vkUid*/}
+                        {/*                        ?*/}
+                        {/*                        null*/}
+                        {/*                        :*/}
+                        {/*                        this.favStatus()*/}
+                        {/*                }*/}
+                        {/*            </React.Fragment>*/}
+                        {/*    }*/}
                         {/*>*/}
-                        {/*    {this.state.activeMaster.firstname} {this.state.activeMaster.lastname}*/}
-                        {/*</Cell>*/}
-
+                        {/*    <SimpleCell description={this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type}>{this.state.activeMaster.firstname} {this.state.activeMaster.lastname}</SimpleCell>*/}
+                        {/*</RichCell>*/}
+                        <Group separator={'hide'}>
+                            <CardGrid>
+                                <Card size="l">
+                                    <RichCell
+                                        disabled
+                                        multiline
+                                        before={<Avatar src={this.state.activeMaster.avatarLink} size={90}/>}
+                                        text={
+                                            <Caption level="2" weight="regular" style={{ marginBottom: 15 }}>
+                                                {this.state.activeMaster.type==='Организация' ? this.state.activeMaster.brand : this.state.activeMaster.type}
+                                            </Caption>
+                                        }
+                                        caption={
+                                            <React.Fragment>
+                                                <Button onClick={() => this.share()}>Поделиться</Button>
+                                                {
+                                                    this.props.user.vkUid === this.state.activeMaster.vkUid
+                                                        ?
+                                                        null
+                                                        :
+                                                        this.favStatus()
+                                                }
+                                            </React.Fragment>
+                                        }
+                                        //after={this.props.master !== null && <Icon24Write onClick={this.props.openSetting}/>}
+                                    >
+                                        {this.state.activeMaster.firstname} {this.state.activeMaster.lastname}
+                                    </RichCell>
+                                </Card>
+                            </CardGrid>
+                        </Group>
                         <Separator/>
-                        <Cell
-                            expandable
-                            onClick={() => this.props.openComments()} indicator={this.state.activeMaster.comments.filter(Boolean).length}
-                            description={'Подписчиков: ' + this.state.countFavs}
-                        >
-                            Отзывы
-                        </Cell>
-                        {/*{this.subscribers()}*/}
-                        {/*<Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>*/}
-                    </Group>
+                        <Group>
+                            <Cell
+                                expandable
+                                onClick={() => this.props.openComments()} indicator={this.state.activeMaster.meta.comments || 0}
+                                description={'Подписчиков: ' + this.state.countFavs}
+                            >
+                                Отзывы
+                            </Cell>
+                            {/*{this.subscribers()}*/}
+                            {/*<Cell><Counter mode="primary">Подписчиков: {this.state.countFavs}</Counter></Cell>*/}
+                        </Group>
                     <Group title="Портфолио">
                         {
                             this.state.activeMaster.photos.length > 0 ?
-                                <Div>
-                                    <Cell>Выполненые работы мастера</Cell>
+                                <Group header={<Header mode="secondary">Выполненые работы мастера</Header>}>
                                     <CardScroll>
                                         {
                                             this.state.activeMaster.photos.map((photoUrl, index) => {
@@ -329,7 +486,14 @@ class MastersCard extends React.Component {
                                                         key={index}
                                                         onClick={() => this.openShowImages(this.state.activeMaster.photos, index)}
                                                     >
-                                                        <div style={{width: 144, height: 96, backgroundImage: 'url('+photoUrl+')', backgroundSize: 'cover', borderRadius: 13}} />
+                                                        <div style={{
+                                                            width: 144,
+                                                            height: 96,
+                                                            backgroundImage: 'url('+photoUrl+')',
+                                                            backgroundSize: 'cover',
+                                                            backgroundPosition: 'center 35%',
+                                                            backgroundRepeat: 'no-repeat',
+                                                            borderRadius: 13}} />
                                                     </Card>
                                                 )
                                             })
@@ -341,44 +505,46 @@ class MastersCard extends React.Component {
                                         description={this.state.activeMaster.photos.length+' фото в портфолио'}
                                         indicator={this.state.activeMaster.photos.length}
                                     >Посмотреть сеткой</Cell>
-                                </Div> :
+                                </Group> :
                                 <Placeholder
                                     icon={<Icon56GalleryOutline />}
                                     header="Нет фотографий"
                                 ></Placeholder>
                         }
                     </Group>
-                    <Group separator="hide">
+                    <Group separator="hide" header={<Header mode="secondary">Запись к мастеру</Header>} description={'Выберите необходимую процедуру и нажмите на кнопку записи к мастеру. Мастер свяжется с Вами.'}>
                         {
                             this.state.activeMaster.priceList.map((item, index) => (
-                                    <Cell
-                                        key={index}
-                                        multiline
-                                        onClick={() => this.changeVisible(index)}
-                                    >
-                                        <CardGrid style={{padding: 0}}>
-                                            <Card size="l">
+                                    // <Cell
+                                    //     style={{borderRadius: '10px 10px 10px 10px'}}
+                                    //     key={index}
+                                    //     multiline
+                                    //     onClick={() => this.changeVisible(index)}
+                                    // >
+                                        <CardGrid key={index}>
+                                            <Card size="l" onClick={() => this.changeVisible(index)}>
                                                 <Cell
                                                     description={
-                                                        item.price !== '' ? 'От ' + item.price + " рублей" : 'Стоимость не указана'
+                                                        item.price !== '' ? 'От ' + item.price + " руб." : 'Стоимость не указана'
                                                     }
-                                                    expandable
-                                                    indicator="">
+                                                    asideContent={this.state[index] ? <Icon16Up /> : <Icon16Down />}
+                                                    indicator=""
+                                                >
                                                     {this.state.activeMaster.priceList[index].title}
                                                 </Cell>
                                                 {
                                                     this.state[index] &&
-                                                        <div>
-                                                            <Cell>{this.connectStatus(this.state.activeMaster.priceList[index].title)}</Cell>
+                                                        <React.Fragment>
                                                             <Cell description="Краткое описание процедуры"
                                                                   multiline>{this.state.activeMaster.priceList[index].body}
                                                             </Cell>
-                                                        </div>
+                                                            {this.connectStatus(this.state.activeMaster.priceList[index].title)}
+                                                        </React.Fragment>
                                                 }
                                                 <Separator></Separator>
                                             </Card>
                                         </CardGrid>
-                                    </Cell>
+                                    // </Cell>
                                 )
                             )}
                     </Group>
@@ -388,7 +554,7 @@ class MastersCard extends React.Component {
                         </Cell>
                     </Group>
                     {this.state.snackbar}
-                </Div>
+                </React.Fragment>
                 </Panel>
             )
         }
@@ -398,13 +564,17 @@ class MastersCard extends React.Component {
 const putStateToProps = (state) => {
     return {
         user: state.user,
-        params: state.params
+        params: state.params,
+        mastersList: state.mastersList,
+        activeMasterOnFindModels: state.activeMasterOnFindModels
     };
 };
 
 const putActionsToProps = (dispatch) => {
     return {
-        loginUser: bindActionCreators(loginUser, dispatch)
+        loginUser: bindActionCreators(loginUser, dispatch),
+        changeMastersList: bindActionCreators(changeMastersList, dispatch),
+        changeActiveMasterOnFindModels: bindActionCreators(changeActiveMasterOnFindModels, dispatch)
     };
 };
 

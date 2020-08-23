@@ -6,7 +6,7 @@ import {
     Select,
     Textarea,
     Separator,
-    CardGrid, Card, File, Snackbar, Spinner, Banner, Switch
+    CardGrid, Card, File, Snackbar, Spinner, Banner, Switch, Div, CardScroll, Placeholder, Footer
 } from "@vkontakte/vkui";
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 import {BACKEND} from "../func/func";
@@ -15,6 +15,7 @@ import fetchJsonp from "fetch-jsonp";
 import bridge from "@vkontakte/vk-bridge";
 import FindCard from "../findmodel/components/findCard";
 import {connect} from "react-redux";
+import Icon56GalleryOutline from '@vkontakte/icons/dist/56/gallery_outline';
 import Icon24DismissSubstract from '@vkontakte/icons/dist/24/dismiss_substract';
 
 
@@ -33,7 +34,8 @@ class FindModelMaster extends React.Component {
                 images: []
             },
             selectvalue: 'Укажите тип акции',
-            visible: true
+            visible: true,
+            targetImg: []
         };
     }
     componentDidMount() {
@@ -41,13 +43,36 @@ class FindModelMaster extends React.Component {
             .then(res => res.json())
             .then(find => {
                 if (find.length > 0) {
-                    console.log(find);
-                    this.setState({loadFind: find[0], body:find[0].body, visible:find[0].visible,  error: '', isLoaded: true, selectvalue: find[0].sale, isActive: true});
+                    let targetImg = [];
+                    find[0].images.map(photo=>{
+                        if (this.props.master.photos.includes(photo)) targetImg.push(photo)
+                    });
+                    this.setState({targetImg: targetImg, loadFind: find[0], body:find[0].body, visible:find[0].visible,  error: '', isLoaded: true, selectvalue: find[0].sale, isActive: true});
                 } else {
-                    let error = <Cell>У вас нет активных поисков</Cell>;
+                    let error = <Cell multiline>У Вас нет активных постов о поиске</Cell>;
                     this.setState({error: error, isLoaded: true});
                 }
             });
+    }
+
+    targetImg = (url) => {
+        try{
+            if (this.state.targetImg.includes(url)){
+                let targetImg = this.state.targetImg;
+                let index = targetImg.indexOf(url);
+                if (index > -1) {
+                    targetImg.splice(index, 1);
+                } else targetImg.splice(0, index);
+                this.setState({targetImg: targetImg});
+            } else {
+                let targetImg = this.state.targetImg;
+                if(targetImg.length >2) throw 'Выделить можно только 3 фотографии.';
+                targetImg.push(url);
+                this.setState({targetImg: targetImg});
+            }
+        }catch(e){
+            this.openSnack(e)
+        }
     }
 
     openSnack (text) {
@@ -72,25 +97,25 @@ class FindModelMaster extends React.Component {
     };
     save=()=>{
         try {
-            if(this.props.master.photos.length < 3) throw 'В портфолио должно быть не менее 3-х фотографий';
+            if (this.state.body.replace(/ +/g, ' ').trim().length === 0) throw 'Пустое сообщение недопустимо.';
+            if (this.state.body.replace(/ +/g, ' ').trim().length > 250) throw 'Максимальная длина сообщения - 250 символов.';
+            if(this.state.targetImg.length < 3) throw 'Необходимо выбрать 3 фотографии из портфолио.';
             if(this.state.selectvalue === 'Укажите тип акции') throw 'Вы не выбрали акцию. Размещение не акционных предложений недоступно.';
             if(this.state.selectvalue === '') throw 'Вы не выбрали акцию. Размещение не акционных предложений недоступно.';
-            if (this.state.body.length === 0) throw 'Пустое сообщение недопустимо';
-            let images = [];
-            this.props.master.photos.map((image,i)=> {
-                if (i < 3){
-                    images.push(image)
-                }
-            });
+            // let images = [];
+            // this.props.master.photos.map((image,i)=> {
+            //     if (i < 3){
+            //         images.push(image)
+            //     }
+            // });
             if (this.state.isActive === true) {
-                let find =this.state.loadFind;
+                let find = this.state.loadFind;
                 find.body = this.state.body;
-                find.images = images;
+                find.images = this.state.targetImg;
                 find.sale = this.state.selectvalue;
                 find.visible = this.state.visible;
                 find.params = this.props.params;
                 this.patchData(BACKEND.findModel.new+this.state.loadFind._id, find);
-                this.openSnack('Информация успешно обновлена.')
             } else {
                 let find =this.state.loadFind;
                 find.body = this.state.body;
@@ -99,7 +124,7 @@ class FindModelMaster extends React.Component {
                 // find.firstname = this.state.activeMaster.firstname;
                 // find.lastname = this.state.activeMaster.lastname;
                 // find.avatarLink = this.state.activeMaster.avatarLink;
-                find.images = images;
+                find.images = this.state.targetImg;
                 find.sale = this.state.selectvalue;
                 find.visible = this.state.visible;
                 find.params = this.props.params;
@@ -148,9 +173,12 @@ class FindModelMaster extends React.Component {
         })
             .then(response=>response.json()) // парсит JSON ответ в Javascript объект
             .then(result=>{
-                console.log(result);
+                this.openSnack('Информация успешно обновлена.')
             })
-            .catch(e=>console.log(e))
+            .catch(e=>{
+                this.openSnack('Не удалось обновить данные.');
+                console.log(e)
+            })
     }
     getDate(comDate) {
         if (comDate === 'Только что') {
@@ -185,7 +213,6 @@ class FindModelMaster extends React.Component {
         })
             .then(response=>response.json()) // парсит JSON ответ в Javascript объект
             .then(result=>{
-                console.log(result);
                 this.setState({loadFind: result, isActive: true})
             })
 
@@ -217,21 +244,51 @@ class FindModelMaster extends React.Component {
                                     value={this.state.body}
                                     onChange={this.handleChange}
                                 />
-                                <CardGrid>
-                                {
-                                    this.props.master.photos.length > 0 ?
-                                    this.props.master.photos.map((image,i)=>{
-                                        return (
-                                            <Card size='s' key={i}>
-                                                <div
-                                                    style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover'}}
-                                                >
-                                                </div>
-                                            </Card>
-                                        )
-                                    }) : 'У вас в портфолио нет фото, разместить объявление о поиске можно, имея в портфолио не менее 3-х фотографий'
-                                }
-                                </CardGrid>
+                                {/*<CardGrid>*/}
+                                    {
+                                        this.props.master.photos.length > 0 ?
+                                            <Div style={{webkitUserSelect: 'none', userSelect: 'none'}}>
+                                                <Cell>Выполненые работы мастера</Cell>
+                                                <CardScroll>
+                                                    {
+                                                        this.props.master.photos.map((photoUrl, index) => {
+                                                            return (
+                                                                <Card
+                                                                    style={{padding: 2, borderRadius: 13, margin: 0}}
+                                                                    size="s"
+                                                                    mode="shadow"
+                                                                    key={index}
+                                                                    onClick={() => this.targetImg(photoUrl)}
+                                                                >
+                                                                    {
+                                                                        this.state.targetImg.includes(photoUrl) ?
+                                                                        <div style={{width: 144, height: 96, backgroundImage: 'url('+photoUrl+')', backgroundSize: 'cover', borderRadius: 13}}><div style={{backgroundColor: 'grey', borderRadius: '13px 13px 0 0', textAlign: 'center'}}>Выбрано</div></div> :
+                                                                        <div style={{width: 144, height: 96, backgroundImage: 'url('+photoUrl+')', backgroundSize: 'cover', borderRadius: 13}} />
+                                                                    }
+                                                                </Card>
+                                                            )
+                                                        })
+                                                    }
+                                                </CardScroll>
+                                            </Div> :
+                                            <Cell multiline>У Вас в портфолио нет фото, разместить объявление о поиске можно, имея в портфолио не менее 3-х фотографий.</Cell>
+                                    }
+                                {/*{*/}
+                                {/*    this.props.master.photos.length > 0 ?*/}
+                                {/*    this.props.master.photos.map((image,i)=>{*/}
+                                {/*        if (i < 3){*/}
+                                {/*            return (*/}
+                                {/*                <Card size='s' key={i}>*/}
+                                {/*                    <div*/}
+                                {/*                        style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover'}}*/}
+                                {/*                    >*/}
+                                {/*                    </div>*/}
+                                {/*                </Card>*/}
+                                {/*            )*/}
+                                {/*        }*/}
+                                {/*    }) : 'У вас в портфолио нет фото, разместить объявление о поиске можно, имея в портфолио не менее 3-х фотографий'*/}
+                                {/*}*/}
+                                {/*</CardGrid>*/}
                                 <Select value={this.state.selectvalue} onChange={this.handleChangeSelect} top="Тип акции" placeholder="Выберите тип акции">
                                     <option value="Скидка 50%">Скидка 50%</option>
                                     <option value="Оплата за материалы">Оплата за материалы</option>
@@ -254,13 +311,17 @@ class FindModelMaster extends React.Component {
                             <Separator style={{ margin: '12px 0' }} />
                             {
                                 this.state.isActive &&
-                                <FindCard
-                                    date={this.getDate(this.state.loadFind.date)}
-                                    key={this.state.loadFind._id}
-                                    find={this.state.loadFind}
-                                    openMasterOnId={this.props.openMasterOnId}
-                                />
+                                <React.Fragment>
+                                    <Cell description={'Некликабельно'}>Ваш пост будет выглядеть так:</Cell>
+                                    <FindCard
+                                        date={this.getDate(this.state.loadFind.date)}
+                                        key={this.state.loadFind._id}
+                                        find={this.state.loadFind}
+                                        openMasterOnId={this.props.openMasterOnId}
+                                    />
+                                </React.Fragment>
                             }
+                            <Footer/>
                             {this.state.snackbar}
                 </React.Fragment>
             );

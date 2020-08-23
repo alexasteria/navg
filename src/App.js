@@ -8,14 +8,14 @@ import {
     Root,
     Tabbar,
     TabbarItem,
-    View, Snackbar, Avatar, Tabs, TabsItem, Separator, ConfigProvider, Spinner
+    View, Snackbar, Avatar, Tabs, TabsItem, Separator, ConfigProvider, Spinner, Button
 } from '@vkontakte/vkui';
-import Icon28Notifications from '@vkontakte/icons/dist/28/notification.js';
 import Icon28More from '@vkontakte/icons/dist/28/more.js';
 import '@vkontakte/vkui/dist/vkui.css';
 import Icon28FireOutline from '@vkontakte/icons/dist/28/fire_outline';
 import Icon28ServicesOutline from '@vkontakte/icons/dist/28/services_outline';
 import Icon16Done from '@vkontakte/icons/dist/16/done';
+import Icon28Search from '@vkontakte/icons/dist/28/search';
 import Head from './js/elements/panelHeader';
 import MasterCard from './js/masters/mastersCard.js';
 import MasterPhoto from './js/masters/mastersPhoto.js';
@@ -32,7 +32,7 @@ import Partners from "./js/lk/partners";
 import {BACKEND} from "./js/func/func";
 import CityList from './js/elements/cityList'
 import Moder from "./js/news/moder";
-//import bridge from "@vkontakte/vk-bridge-mock";
+import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
 import bridge from '@vkontakte/vk-bridge';
 import {patchData} from './js/elements/functions'
 import Masters from './js/masters/masters';
@@ -40,16 +40,18 @@ import CategoriesList from './js/elements/categoriesList'
 import Rules from './js/lk/rules';
 import {connect} from "react-redux";
 import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll, changeFindModelsList, changeFindModelsListScroll,
-    loginUser, setMaster, changeActiveMasterOnMasters, changeActiveMasterOnFindModels, changeActiveMasterOnFavs, changeLaunchParams, changeStory, goTo, goForward} from "./js/store/actions";
+    loginUser, setMaster, changeActiveMasterOnMasters, changeActiveMasterOnFindModels, changeActiveMasterOnFavs, changeLaunchParams, changeStory, goTo, goForward, changeActiveViewLk} from "./js/store/actions";
 import {bindActionCreators} from "redux";
 import HeadCity from "./js/elements/headCity";
+import Icon56WifiOutline from '@vkontakte/icons/dist/56/wifi_outline';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            popout: null,
+            popoutLk: null,
+            popoutInvite: null,
             activeStory: 'news',
             activePanelFindModels: 'findmodel',
             activePanelMasters: 'mastersList',
@@ -64,13 +66,24 @@ class App extends React.Component {
             modalHistory: [],
             targetCity: 'Не выбрано',
             activeTabLk: 'about',
-            scheme: "bright_light"
-
+            scheme: "bright_light",
+            warnConnection: false,
+            mastersModal: null,
+            findModal: null,
+            lkModal: null,
+            snackbarInvite: null
         };
         this.onStoryChange = this.onStoryChange.bind(this);
     }
 
     componentDidMount() {
+        bridge.subscribe(({ detail: { type, data }}) => {
+            if (type === 'VKWebAppUpdateConfig'){
+                this.setState({scheme: data.scheme});
+                if (data.scheme === 'space_gray') bridge.send("VKWebAppSetViewSettings", {"status_bar_style": "light"});
+                if (data.scheme === 'bright_light') bridge.send("VKWebAppSetViewSettings", {"status_bar_style": "dark"});
+            }
+        });
         if (this.props.launchParams.sign !== undefined) {
             this.setState({validLaunchParams: true});
             console.log('Параметры пришли');
@@ -80,11 +93,11 @@ class App extends React.Component {
             this.setState({validLaunchParams: false});
             this.openSnack('Ошибка. Не переданы параметры запуска.');
         }
-        bridge.subscribe(({ detail: { type, data }}) => {
-            if (type === 'VKWebAppUpdateConfig'){
-                this.setState({scheme: data.scheme});
-            }
-        });
+
+        if (this.props.linkParams.masterid){
+            this.openMasterOnId(this.props.linkParams.masterid);
+            this.props.changeStory('masters')
+        }
         window.onpopstate = () => {
             this.goBack(this.props.activeStory)
         };
@@ -103,6 +116,9 @@ class App extends React.Component {
         })
             .then(res => res.json())
             .then(data=>{
+                if (this.state.warnConnection === true){
+                    this.setState({warnConnection: false, snackbar: null});
+                }
                 this.setState({validLaunchParams: true});
                 this.props.loginUser(data.user);
                 if (data.master !== null){
@@ -111,8 +127,19 @@ class App extends React.Component {
             })
             .catch(e=>{
                 console.log(e);
-                this.openSnack('Ошибка подключения к серверу.')
-                this.setState({validLaunchParams: false});
+                this.setState({
+                    snackbar:
+                        <Snackbar
+                            duration='3000'
+                            layout="vertical"
+                            onClose={() => this.setState({snackbar: null})}
+                            before={<Icon24Dismiss/>}
+                        >
+                            Ошибка подключения к серверу. Страшно, очень страшно, мы не знаем что это такое, если бы мы знали что это такое, то мы бы знали, что это такое.
+                        </Snackbar>
+                });
+                //this.openSnack('Ошибка подключения к серверу. Страшно, очень страшно, мы не знаем что это такое, если бы мы знали что это такое, то мы бы знали, что это такое.');
+                this.setState({warnConnection: true});
             })
     };
 
@@ -124,10 +151,84 @@ class App extends React.Component {
         this.setState({
             snackbar:
                 <Snackbar
+                    duration='3000'
                     layout="vertical"
                     onClose={() => this.setState({snackbar: null})}
                     before={<Avatar size={24} style={blueBackground}><Icon16Done fill="#fff" width={14}
                                                                                  height={14}/></Avatar>}
+                >
+                    {text}
+                </Snackbar>
+        });
+    }
+
+    openSnackInvite(text) {
+        const blueBackground = {
+            backgroundColor: 'var(--accent)'
+        };
+        if (this.state.snackbarInvite) this.setState({snackbarInvite: null});
+        this.setState({
+            snackbarInvite:
+                <Snackbar
+                    duration='3000'
+                    layout="vertical"
+                    onClose={() => this.setState({snackbarInvite: null})}
+                    before={<Icon24Dismiss/>}
+                >
+                    {text}
+                </Snackbar>
+        });
+    }
+
+    openMasterOnId = (masterId) => {
+        fetch(BACKEND.masters.onID + masterId)
+            .then(res => res.json())
+            .then(master => {
+                if (master.error) master = null;
+                this.props.changeActiveMasterOnMasters(master);
+                this.goTo('masters', 'masterInfo');
+            });
+    };
+
+    openFindMasterOnId = (masterId) => {
+        fetch(BACKEND.masters.onID + masterId)
+            .then(res => res.json())
+            .then(master => {
+                this.props.changeActiveMasterOnFindModels(master);
+                this.goTo('findmodel', 'masterInfo');
+            });
+    };
+
+    openSnackLk(text) {
+        const blueBackground = {
+            backgroundColor: 'var(--accent)'
+        };
+        if (this.state.snackbarLk) this.setState({snackbarLk: null});
+        this.setState({
+            snackbarLk:
+                <Snackbar
+                    duration='3000'
+                    layout="vertical"
+                    onClose={() => this.setState({snackbarLk: null})}
+                    before={<Avatar size={24} style={blueBackground}><Icon16Done fill="#fff" width={14}
+                                                                                 height={14}/></Avatar>}
+                >
+                    {text}
+                </Snackbar>
+        });
+    }
+    openSnackLkDismiss(text) {
+        const blueBackground = {
+            backgroundColor: 'var(--accent)'
+        };
+        if (this.state.snackbarLk) this.setState({snackbarLk: null});
+        this.setState({
+            snackbarLk:
+                <Snackbar
+                    duration='3000'
+                    layout="vertical"
+                    onClose={() => this.setState({snackbarLk: null})}
+                    before={<Icon24Dismiss/>}
                 >
                     {text}
                 </Snackbar>
@@ -147,9 +248,12 @@ class App extends React.Component {
         })
             .then(res => res.json())
             .then(newMaster => {
-                this.props.setMaster(newMaster);
-                this.setState({activeViewLk: 'lk'});
-                this.openSnack('Ваш профиль отправлен на проверку. Не забудьте добавить фотографии в портфолио - так, шансы получить заказ намного выше.');
+                if (newMaster.error){
+                    this.openSnack(newMaster.error);
+                } else {
+                    this.props.setMaster(newMaster);
+                    this.goTo('lk', 'lk');
+                }
                 //this.sendMessage('Благодарим за регистрацию. Ваш профиль будет проходить модерацию в течении часа. Не забудьте добавить фотографии в портфолио в разделе Кабинет->Портфолио. Так же, при необходимости, в разделе Кабинет->Поиск модели - можно создать объявление о поиске модели для пополнения портфолио, либо акционных предложений.');
             })
         .catch(e=>{
@@ -159,31 +263,29 @@ class App extends React.Component {
         })
     };
 
-    openMasterOnLink = (masterId) => {
-        this.setState({activeMasterId: masterId,activeStory: 'masters',activeViewMasters: 'mastersList',activePanelMasters: 'masterInfo'});
-        console.log(masterId);
-    };
+    // openMasterOnLink = (masterId) => {
+    //     this.setState({activeMasterId: masterId,activeStory: 'masters',activeViewMasters: 'mastersList',activePanelMasters: 'masterInfo'});
+    // };
 
     goTo = (story, panel) => {
         window.history.pushState({panel: panel}, panel);
         this.props.goTo(story, panel)
         let hist = this.props[story+'History'];
-        console.log(hist);
     };
 
     goBack = (story) => {
+        console.log('до',this.props[story+'History']);
         if (this.props[story+'History'].length === 1){
             bridge.send('VKWebAppClose', {'status': 'sucsess'});
         } else {
             this.props.goForward(story)
             let hist = this.props[story+'History'];
-            console.log(hist);
+            console.log('после',this.props[story+'History']);
         }
     };
 
     activePanelMasters = (name) => {
         this.setState({activePanelMasters: name});
-        console.log(this.state.activePanelMasters);
     };
 
     openStory = (storyName) => {
@@ -203,7 +305,25 @@ class App extends React.Component {
 
     render() {
         const {user, loginStatus} = this.props;
-        if (this.state.validLaunchParams === false) {
+        if (this.state.warnConnection === true){
+            return (
+                <ConfigProvider scheme={this.state.scheme}>
+                    <View id='loading' activePanel="loading">
+                        <Panel id='loading'>
+                                      <Placeholder
+                                          stretched
+                                           icon={<Icon56WifiOutline />}
+                                          header={'Что-то не так!'}
+                                            action={<Button size="l" onClick={()=>this.auth(this.props.launchParams)}>Повторить авторизацию</Button>}
+                                        >
+                                            Проверьте интернет-соединение.
+                                        </Placeholder>
+                            {this.state.snackbar}
+                        </Panel>
+                    </View>
+                </ConfigProvider>
+            )
+        } else if (this.state.validLaunchParams === false) {
             return (
                 <ConfigProvider scheme={this.state.scheme}>
                     <View id="warn" activePanel="warn">
@@ -211,8 +331,9 @@ class App extends React.Component {
                             <Placeholder
                                 icon={<Spinner size="large" style={{ marginTop: 40 }} />}
                             >
-                                Все, беда. Кто-то лезет в параметры запуска :(
+                                Всё, беда! Вы все сломали :(
                             </Placeholder>
+                            {this.state.snackbar}
                         </Panel>
                     </View>
                 </ConfigProvider>
@@ -220,13 +341,17 @@ class App extends React.Component {
         } else if (loginStatus === false) {
             return (
                 <ConfigProvider scheme={this.state.scheme}>
-                    <Placeholder
-                        stretched
-                        icon={<Spinner size="large" style={{ marginTop: 40 }} />}
-                        header="Выполняется вход..."
-                    >Это может занять несколько секунд
-                        {this.state.snackbar}
-                    </Placeholder>
+                    <View id='loading' activePanel="loading">
+                        <Panel id='loading'>
+                            <Placeholder
+                                stretched
+                                icon={<Spinner size="large" style={{ marginTop: 40 }} />}
+                                header="Выполняется вход..."
+                            >Это может занять несколько секунд
+                                {this.state.snackbar}
+                            </Placeholder>
+                        </Panel>
+                    </View>
                 </ConfigProvider>
             )
       } else {
@@ -235,38 +360,65 @@ class App extends React.Component {
                 <Epic activeStory={this.props.activeStory} tabbar={
                     <Tabbar>
                         <TabbarItem
-                            onClick={()=>this.props.changeStory('news')}
+                            onClick={()=>{
+                                if (this.props.activeStory === 'news'){
+                                    this.goTo('news', 'news')
+                                } else {
+                                    this.props.changeStory('news');
+                                }
+                            }}
                             selected={this.props.activeStory === 'news'}
                             data-story="news"
                             text="Новости"
                         ><Icon28FireOutline/></TabbarItem>
                         <TabbarItem
-                            onClick={()=>this.props.changeStory('masters')}
+                            onClick={()=>{
+                                if (this.props.activeStory === 'masters'){
+                                    this.goTo('masters', 'mastersList')
+                                } else {
+                                    this.props.changeStory('masters');
+                                }
+                            }}
                             selected={this.props.activeStory === 'masters'}
                             data-story="masters"
                             text="Мастера"
                         ><Icon28ServicesOutline/></TabbarItem>
                         <TabbarItem
-                            onClick={()=>this.props.changeStory('findmodel')}
+                            onClick={()=>{
+                                if (this.props.activeStory === 'findmodel'){
+                                    this.goTo('findmodel', 'findmodel')
+                                } else {
+                                    this.props.changeStory('findmodel');
+                                }
+                            }}
                             selected={this.props.activeStory === 'findmodel'}
                             data-story="findmodel"
                             text="Ищу модель"
-                        ><Icon28Notifications/></TabbarItem>
+                        ><Icon28Search /></TabbarItem>
                         <TabbarItem
-                            onClick={()=>this.props.changeStory('lk')}
+                            onClick={()=>{
+                                this.setState({snackbarLk: null});
+                                if (this.props.activeStory === 'lk'){
+                                    this.goTo('lk', 'lk')
+                                } else {
+                                    this.props.changeStory('lk');
+                                }
+                            }}
                             selected={this.props.activeStory === 'lk'}
                             data-story="lk"
                             text="Кабинет"
                         ><Icon28More/></TabbarItem>
                     </Tabbar>
                 }>
-                    <View id="news" history={this.props.newsHistory} onSwipeBack={() => this.goBack('news')} activePanel={this.props.activePanelnews}>
+                    <View id="news" history={this.props.newsHistory} onSwipeBack={() => this.goBack('news')} activePanel={this.props.newsHistory[this.props.newsHistory.length -1]}>
                             <News
                                 id="news"
                                 params={this.props.params}
                                 openReg={()=>{
                                     this.props.changeStory('lk');
-                                    this.setState({activeViewLk: 'registration'})
+                                    this.goTo('lk', 'registration')
+                                    //this.props.changeStory('lk');
+                                    //this.props.changeActiveViewLk('registration');
                                 }}
                                 //openReg={() => this.setState({activeViewLk: 'registration', activeStory: 'lk'})}
                                 openStory={this.openStory}
@@ -294,23 +446,23 @@ class App extends React.Component {
                                 />
                             </Panel>
                     </View>
-                        <View id="masters" activePanel={this.props.activePanelmasters} history={this.props.mastersHistory} onSwipeBack={() => this.goBack('masters')}>
-                            <Masters
-                                id="mastersList"
-                                    //changeCity={()=>this.setState({activePanelMasters: 'changeCity'})}
-                                    changeCity={()=> this.goTo('masters', 'changeCity')}
-                                    openSnack={(title)=>this.openSnack(title)}
-                                    //changeCategory={()=>this.setState({activePanelMasters: 'masterCat'})}
-                                    changeCategory={()=>this.goTo('masters', 'masterCat')}
-                                    openPanelMaster={(master)=>{
-                                        this.props.changeActiveMasterOnMasters(master);
-                                        this.goTo('masters', 'masterInfo');
-                                    }}
-                                    snackbar={this.state.snackbar}
-                            />
+                        <View id="masters" modal={this.state.mastersModal} activePanel={this.props.mastersHistory[this.props.mastersHistory.length-1]} history={this.props.mastersHistory} onSwipeBack={() => this.goBack('masters')}>
+                                    <Masters
+                                            id="mastersList"
+                                            //changeCity={()=>this.setState({activePanelMasters: 'changeCity'})}
+                                            changeCity={()=> this.goTo('masters', 'changeCity')}
+                                            openSnack={(title)=>this.openSnack(title)}
+                                            //changeCategory={()=>this.setState({activePanelMasters: 'masterCat'})}
+                                            changeCategory={()=>this.goTo('masters', 'masterCat')}
+                                            openPanelMaster={(master)=>{
+                                                this.props.changeActiveMasterOnMasters(master);
+                                                this.goTo('masters', 'masterInfo');
+                                            }}
+                                            snackbar={this.state.snackbar}
+                                    />
                             <Panel id='changeCity'>
                                 <Head title={'Выбор города'}
-                                      goBack={() => this.props.goBack()}/>
+                                      goBack={() => this.goBack('masters')}/>
                                     <CityList
                                             id='changeCity'
                                             // goBack={() => this.setState({activePanelMasters: 'mastersList'})}
@@ -332,6 +484,9 @@ class App extends React.Component {
                                     openPhoto={() => this.goTo('masters', 'masterPhoto')}
                                     openComments={() => this.goTo('masters', 'masterComments')}
                                     activeMaster={this.props.activeMasterOnMasters}
+                                    openModal={(content)=>{
+                                        this.setState({mastersModal: content})
+                                    }}
                                     //activeMasterId={this.state.activeMasterId}
                                     //setActiveMaster={(master)=>this.setState({activeMaster: master})}
                                 />
@@ -378,29 +533,22 @@ class App extends React.Component {
                         </View>
                     <View
                         id="findmodel"
-                        activePanel={this.props.activePanelfindmodel}
+                        activePanel={this.props.findmodelHistory[this.props.findmodelHistory.length-1]}
                         history={this.props.findmodelHistory} onSwipeBack={() => this.goBack('findmodel')}
+                        modal={this.state.findModal}
                     >
                         <Panel id="findmodel">
-                            <PanelHeader>Ишу модель</PanelHeader>
+                            <PanelHeader>Ищу модель</PanelHeader>
                             <FindModel
                                 //openMasterOnId={(masterId)=>this.openMasterOnId(masterId)}
-                                openMasterOnId={(masterId)=>{
-                                    fetch(BACKEND.masters.onID + masterId)
-                                        .then(res => res.json())
-                                        .then(master => {
-                                            this.props.changeActiveMasterOnFindModels(master);
-                                            console.log(master);
-                                            this.goTo('findmodel', 'masterInfo')
-                                        });
-                                }}
+                                openMasterOnId={(masterId)=>this.openFindMasterOnId(masterId)}
                                 // changeCity={() => this.setState({activePanelFindModels: 'changeCity'})}
                                 changeCity={() => this.goTo('findmodel', 'changeCity')}
                             />
                         </Panel>
                         <Panel id='changeCity'>
                             <Head title={'Выбор города'}
-                                  goBack={() => this.props.goBack()}/>
+                                  goBack={() => this.goBack('findmodel')}/>
                         <CityList
                                 id='changeCity'
                                 goBack={() => this.goBack('findmodel')}
@@ -417,6 +565,9 @@ class App extends React.Component {
                                 openPhoto={() => this.goTo('findmodel', 'masterPhoto')}
                                 activeMaster={this.props.activeMasterOnFindModels}
                                 openComments={() => this.goTo('findmodel', 'masterComments')}
+                                openModal={(content)=>{
+                                    this.setState({findModal: content})
+                                }}
                                 //setActiveMaster={(master)=>this.setState({activeMaster: master})}
                             />
                         </Panel>
@@ -443,9 +594,8 @@ class App extends React.Component {
                             />
                         </Panel>
                     </View>
-
-                    <Root id="lk" activeView={this.state.activeViewLk}>
-                        <View id="lk" activePanel={this.props.activePanellk} history={this.props.lkHistory} onSwipeBack={() => this.goBack('lk')}>
+                    <Root id="lk" activeView={this.props.activeViewLk} modal={this.state.lkModal}>
+                            <View id="lk" popout={this.state.popoutLk} activePanel={this.props.lkHistory[this.props.lkHistory.length-1]} history={this.props.lkHistory} onSwipeBack={() => this.goBack('lk')}>
                             <Panel id="lk">
                                 <PanelHeader separator={false}>Кабинет</PanelHeader>
                                 <Tabs>
@@ -459,7 +609,7 @@ class App extends React.Component {
                                         onClick={() => this.setState({ activeTabLk: 'partners' })}
                                         selected={this.state.activeTabLk === 'partners'}
                                     >
-                                        Партнерам
+                                        Партнёрам
                                     </TabsItem>
                                 </Tabs>
                                 <Separator />
@@ -476,47 +626,56 @@ class App extends React.Component {
                                         /> :
                                         <Partners />
                                 }
-                                {this.state.snackbar}
+                                {this.state.snackbarLk}
                             </Panel>
                             <Panel id='setting'>
-                                <Head
-                                    title='Настройки'
-                                    goBack={() => this.goBack('lk')}
-                                />
                                 <Setting
-                                    snackbar={(message) => this.openSnack(message)}
+                                    setAlert={(alert) => this.setState({popoutLk: alert})}
+                                    snackbar={(message) => this.openSnackLk(message)}
+                                    snackbarDismiss={(message) => this.openSnackLkDismiss(message)}
                                     modalBack={this.modalBack}
                                     activeModal={this.state.activeModal}
-                                    changeModal={(name) => this.setActiveModal(name)}
+                                    changeCity={() => this.goTo('lk', 'changeCity')}
+                                    goBack={() => this.goBack('lk')}
+                                    snackbarLk={this.state.snackbarLk}
+                                />
+                            </Panel>
+                            <Panel id='changeCity'>
+                                <Head title={'Выбор города'}
+                                      goBack={() => this.goBack('lk')}/>
+                                <CityList
+                                    id='changeCity'
+                                    goBack={() => this.goBack('lk')}
+                                    changeCity={(city) => {
+                                        let master = this.props.master;
+                                        master.location.city = city;
+                                        master.changed = true;
+                                        this.props.setMaster(master);
+                                        this.goBack('lk')
+                                    }}
                                 />
                             </Panel>
                             <Panel id='favourite'>
-                                <Head
-                                    title='Избранное'
-                                    goBack={() => this.goBack('lk')}
-                                />
                                 <Favourite
                                     goBack={() => this.goBack('lk')}
                                     user={user}
-                                    openFavMasterOnId={(masterId)=>{
-                                        fetch(BACKEND.masters.onID + masterId)
-                                            .then(res => res.json())
-                                            .then(master => {
-                                                this.props.changeActiveMasterOnFavs(master);
-                                                this.goTo('lk', 'masterInfo')
-                                            });
+                                    openFavMasterOnId={(master)=>{
+                                        this.props.changeActiveMasterOnFavs(master);
+                                        this.goTo('lk', 'masterInfo');
                                     }}
                                 />
                             </Panel>
                             <Panel id="masterInfo">
                                 <MasterCard
-                                    id="masterInfo"
                                     goBack={() => this.goBack('lk')}
                                     openPhoto={() => this.goTo('lk', 'masterPhoto')}
                                     user={user}
                                     activeMaster={this.props.activeMasterOnFavs}
                                     openComments={() => this.goTo('lk', 'masterComments')}
                                     setActiveMaster={(master)=>this.setState({activeMaster: master})}
+                                    openModal={(content)=>{
+                                        this.setState({lkModal: content})
+                                    }}
                                 />
                             </Panel>
                             <Panel id="masterPhoto">
@@ -536,6 +695,7 @@ class App extends React.Component {
                                     goBack={() => this.goBack('lk')}
                                 />
                                 <Portfolio
+                                    setAlert={(alert) => this.setState({popoutLk: alert})}
                                     goBack={() => this.goBack('lk')}
                                     user={user}
                                 />
@@ -562,44 +722,52 @@ class App extends React.Component {
                                     user={user} popout={this.openAlert}
                                 />
                             </Panel>
+
+                                {/*reg*/}
+                                <Panel id='registration'>
+                                    <Head
+                                        title={'Регистрация'}
+                                        goBack={() => {
+                                            this.goBack('lk')
+                                            //this.props.changeActiveViewLk('lk')
+                                        } }
+                                    />
+                                    <Invite
+                                        setAlert={(alert) => this.setState({popoutLk: alert})}
+                                        goBack={() => this.props.changeActiveViewLk('lk')}
+                                        closeReg={this.closeReg}
+                                        changeCity={() => this.goTo('lk', 'changeCityReg')}
+                                        openRules={() => this.goTo('lk', 'rules')}
+                                        snackbar={(message) => this.openSnackInvite(message)}
+                                    />
+                                    {this.state.snackbarInvite}
+                                </Panel>
+                                <Panel id='rules'>
+                                    <Head
+                                        title='Соглашение'
+                                        goBack={() => this.goBack('lk')}
+                                    />
+                                    <Rules
+                                        goBack={() => this.goBack('lk')}
+                                    />
+                                </Panel>
+                                <Panel id='changeCityReg'>
+                                    <Head title={'Выбор города'}
+                                          goBack={() => this.goBack('lk')}/>
+                                    <CityList
+                                        id='changeCityReg'
+                                        goBack={() => this.goBack('lk')}
+                                        changeCity={(city) => {
+                                            this.changeTargetCity(city);
+                                            this.goBack('lk')
+                                        }}
+                                    />
+                                </Panel>
                         </View>
-                        <View activePanel={this.state.activePanelReg} id='registration'>
-                            <Panel id='registration'>
-                                <Head
-                                    title={'Регистрация'}
-                                    goBack={() => this.setState({activeViewLk: 'lk'})}
-                                />
-                                <Invite
-                                    goBack={() => this.setState({activeViewLk: 'lk'})}
-                                    closeReg={this.closeReg}
-                                    changeCity={() => this.setState({activePanelReg: 'changeCity'})}
-                                    openRules={() => this.setState({activePanelReg: 'rules'})}
-                                    snackbar={(message) => this.openSnack(message)}
-                                />
-                                {this.state.snackbar}
-                            </Panel>
-                            <Panel id='rules'>
-                                <Head
-                                    title='Соглашение'
-                                    goBack={() => this.setState({activePanelReg: 'registration'})}
-                                />
-                                <Rules
-                                    goBack={() => this.setState({activePanelReg: 'registration'})}
-                                />
-                            </Panel>
-                            <Panel id='changeCity'>
-                                <Head title={'Выбор города'}
-                                      goBack={() => this.props.goBack()}/>
-                            <CityList
-                                    id='changeCity'
-                                    goBack={() => this.setState({activePanelReg: 'registration'})}
-                                    changeCity={(city) => {
-                                    this.changeTargetCity(city);
-                                    this.setState({activePanelReg: 'registration'})
-                                }}
-                            />
-                            </Panel>
-                        </View>
+
+                        {/*<View activePanel={this.props.activePanelregistration} popout={this.state.popoutInvite} id='registration'>*/}
+                        {/*    */}
+                        {/*</View>*/}
                     </Root>
                 </Epic>
                 </ConfigProvider>
@@ -631,7 +799,10 @@ const putStateToProps = (state) => {
         newsHistory: state.newsHistory,
         mastersHistory: state.mastersHistory,
         findmodelHistory: state.findmodelHistory,
-        lkHistory: state.lkHistory
+        lkHistory: state.lkHistory,
+        activeViewLk: state.activeViewLk,
+        activePanelregistration: state.activePanelregistration,
+        registrationHistory: state.registrationHistory
     };
 };
 
@@ -651,7 +822,8 @@ const putActionsToProps = (dispatch) => {
         changeLaunchParams: bindActionCreators(changeLaunchParams, dispatch),
         changeStory: bindActionCreators(changeStory, dispatch),
         goTo: bindActionCreators(goTo, dispatch),
-        goForward: bindActionCreators(goForward, dispatch)
+        goForward: bindActionCreators(goForward, dispatch),
+        changeActiveViewLk: bindActionCreators(changeActiveViewLk, dispatch)
 
     };
 };

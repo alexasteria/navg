@@ -1,5 +1,19 @@
 import React from 'react';
-import {Div, Separator, CellButton, Avatar, Cell, List, Group, Banner, Button, Card} from "@vkontakte/vkui"
+import {
+    Div,
+    Separator,
+    CellButton,
+    Avatar,
+    Cell,
+    List,
+    Group,
+    Banner,
+    Button,
+    Card,
+    CardGrid,
+    RichCell,
+    Caption, PromoBanner, FixedLayout
+} from "@vkontakte/vkui"
 import Icon24Story from '@vkontakte/icons/dist/24/story';
 import Icon24Like from '@vkontakte/icons/dist/24/like';
 import Icon24Search from '@vkontakte/icons/dist/24/search';
@@ -17,32 +31,56 @@ class Lk extends React.Component {
             isUser: false,
             favsArr: [],
             mastersArr: [],
-            countFavs: 0
+            countFavs: 0,
+            promo: null
         };
     }
 
     componentDidMount() {
+        bridge.subscribe(e=>{
+            if (!e.detail) {
+                return;
+            }
 
+            const { type, data } = e.detail;
+
+            if (type === 'VKWebAppGetAdsResult') {
+                this.setState({promo: data})
+            }
+
+            if (type === 'VKWebAppGetAdsFailed') {
+                // Reading result of the Code Reader
+                console.log(data.error_data);
+                //this.setState({promo: data.error_data})
+            }
+        });
+        bridge.send("VKWebAppGetAds", {})
+            .then(data=>console.log('Ads'))
+            .catch(e=>console.log(e));
     }
 
     checkModeration = () => {
         if (this.props.master.moderation.status === false) {
             if (this.props.master.moderation.reasons.length > 0) {
                 return (
-                    <Card>
-                        <Cell description={'Их необходимо исправить'}>При модерации обнаружены ошибки:</Cell>
-                        {
-                            this.props.master.moderation.reasons.map((reason, index)=>{
-                                return <Cell key={index}>{reason}</Cell>
-                            })
-                        }
-                    </Card>
+                    <CardGrid>
+                        <Card size='xl'>
+                            <Cell description={'Их необходимо исправить'}>При модерации обнаружены ошибки:</Cell>
+                            {
+                                this.props.master.moderation.reasons.map((reason, index)=>{
+                                    return <Cell key={index}>{reason}</Cell>
+                                })
+                            }
+                        </Card>
+                    </CardGrid>
                 )
             } else {
                 return (
-                    <Card>
-                        <Cell multiline>Ваш профиль на проверке. В течении часа он будет доступен в поиске.</Cell>
-                    </Card>
+                    <CardGrid>
+                        <Card size='xl'>
+                            <Cell multiline>Ваш профиль на проверке. В течение суток он будет доступен в поиске.</Cell>
+                        </Card>
+                    </CardGrid>
                 )
             }
         }
@@ -63,7 +101,7 @@ class Lk extends React.Component {
             referrer: 'no-referrer', // no-referrer, *client
             body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
         })
-            .then(response => console.log(response.json())); // парсит JSON ответ в Javascript объект
+            .then(response => console.log('ok')); // парсит JSON ответ в Javascript объект
 
     }
 
@@ -73,21 +111,29 @@ class Lk extends React.Component {
 
     render(){
         return (
-            <Div>
-                <Cell
-                    size="l"
-                    description={this.props.master === null ? 'Пользователь' : 'Авторизованный мастер'}
-                    bottomContent={this.props.master !== null && <CellButton
-                        onClick={this.props.openSetting}
-                        before={<Icon24Write />}
-                    >Редактировать</CellButton>}
-                    before={<Avatar src={this.props.user.avatarLink} size={80}/>}
-                >
-                    {this.props.user.firstname+' '+this.props.user.lastname}
-                </Cell>
+            <React.Fragment>
+                <Group separator={'hide'}>
+                    <CardGrid>
+                        <Card size="l">
+                            <RichCell
+                                disabled
+                                multiline
+                                before={<Avatar src={this.props.user.avatarLink} size={62}/>}
+                                text={
+                                    <Caption level="2" weight="regular" style={{ marginBottom: 15 }}>
+                                        {this.props.master ? this.props.master.type : 'Пользователь'}
+                                    </Caption>
+                                }
+                                caption={this.props.master && this.props.master.location.city.title}
+                                after={this.props.master !== null && <Icon24Write onClick={this.props.openSetting}/>}
+                            >
+                                {this.props.user.firstname+' '+this.props.user.lastname}
+                            </RichCell>
+                        </Card>
+                    </CardGrid>
+                </Group>
                 {this.props.master !== null && this.checkModeration()}
                     <Group title="Основное" separator={'hide'}>
-                        <Separator style={{ margin: '12px 0' }} />
                         <List>
                             <Cell
                                 expandable
@@ -140,7 +186,15 @@ class Lk extends React.Component {
                     </List>
                     </Group>
                 }
-            </Div>
+                {
+                    this.state.promo !== null ?
+                        <FixedLayout vertical="bottom">
+                            <PromoBanner onClose={() => this.setState({promo: null})} bannerData={ this.state.promo } />
+                        </FixedLayout>
+                            :
+                        null
+                }
+            </React.Fragment>
         );
     }
 }

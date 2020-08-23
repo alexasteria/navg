@@ -1,6 +1,6 @@
 import React from 'react';
 import HeadCity from "../elements/headCity";
-import {PanelHeader, SelectMimicry, Spinner, Div, Panel, View} from "@vkontakte/vkui";
+import {PanelHeader, SelectMimicry, Spinner, Div, Panel, View, Placeholder} from "@vkontakte/vkui";
 import MastersList from './mastersList';
 import ScrollSubcat from '../elements/scrollSubcat'
 import {BACKEND} from "../func/func";
@@ -8,6 +8,8 @@ import Spin from '../elements/spinner'
 import {connect} from "react-redux";
 import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll} from "../store/actions";
 import {bindActionCreators} from "redux";
+import bridge from '@vkontakte/vk-bridge';
+import Icon56WifiOutline from '@vkontakte/icons/dist/56/wifi_outline';
 
 class Masters extends React.Component{
     constructor(props) {
@@ -22,11 +24,14 @@ class Masters extends React.Component{
         if (this.props.mastersList.length === 0) {
             this.loadList()
         } else {
-            this.setState({filteredList: this.props.mastersList, isLoad: true}, ()=> {
-                if (this.props.mastersListScroll){
-                    window.scrollTo(0, this.props.mastersListScroll)
-                }
-            });
+            this.setState({filteredList: this.props.mastersList, isLoad: true});
+        }
+    }
+
+    componentWillMount() {
+        if (this.props.mastersListScroll){
+            //window.scrollTo(0, this.props.mastersListScroll)
+            bridge.send("VKWebAppScroll", {"top": this.props.mastersListScroll});
         }
     }
 
@@ -47,14 +52,16 @@ class Masters extends React.Component{
                 .then(mastersList => {
                     this.props.changeMastersList(mastersList);
                     this.filter();
-                });
+                })
+                .catch(e=>this.setState({warnConnection: true}))
         } else {
             fetch(BACKEND.masters.category+this.props.targetCategory._id+'/'+this.props.targetCity.id)
                 .then(res => res.json())
                 .then(mastersList => {
                     this.props.changeMastersList(mastersList);
                     this.filter();
-                });
+                })
+                .catch(e=>this.setState({warnConnection: true}))
         }
     };
 
@@ -93,11 +100,27 @@ class Masters extends React.Component{
     }
 
     render() {
-        const {targetCategory, user} = this.props;
+        if (this.state.warnConnection){
             return (
+                <React.Fragment>
+                    <HeadCity changeCity={()=>this.props.changeCity()}/>
+                    <Placeholder
+                        stretched
+                        icon={<Icon56WifiOutline />}
+                        header={'Что-то не так!'}
+                        //action={<Button size="l" onClick={()=>this.auth(this.props.launchParams)}>Повторить</Button>}
+                    >
+                        Проверьте интернет-соединение.
+                    </Placeholder>
+                    {this.state.snackbar}
+                </React.Fragment>
+            )
+        } else {
+            const {targetCategory, user} = this.props;
+            return (
+                // <React.Fragment>
                 <Panel id="mastersList">
                     <PanelHeader>Мастера</PanelHeader>
-                <React.Fragment>
                     <HeadCity changeCity={()=>this.props.changeCity()}/>
                     <Div>
                         <SelectMimicry
@@ -129,10 +152,11 @@ class Masters extends React.Component{
                             /> :
                             <Spinner size="large" style={{ marginTop: 20 }} />
                     }
-                </React.Fragment>
                     {this.props.snackbar}
+                    {/*</React.Fragment>*/}
                 </Panel>
             )
+        }
     }
 }
 

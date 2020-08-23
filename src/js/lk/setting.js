@@ -14,9 +14,9 @@ import {
     CardGrid,
     Card,
     List,
-    ModalPageHeader,
+    Alert,
     ANDROID,
-    PanelHeaderButton, IOS, ModalRoot, platform, withModalRootContext, Snackbar
+    PanelHeaderButton, IOS, ModalRoot, platform, withModalRootContext, Snackbar, Placeholder, Spinner, Select
 } from "@vkontakte/vkui";
 import '@vkontakte/vkui/dist/vkui.css';
 import {BACKEND} from '../func/func';
@@ -27,6 +27,12 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {setMaster} from "../store/actions";
 import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
+import Head from "../elements/panelHeader";
+import Icon16Down from '@vkontakte/icons/dist/16/down';
+import Icon16Up from '@vkontakte/icons/dist/16/up';
+import Icon24Write from '@vkontakte/icons/dist/24/write';
+import HeadCity from "../elements/headCity";
+import Icon56WifiOutline from '@vkontakte/icons/dist/56/wifi_outline';
 
 const osname = platform();
 
@@ -53,27 +59,48 @@ class Setting extends React.Component {
             snackbar: null,
             newProdTitle: '',
             newProdBody: '',
-            newProdPrice: ''
+            newProdPrice: '',
+            editProdTitle: '',
+            editProdBody: '',
+            editProdPrice: '',
+            isChange: false,
+            type: 'Частный мастер',
+            brand: ''
         };
     }
 
     componentDidMount() {
         if(this.props.user.isMaster === true) {
-            this.setState({master: this.props.master, description: this.props.master.description});
+            this.setState({master: this.props.master, description: this.props.master.description, type: this.props.master.type, brand: this.props.master.brand});
             fetch(BACKEND.category.getAll)
                 .then(res => res.json())
                 .then(categories => {
-                    this.setState({categories: categories, isLoad: true});
+                    this.setState({categories: categories});
                     categories.map(category => {
                         this.setState({[category._id]: false});
                     });
                     this.setActive( this.props.master.categories.subcat);
+                })
+                .catch(e=>{
+                    this.setState({warnConnection: true})
                 });
+            if (this.props.master.changed)this.setState({isChange: true})
         }
+        // window.onpopstate = () => {
+        //     try{
+        //         if (this.state.description.replace(/ +/g, ' ').trim().length < 20) throw 'Блок "О себе" должен содержать более 20 символов.';
+        //         if (this.state.description.replace(/ +/g, ' ').trim().length > 200) throw 'Блок "О себе" должен содержать не более 200 символов.';
+        //         if (this.state.master.priceList.length < 1) throw 'Добавьте как минимум одну процедуру, чтобы клиенты смогли записаться к Вам.';
+        //         this.props.goBack('lk')
+        //     }catch(e){
+        //         this.props.snackbarDismiss(e)
+        //     }
+        // };
     }
 
     componentWillUnmount() {
         this.saveChanges()
+        this.props.setAlert(null);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -85,10 +112,25 @@ class Setting extends React.Component {
     }
 
     saveChanges = () => {
-        const master = this.state.master;
-        master.params = this.props.params;
-        this.patchData(BACKEND.masters.all + this.state.master._id, master);
-        this.props.setMaster(this.state.master);
+        try{
+            if (this.state.type === 'Частный мастер') this.setState({brand: ''});
+            if (this.state.description.replace(/ +/g, ' ').trim().length < 20) throw 'Блок "О себе" должен содержать более 20 символов.';
+            if (this.state.description.replace(/ +/g, ' ').trim().length > 200) throw 'Блок "О себе" должен содержать не более 200 символов.';
+            if (this.state.master.priceList.length < 1) throw 'Добавьте как минимум одну процедуру, чтобы клиенты смогли записаться к Вам.';
+            if (this.state.brand !== "") {
+                if (this.state.brand.length > 25) throw 'Длина названия организации ограничена 25 символами.';
+            }
+              if (this.state.isChange === true){
+                  let master = this.state.master;
+                  master.type = this.state.type;
+                  master.brand = this.state.brand;
+                  master.params = this.props.params;
+                  this.patchData(BACKEND.masters.all + this.state.master._id, master);
+                  this.props.setMaster(this.state.master);
+              }
+        }catch(e){
+            this.props.snackbarDismiss(e);
+        }
     };
 
     setActive(subcat){
@@ -101,11 +143,36 @@ class Setting extends React.Component {
                     }
                 })
             });
+            this.setState({isLoad: true})
         }
     }
 
+    deleteProcedure = (index) => {
+        this.setState({isChange: true});
+        this.props.setAlert(
+                    <Alert
+                        actionsLayout="vertical"
+                        actions={[{
+                            title: 'Удалить процедуру',
+                            autoclose: true,
+                            mode: 'destructive',
+                            action: () => this.onRemove(index),
+                        }, {
+                            title: 'Отмена',
+                            autoclose: true,
+                            mode: 'cancel'
+                        }]}
+                        onClose={()=>this.props.setAlert(null)}
+                    >
+                        <h2>Подтвердите действие</h2>
+                        <p>Вы уверены, что хотите удалить выбранную процедуру?</p>
+                    </Alert>
+        );
+    };
+
     handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
+        this.setState({isChange: true});
     };
 
     patchData(url = '', activeMaster = {}) {
@@ -144,10 +211,38 @@ class Setting extends React.Component {
         })
             .then(res => res.json())
             .then(res => {
-                this.props.snackbar('Изменения сохранены');
+                console.log('Сохранено')
+                //this.props.snackbar('Изменения сохранены.');
             })
             .catch(e=>console.log(e.message))
     }
+
+    saveEdit = (index) => {
+        try {
+            let title = this.validateNewProdTitle(this.state.editProdTitle);
+            if (!title.status) throw title.error;
+
+            let body = this.validateNewProdBody(this.state.editProdBody);
+            if (!body.status) throw body.error;
+
+            let price = this.validateNewProdPrice(this.state.editProdPrice);
+            if (!price.status) throw price.error;
+
+
+            const editProd = {
+                title: this.state.editProdTitle,
+                body: this.state.editProdBody,
+                price: Number(this.state.editProdPrice.replace(/[\s.,%]/g, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, ''))
+            };
+
+            let master = this.state.master;
+            master.priceList.splice(index, 1, editProd);
+            this.setState({master: master, editProdTitle: '', editProdBody: '', editProdPrice: '', edit: null});
+            this.setState({isChange: true});
+        } catch (error) {
+            this.props.snackbarDismiss(error)
+        }
+    };
 
     visible = event => {
         const target = event.target;
@@ -155,15 +250,15 @@ class Setting extends React.Component {
         let master = this.state.master;
         master[name] = !master[name];
         this.setState({master: master});
+        this.props.setMaster(master);
+        this.setState({isChange: true});
     };
     onRemove = (index) => {
         let master = this.state.master;
         master.priceList = [...this.state.master.priceList.slice(0, index), ...this.state.master.priceList.slice(index + 1)];
         this.setState({master: master});
+        this.setState({isChange: true});
         //this.patchData(BACKEND.masters.all + this.state.master._id, this.state.master);
-    };
-    addProd = (status) => {
-        this.setState({add: status})
     };
 
     openSnackDismiss(text) {
@@ -191,55 +286,90 @@ class Setting extends React.Component {
                 </Snackbar>
         });
     }
+
+    validateNewProdTitle(newProdTitle){
+        if (newProdTitle === undefined){
+            return {status: false, error: 'Не заполнено название процедуры.'};
+        } else {
+            if (newProdTitle.replace(/ +/g, ' ').trim().length > 20){
+                return {status: false, error: 'Недопустимая длина заголовка.'};
+            } else {
+                if (newProdTitle.replace(/ +/g, ' ').trim().length < 2){
+                    return {status: false, error: 'Недопустимая длина заголовка.'};
+                } else {
+                    return {status: true}
+                }
+            }
+        }
+    }
+
+    validateNewProdBody(newProdBody){
+        if (newProdBody === undefined){
+            return {status: false, error: 'Не заполнено описание процедуры.'};
+        } else {
+            if (newProdBody.replace(/ +/g, ' ').trim().length > 250){
+                return {status: false, error: 'Недопустимая длина описания.'};
+            } else {
+                if (newProdBody.replace(/ +/g, ' ').trim().length < 5){
+                    return {status: false, error: 'Недопустимая длина описания.'};
+                } else {
+                    return {status: true}
+                }
+            }
+        }
+    }
+
+    validateNewProdPrice(newProdPrice){
+        if (newProdPrice === undefined){
+            return {status: false, error: 'Не заполнена стоимость процедуры.'};
+        } else {
+            if (newProdPrice.replace(/[\s.,%]/g, '').replace(/[.\/,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '').trim().length > 5){
+                return {status: false, error: 'Некорректная стоимость. Допустимы целые числа длиной от 1 до 5 символов.'};
+            } else {
+                if (newProdPrice.replace(/[\s.,%]/g, '').replace(/[.\/,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '').trim().length < 1){
+                    return {status: false, error: 'Некорректная стоимость. Допустимы целые числа длиной от 1 до 5 символов.'};
+                } else {
+                    if (Number(newProdPrice.replace(/[\s.,%]/g, '').replace(/[.\/,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '')) < 0){
+                        return {status: false, error: 'Нельзя указать отрицательную стоимость.'};
+                    } else {
+                        return {status: true}
+                    }
+                }
+            }
+        }
+    }
+
     saveProd = () => {
         try {
-            if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
-            if (this.state.newProdTitle.replace(/ +/g, ' ').trim().length > 20 || this.state.newProdTitle.replace(/ +/g, ' ').trim().length < 2) throw 'Недопустимая длина заголовка';
-            if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
-            if (this.state.newProdBody.replace(/ +/g, ' ').trim().length > 250 || this.state.newProdBody.replace(/ +/g, ' ').trim().length < 5) throw 'Недопустимая длина описания';
-            if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
-            if (this.state.newProdPrice.replace(/ +/g, ' ').trim().length > 5 || this.state.newProdPrice.replace(/ +/g, ' ').trim().length < 1) throw 'Недопустимая длина суммы';
+            let title = this.validateNewProdTitle(this.state.newProdTitle);
+            if (!title.status) throw title.error;
+
+            let body = this.validateNewProdBody(this.state.newProdBody);
+            if (!body.status) throw body.error;
+
+            let price = this.validateNewProdPrice(this.state.newProdPrice);
+            if (!price.status) throw price.error;
+
             let master = this.state.master;
             master.priceList.push({
                 title: this.state.newProdTitle,
                 body: this.state.newProdBody,
-                price: this.state.newProdPrice
+                price: Number(this.state.newProdPrice.replace(/[\s.,%]/g, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, ''))
             });
             this.setState({master: master, add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
-            this.openSnack('Процедура добавлена');
+            this.setState({isChange: true});
         } catch (error) {
-            this.openSnackDismiss(error)
+            this.props.snackbarDismiss(error)
+            //this.openSnackDismiss(error)
         }
     };
-    // saveProd = () => {
-    //     try {
-    //         if (this.state.newProdTitle === undefined) throw 'Не заполнено название процедуры';
-    //         if (this.state.newProdBody === undefined) throw 'Не заполнено описание процедуры';
-    //         if (this.state.newProdPrice === undefined) throw 'Не заполнена стоимость процедуры';
-    //         let master = this.state.master;
-    //         master.priceList.push({
-    //             title: this.state.newProdTitle,
-    //             body: this.state.newProdBody,
-    //             price: this.state.newProdPrice
-    //         });
-    //         this.setState({master: master});
-    //         this.setState({add: false, newProdTitle: '', newProdBody: '', newProdPrice: ''});
-    //         this.props.snackbar('Процедура добавлена');
-    //     } catch (error) {
-    //         this.props.snackbar(error)
-    //     }
-    // };
 
     counter = (index) => {
-        let countMass = this.state.categories[index].subcat.filter(
-            function(item){
-                if (item.active === true){
-                    return item.active;
-                } else {
-                    return null
-                }
+        let countMass = this.state.categories[index].subcat.filter(subcat=> {
+            if (subcat.active === true) {
+                return subcat.label
             }
-        );
+        });
         return countMass.length;
     };
     checkBan = () => {
@@ -273,30 +403,89 @@ class Setting extends React.Component {
         let master = this.state.master;
         master.location.city = city;
         this.props.setMaster(master);
-        this.props.changeModal('setting');
+        this.props.goBack();
+        this.setState({isChange: true});
+        //this.props.changeModal('setting');
     };
 
+    statusProfile = () => {
+        if (this.state.master.moderation.status === false){
+            return 'На модерации'
+        } else if (this.state.master.visible === false){
+            return 'Ваш профиль не выводится в поиске'
+        } else {
+            return 'Ваш профиль доступен в поиске'
+        }
+    }
+
     render() {
-        if(this.state.isLoad === false){
-            return null
+        if (this.state.warnConnection){
+            return (
+                <React.Fragment>
+                    <HeadCity changeCity={()=>this.props.changeCity()}/>
+                    <Placeholder
+                        stretched
+                        icon={<Icon56WifiOutline />}
+                        header={'Что-то не так!'}
+                        //action={<Button size="l" onClick={()=>this.auth(this.props.launchParams)}>Повторить</Button>}
+                    >
+                        Проверьте интернет-соединение.
+                    </Placeholder>
+                </React.Fragment>
+            )
+        } else if(this.state.isLoad === false){
+            return (
+                <React.Fragment>
+                    <Head
+                        title='Настройки'
+                        goBack={()=>this.props.goBack('lk')}
+                    />
+                    <Placeholder
+                        stretched
+                        icon={<Spinner size="large" style={{ marginTop: 20 }} />}
+                        header={'Загружаю...'}
+                    ></Placeholder>
+                </React.Fragment>
+            )
         }
         if (this.props.user.isMaster === false) {
             return null
         } else {
                 return (
-                    <Div>
+                    <React.Fragment>
+                        <Head
+                            title='Настройки'
+                            goBack={() => {
+                                try{
+                                    if (this.state.description.replace(/ +/g, ' ').trim().length < 20) throw 'Блок "О себе" должен содержать более 20 символов.';
+                                    if (this.state.description.replace(/ +/g, ' ').trim().length > 200) throw 'Блок "О себе" должен содержать не более 200 символов.';
+                                    if (this.state.master.priceList.length < 1) throw 'Добавьте как минимум одну процедуру, чтобы клиенты смогли записаться к Вам.';
+                                    this.props.goBack('lk')
+                                }catch(e){
+                                    this.props.snackbarDismiss(e)
+                                }
+                            }}
+                        />
                                 <Cell
                                     size="l"
-                                    description={
-                                        this.state.master.visible ? 'Ваш профиль доступен в поиске' : 'Ваш профиль не выводится в поиске'
-                                    }
+                                    description={this.statusProfile()}
                                     before={<Avatar src={this.state.master.avatarLink} size={80}/>}
                                 >
                                     {this.state.master.firstname + ' ' + this.state.master.lastname}
                                 </Cell>
                                 <Cell
                                     expandable
-                                    onClick={() => this.props.changeModal('changeCity')}
+                                    onClick={() => {
+                                        try{
+                                            if (this.state.description.replace(/ +/g, ' ').trim().length < 20) throw 'Блок "О себе" должен содержать более 20 символов.';
+                                            if (this.state.description.replace(/ +/g, ' ').trim().length > 201) throw 'Блок "О себе" должен содержать не более 200 символов.';
+                                            if (this.state.master.priceList.length < 1) throw 'Добавьте как минимум одну процедуру, чтобы клиенты смогли записаться к Вам.';
+                                            this.props.changeCity()
+                                        }catch(e){
+                                            this.props.snackbarDismiss(e)
+                                        }
+                                        }
+                                    }
                                     indicator={this.state.master.location.city === typeof String ? 'Не выбрано' : this.state.master.location.city.title}
                                 >
                                     Ваш город
@@ -311,38 +500,105 @@ class Setting extends React.Component {
                                     <CardGrid>
                                         {this.state.master.priceList.map((item, index) => (
                                             <Card size="l" mode="shadow" key={index}>
-                                                <Cell
-                                                    multiline
-                                                    //onClick={() => this.setState({pedicureVisible: !this.state.pedicureVisible})}
-                                                    //removable
-                                                    // onRemove={() => {
-                                                    //     this.onRemove(index)
-                                                    // }}
-                                                >
+                                                <Cell multiline>
                                                     <Cell
-                                                        description="Название процедуры">{this.state.master.priceList[index].title}</Cell>
+                                                        description="Название процедуры">
+                                                        {
+                                                            this.state.edit === index ?
+                                                                <Input
+                                                                    name="editProdTitle"
+                                                                    onChange={this.handleChange}
+                                                                    defaultValue={this.state.master.priceList[index].title}
+                                                                    value={this.state.editProdTitle}
+                                                                    status={this.validateNewProdTitle(this.state.editProdTitle).status === true ? 'valid' : 'error'}
+                                                                /> :
+                                                                this.state.master.priceList[index].title
+                                                        }
+                                                    </Cell>
                                                     <Cell description="Краткое описание процедуры"
-                                                          multiline>{this.state.master.priceList[index].body}</Cell>
+                                                          multiline>
+                                                        {
+                                                            this.state.edit === index ?
+                                                                <Input
+                                                                    name="editProdBody"
+                                                                    onChange={this.handleChange}
+                                                                    defaultValue={this.state.master.priceList[index].body}
+                                                                    value={this.state.editProdBody}
+                                                                    status={this.validateNewProdBody(this.state.editProdBody).status ? 'valid' : 'error'}
+                                                                /> :
+                                                                this.state.master.priceList[index].body
+                                                        }
+                                                    </Cell>
                                                     <Cell
-                                                        description="Минимальная цена за работу">{this.state.master.priceList[index].price}</Cell>
-                                                    <Button
-                                                        //before={<Icon24Dismiss/>}
-                                                        onClick={() => {this.onRemove(index)}}
-                                                        size="xl"
-                                                        mode="destructive"
-                                                    >Удалить</Button>
+                                                        description="Минимальная цена за работу">
+                                                        {
+                                                            this.state.edit === index ?
+                                                                <Input
+                                                                    name="editProdPrice"
+                                                                    type="number"
+                                                                    onChange={this.handleChange}
+                                                                    defaultValue={this.state.master.priceList[index].price}
+                                                                    value={this.state.editProdPrice.replace(/[\s.,%]/g, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '')}
+                                                                    status={this.validateNewProdPrice(this.state.editProdPrice.replace(/[\s.,%]/g, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '')).status ? 'valid' : 'error'}
+                                                                /> :
+                                                                this.state.master.priceList[index].price
+                                                        }
+                                                    </Cell>
+                                                    {
+                                                        this.state.edit === index ?
+                                                            <Div style={{display: 'flex'}}>
+                                                                <Button
+                                                                    stretched
+                                                                    //before={<Icon24Dismiss/>}
+                                                                    style={{ marginRight: 8 }}
+                                                                    onClick={() => this.setState({edit: null})}
+                                                                    size="l"
+                                                                    mode="destructive"
+                                                                >Отменить</Button>
+                                                                <Button
+                                                                    size="l"
+                                                                    stretched
+                                                                    onClick={()=>this.saveEdit(index)}
+                                                                    mode="secondary"
+                                                                    //before={<Icon24Write/>}
+                                                                >Сохранить</Button>
+                                                            </Div> :
+                                                            <Div style={{display: 'flex'}}>
+                                                                <Button
+                                                                    stretched
+                                                                    //before={<Icon24Dismiss/>}
+                                                                    style={{ marginRight: 8 }}
+                                                                    onClick={() => this.deleteProcedure(index)}
+                                                                    size="l"
+                                                                    mode="destructive"
+                                                                >Удалить</Button>
+                                                                <Button
+                                                                    size="l"
+                                                                    stretched
+                                                                    onClick={()=>{
+                                                                        this.setState({editProdTitle:this.state.master.priceList[index].title, editProdBody:this.state.master.priceList[index].body, editProdPrice:String(this.state.master.priceList[index].price), edit: index, add: false})
+                                                                    }}
+                                                                    mode="secondary"
+                                                                    //before={<Icon24Write/>}
+                                                                >Редактировать</Button>
+                                                            </Div>
+                                                    }
                                                 </Cell>
                                             </Card>
                                         ))}
                                     </CardGrid>
-                                    {this.state.add &&
-                                    <Div>
+                                    {this.state.add ?
+                                    <Div style={{webkitUserSelect: 'none', userSelect: 'none'}}>
                                         <Cell description="Добавления нового элемента" multiline>
                                             <List>
                                                 <Cell description={this.state.newProdTitle.replace(/ +/g, ' ').trim().length+"/20"}>
                                                     <Input
                                                         require
-                                                        status={this.state.newProdTitle.replace(/ +/g, ' ').trim().length <= 20 ? 'valid' : 'error'}
+                                                        status={
+                                                            this.state.newProdTitle.length > 0 ?
+                                                            this.validateNewProdTitle(this.state.newProdTitle).status === true ? 'valid' : 'error' :
+                                                                null
+                                                        }
                                                         name="newProdTitle"
                                                         type="text"
                                                         value={this.state.newProdTitle}
@@ -352,64 +608,77 @@ class Setting extends React.Component {
                                                 <Cell description={this.state.newProdBody.replace(/ +/g, ' ').trim().length+"/250"}>
                                                     <Textarea
                                                         require
-                                                        status={this.state.newProdBody.replace(/ +/g, ' ').trim().length <= 250 ? 'valid' : 'error'}
+                                                        status={
+                                                            this.state.newProdBody.length > 0 ?
+                                                            this.validateNewProdBody(this.state.newProdBody).status ? 'valid' : 'error' :
+                                                                null
+                                                        }
                                                         name="newProdBody"
                                                         value={this.state.newProdBody}
                                                         placeholder={'Укажите описание'}
                                                         onChange={this.handleChange}/>
                                                 </Cell>
-                                                <Cell description={this.state.newProdPrice.replace(/ +/g, ' ').trim().length+"/5"}>
+                                                <Cell description={this.state.newProdPrice.replace(/[\s.,%]/g, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '').trim().length+"/5"}>
                                                     <Input
                                                         require
-                                                        status={this.state.newProdPrice.replace(/ +/g, ' ').trim().length <= 5 ? 'valid' : 'error'}
+                                                        status={
+                                                            this.state.newProdPrice.replace(/[\s.,%]/g, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '').length > 0 ?
+                                                            this.validateNewProdPrice(this.state.newProdPrice.replace(/[\s.,%]/g, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '')).status ? 'valid' : 'error' :
+                                                                null
+                                                        }
                                                         name="newProdPrice"
-                                                        type="number" value={this.state.newProdPrice}
+                                                        type="number" value={this.state.newProdPrice.replace(/[\s.,%]/g, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/^0+/, '')}
                                                         placeholder={'Укажите цену'}
                                                         onChange={this.handleChange}/>
                                                 </Cell>
                                             </List>
                                         </Cell>
-                                        <Div style={{display: 'flex'}}>
-                                            <Button size="l" stretched style={{marginRight: 8}}
+                                        <Div style={{display: 'flex', webkitUserSelect: 'none', userSelect: 'none'}}>
+                                            <Button size="l" stretched mode="destructive" style={{marginRight: 8}}
+                                                    onClick={() => this.setState({add: false})}>Отменить</Button>
+                                            <Button size="l" stretched
                                                     onClick={() => this.saveProd()}>Сохранить</Button>
-                                            <Button size="l" stretched mode="destructive"
-                                                    onClick={() => this.addProd(false)}>Отменить</Button>
                                         </Div>
-                                    </Div>
+                                    </Div> :
+                                        <CellButton
+                                        onClick={() => this.setState({add: true, edit: null})}
+                                        before={<Icon24Add/>}
+                                        >Добавить процедуру</CellButton>
                                     }
                                 </Group>
+                                {/*<Group>*/}
+                                {/*    <CellButton*/}
+                                {/*        onClick={() => this.addProd(true)}*/}
+                                {/*        before={<Icon24Add/>}*/}
+                                {/*    >Добавить процедуру</CellButton>*/}
+                                {/*</Group>*/}
                                 <Group>
-                                    <CellButton
-                                        onClick={() => this.addProd(true)}
-                                        before={<Icon24Add/>}
-                                    >Добавить процедуру</CellButton>
-                                </Group>
-                                <Group>
-                                    <FormLayout onSubmit={this.handleSubmit}>
+                                    <FormLayout>
                                         <Textarea
                                             name={'description'}
-                                            status={this.state.description ? 'valid' : 'error'}
-                                            bottom={this.state.description ? '' : 'Пожалуйста, напишите пару слов о себе'}
+                                            status={this.state.description.replace(/ +/g, ' ').trim().length > 19 && this.state.description.replace(/ +/g, ' ').trim().length < 201 ? 'valid' : 'error'}
+                                            bottom={this.state.description.replace(/ +/g, ' ').trim().length > 1 ? '' : 'Пожалуйста, напишите пару слов о себе'}
                                             top="О себе"
                                             value={this.state.description}
                                             onChange={this.handleChange}/>
-                                    </ FormLayout>
                                     <FormLayoutGroup top="Сфера деятельности"
-                                                     bottom="Укажите вид работы, в соответствии с тем, что вы выполняете. Так вас будет проще найти."
+                                                     bottom="Укажите вид работы, в соответствии с тем, что Вы выполняете. Так Вас будет проще найти."
                                                      id={'category'}>
                                         {
                                             this.state.categories.map((category, i) => {
                                                 return (
                                                     <Group key={category._id}>
-                                                        <Cell expandable name={category._id}
+                                                        <Cell name={category._id}
                                                               onClick={() => this.setState({[category._id]: !this.state[category._id]})}
                                                               indicator={
                                                                   'Выбрано: ' + this.counter(i)
-                                                              }>
+                                                              }
+                                                              asideContent={this.state[category._id] ? <Icon16Up /> : <Icon16Down />}
+                                                        >
                                                             {category.label}
                                                         </Cell>
                                                         {this.state[category._id] &&
-                                                        <Div>
+                                                        <Div style={{webkitUserSelect: 'none', userSelect: 'none'}}>
                                                             {
                                                                 category.subcat.map((subcategory, index, category)=>{
                                                                     return (
@@ -419,7 +688,7 @@ class Setting extends React.Component {
                                                                                 <Switch
                                                                                     name={i}
                                                                                     id={index}
-                                                                                    onChange={this.checkSubcat}
+                                                                                    onChange={(event)=>{this.setState({isChange: true}); this.checkSubcat(event)}}
                                                                                     checked={subcategory.active}/>
                                                                             }>
                                                                             {subcategory.label}
@@ -434,9 +703,36 @@ class Setting extends React.Component {
                                             })
                                         }
                                     </FormLayoutGroup>
+                                        <Select
+                                            name={'type'}
+                                            top="Выберите тип оказания услуг"
+                                            value={this.state.type}
+                                            bottom={this.state.type ? '' : 'Пожалуйста, укажите тип оказания услуг'}
+                                            onChange={this.handleChange}
+                                        >
+                                            <option value="Частный мастер">Частный мастер</option>
+                                            <option value="Организация">Организация</option>
+                                        </Select>
+                                        {
+                                            this.state.type === 'Организация' &&
+                                            <FormLayoutGroup top="Укажите наименование организации в которой вы работаете">
+                                                <Input
+                                                    name={'brand'}
+                                                    type="text"
+                                                    status={
+                                                        this.state.brand.length > 0 ?
+                                                            this.state.brand.length < 26 ? 'valid' : 'error' :
+                                                            null
+                                                    }
+                                                    value={this.state.brand}
+                                                    onChange={this.handleChange}
+                                                />
+                                            </FormLayoutGroup>
+                                        }
+                                    </FormLayout>
                                 </Group>
-                        {this.state.snackbar}
-                            </Div>
+                        {this.props.snackbarLk}
+                    </React.Fragment>
                 )
 
         }

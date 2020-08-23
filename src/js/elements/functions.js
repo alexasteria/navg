@@ -31,7 +31,7 @@ function patchData(url = '', data = {}) {
         body: JSON.stringify(data), // тип данных в body должен соответвовать значению заголовка "Content-Type"
     })
         .then(response => {
-            console.log(response.json());
+            console.log('ok');
         }) // парсит JSON ответ в Javascript объект
         .catch(e=>console.log(e));
 }

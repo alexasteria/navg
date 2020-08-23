@@ -18,7 +18,8 @@ class Moder extends React.Component {
             activeTab: 'masters',
             comments: [],
             mastersCount: 0,
-            usersCount: 0
+            usersCount: 0,
+            isLoad: true
         };
     }
 
@@ -27,8 +28,8 @@ class Moder extends React.Component {
         this.setState({[name]: value});
     };
 
-    componentDidMount() {
-        fetch(BACKEND.moder, {
+    async componentDidMount() {
+        await fetch(BACKEND.moder, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, cors, *same-origin
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -45,7 +46,7 @@ class Moder extends React.Component {
                 this.setState({mastersList: mastersList})
             })
             .catch(e=>console.log(e))
-        fetch(BACKEND.comment.moderation,{
+        await fetch(BACKEND.comment.moderation,{
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, cors, *same-origin
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -59,7 +60,7 @@ class Moder extends React.Component {
         })
             .then(res => res.json())
             .then(comments => {
-                this.setState({comments: comments})
+                this.setState({comments: comments, isLoad: false})
             });
     }
 
@@ -120,7 +121,7 @@ class Moder extends React.Component {
         })
             .then(res => res.json())
             .catch(e=>console.log(e))
-        this.setState({mastersList: mastersList});
+        //this.setState({mastersList: mastersList});
     };
 
     goodComment = (id, index) => {
@@ -133,7 +134,6 @@ class Moder extends React.Component {
             id: id,
             params: this.props.params
         };
-        console.log(BACKEND.moderCom+'good');
         fetch(BACKEND.moderCom+'good', {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, cors, *same-origin
@@ -161,7 +161,6 @@ class Moder extends React.Component {
             id: id,
             params: this.props.params
         };
-        console.log(BACKEND.moderCom+'bad');
         fetch(BACKEND.moderCom+'bad', {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'cors', // no-cors, cors, *same-origin
@@ -191,6 +190,7 @@ class Moder extends React.Component {
         }
         return this.state.comments.map((comment, index)=> {
             if (comment === null) return null;
+            console.log(comment)
             return (
                 <CardGrid key={index} style={{padding: 0}}>
                     <Card size="l" mode="shadow">
@@ -206,6 +206,8 @@ class Moder extends React.Component {
                         >
                             {comment.body}
                         </RichCell>
+                        <Cell before={ <Avatar size={25} src={comment.user.avatarLink} /> }> From - {comment.user.firstname + ' ' + comment.user.lastname}</Cell>
+                        <Cell >To - {comment.to.name}</Cell>
                     </Card>
                 </CardGrid>
             )
@@ -213,7 +215,15 @@ class Moder extends React.Component {
     }
 
     renderMasters() {
-        if(this.state.mastersList.length === 0){
+        if(this.state.isLoad === true) {
+            return (
+                <Placeholder
+                    icon={<Icon56LikeOutline/>}
+                    header="Загружаю..."
+                >Пока никого нет
+                </Placeholder>
+            )
+        } else if(this.state.mastersList.length === 0){
             return (
                 <Placeholder
                     icon={<Icon56LikeOutline/>}
@@ -260,7 +270,10 @@ class Moder extends React.Component {
                                         this.setState({reason: event.target.value})
                                     }
                                     }/>
-                                    <Button onClick={()=>this.bad(master._id, index)} mode="secondary">Отклонить</Button>
+                                    <Button onClick={()=>{
+                                        this.bad(master._id, index);
+                                        this.setState({[master.vkUid]: false})
+                                    }} mode="secondary">Отклонить</Button>
                                 </Cell>
                             }
                         </Card>
@@ -271,12 +284,19 @@ class Moder extends React.Component {
     };
 
     render(){
-        return (
-            <Panel id="moder">
-                <Head
-                    title={'Модерация'}
-                    goBack={() => this.props.goBack()}
-                />
+        if (this.props.params.vk_user_id !== '199500866'){
+            return (
+                <Panel id="moder">
+                    <Cell>У Вас нет доступа</Cell>
+                </Panel>
+            )
+        } else {
+            return (
+                <Panel id="moder">
+                    <Head
+                        title={'Модерация'}
+                        goBack={() => this.props.goBack()}
+                    />
                     <div>
                         <Tabs>
                             <TabsItem
@@ -296,8 +316,9 @@ class Moder extends React.Component {
                             this.state.activeTab === 'masters' ? this.renderMasters() : this.renderComments()
                         }
                     </div>
-            </Panel>
-        );
+                </Panel>
+            );
+        }
     }
 }
 

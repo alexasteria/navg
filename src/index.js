@@ -14,19 +14,20 @@ require('dotenv').config();
 const store = createStore(rootReducer);
 bridge.send("VKWebAppInit", {});
 
-// let linkParams =  window
-//     .location
-//     .hash
-//     .replace('#','')
-//     .split('&')
-//     .reduce(
-//         function(p,e){
-//             let a = e.split('=');
-//             p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
-//             return p;
-//         },
-//         {}
-//     );
+let linkParams =  window
+    .location
+    .hash
+    .replace('#','')
+    .split('&')
+    .reduce(
+        function(p,e){
+            let a = e.split('=');
+            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+            return p;
+        },
+        {}
+    );
+
 let params = window
     .location
     .search
@@ -42,10 +43,11 @@ let params = window
     );
 
 ReactDOM.render(<Provider store={store}>
-                    <App launchParams={params} />
+                    <App launchParams={params} linkParams={linkParams}/>
                 </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+// import("./eruda.js").then(({ default: eruda }) => {}); //runtime download

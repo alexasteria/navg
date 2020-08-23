@@ -11,7 +11,7 @@ class MastersCard extends React.Component {
         };
     }
     componentDidMount() {
-        this.setState({images: this.props.activeMaster.photos.reverse(), isLoad: true});
+        this.setState({images: this.props.activeMaster.photos, isLoad: true});
     }
     openShowImages(images, index) {
         bridge.send("VKWebAppShowImages", {
@@ -25,10 +25,11 @@ class MastersCard extends React.Component {
                 <Cell multiline>У мастера еще нет фотографий в портфолио</Cell>
             )
         } else {
+            let imgArr = this.state.images;
             return (
                 <CardGrid>
                     {
-                        this.state.images.map((image, index) => {
+                        imgArr.map((image, index) => {
                             return (
                                 <Card
                                     style={{padding: 2, borderRadius: 13, margin: 0}}
@@ -37,7 +38,13 @@ class MastersCard extends React.Component {
                                     key={index}
                                     onClick={() => this.openShowImages(this.state.images, index)}
                                 >
-                                    <div style={{height: 96, backgroundImage: 'url('+image+')', backgroundSize: 'cover', borderRadius: 13}} />
+                                    <div style={{
+                                        height: 96,
+                                        backgroundImage: 'url('+image+')',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center 35%',
+                                        backgroundRepeat: 'no-repeat',
+                                        borderRadius: 13}} />
                                 </Card>
                             )
                         })

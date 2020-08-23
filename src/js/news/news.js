@@ -3,7 +3,7 @@ import {
     Placeholder,
     Group,
     Cell,
-    Avatar, Spinner, CardGrid, Card, Button, CellButton, Banner, Counter, PanelHeader, Panel
+    Avatar, Spinner, CardGrid, Card, Button, CellButton, Banner, Counter, PanelHeader, Panel, Footer
 } from "@vkontakte/vkui"
 import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
 import bridge from "@vkontakte/vk-bridge";
@@ -21,6 +21,7 @@ class News extends React.Component {
     }
 
     componentDidMount() {
+        window.scrollTo(0,0);
         if (this.props.params){
             this.setState({isFav: Number(this.props.params.vk_is_favorite)})
         }
@@ -46,15 +47,18 @@ class News extends React.Component {
             return (
                 <Banner
                     subheader="Добавьте Навигатор красоты в список избранных приложений - все мастера будут всегда под рукой"
-                    actions={<Button onClick={()=>this.addToFav()}>В избранные</Button>}
+                    actions={<Button onClick={()=>this.addToFav()}>В избранное</Button>}
                 />
             )
+        } else {
+            return <Footer />
         }
     };
 
     isMember = () => {
         const data = {
-            user_id: this.props.user.vkUid
+            user_id: this.props.user.vkUid,
+            params: this.props.params
         };
         fetch(BACKEND.vkapi.isMember,{
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -129,12 +133,13 @@ class News extends React.Component {
                     }
                     {this.props.master === null &&
                     <Cell
+                        style={{borderRadius: '0 0 10px 10px'}}
                         multiline
                         onClick={this.props.openReg}
                         before={<Icon24UserOutgoing/>}
                         expandable
                     >
-                        Если вы - мастер, пройдите простую процедуру регистрации
+                        Если Вы — мастер, пройдите простую процедуру регистрации
                     </Cell>
                     }
                 </Card>
@@ -146,20 +151,24 @@ class News extends React.Component {
         return (
             <CardGrid>
                 <Card size="l" mode="shadow">
-                    <div>
+                    <React.Fragment>
                         <Cell>Уже с нами:</Cell>
                         <Cell indicator={this.state.countUsers ? <Counter>{this.state.countUsers}</Counter> : <Spinner size="small"/>}>Пользователей</Cell>
                         <Cell indicator={this.state.countMasters ? <Counter>{this.state.countMasters}</Counter> : <Spinner size="small"/>}>Мастеров</Cell>
                         <Cell indicator={this.state.countCities ? <Counter>{this.state.countCities}</Counter> : <Spinner size="small"/>}>Городов</Cell>
-                        <Cell multiline>
-                            {
-                                this.state.cities &&
-                                this.state.cities.map(city=>{
-                                    return city+' '
-                                })
-                            }
-                        </Cell>
-                    </div>
+                        {/*<Cell multiline>*/}
+                        {/*    {*/}
+                        {/*        this.state.cities &&*/}
+                        {/*        this.state.cities.map((city, index)=>{*/}
+                        {/*            if (index + 1 !== this.state.cities.length){*/}
+                        {/*                return city+', '*/}
+                        {/*            } else {*/}
+                        {/*                return city*/}
+                        {/*            }*/}
+                        {/*        })*/}
+                        {/*    }*/}
+                        {/*</Cell>*/}
+                    </React.Fragment>
                 </Card>
             </CardGrid>
         )
@@ -175,7 +184,7 @@ class News extends React.Component {
                             icon={<Avatar src="https://sun1-28.userapi.com/O4KZM7zfdhZ-zHP-LtRj_xrYiNSRdraBcCQe6Q/PLqKmK-NWTY.jpg?ava=1" size={70}/>}
                             header="Привет!"
                         >
-                            У нас ты можешь найти бьюти-мастера или предложить свои услуги. База мастеров в разных городах пополняется ежедневно.
+                            У нас можно найти бьюти-мастера или предложить свои услуги. База мастеров в разных городах пополняется ежедневно.
                         </Placeholder>
                         {this.userInfo(user)}
                         {this.nowCounter()}
@@ -197,7 +206,8 @@ class News extends React.Component {
 const putStateToProps = (state) => {
     return {
         user: state.user,
-        master: state.master
+        master: state.master,
+        params: state.params
     };
 };
 

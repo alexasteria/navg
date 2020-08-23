@@ -1,12 +1,15 @@
 import React from 'react';
-import {Avatar, Button, Card, CardGrid, Cell, Div, Group, Header, Placeholder} from "@vkontakte/vkui";
+import {Avatar, Button, Card, CardGrid, Cell, Div, Group, Header, Placeholder, Footer, PromoBanner} from "@vkontakte/vkui";
 import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
 import bridge from "@vkontakte/vk-bridge";
+import {Ads} from "../elements/ads";
 
 export default class MastersList extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            promo: null
+        };
     }
 
     componentDidMount() {
@@ -17,6 +20,27 @@ export default class MastersList extends React.Component {
         } catch (e) {
             this.setState({error: e})
         }
+        bridge.subscribe(e=>{
+            if (!e.detail) {
+                return;
+            }
+
+            const { type, data } = e.detail;
+
+            if (type === 'VKWebAppGetAdsResult') {
+                // Reading result of the Code Reader
+                this.setState({promo: data})
+            }
+
+            if (type === 'VKWebAppGetAdsFailed') {
+                // Reading result of the Code Reader
+                console.log(data.error_data);
+                this.setState({promo: data.error_data})
+            }
+        });
+        bridge.send("VKWebAppGetAds", {})
+            .then(data=>console.log('ads'))
+            .catch(e=>console.log(e));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -40,17 +64,16 @@ export default class MastersList extends React.Component {
     }
 
     renderMasters() {
+        let i = 0;
         return this.props.mastersList.map(master => {
-            let ratingArrNew = master.comments.map(comment => {
-                if (comment !== null) return Number(comment.rating)
-            });
-            let ratingArr = ratingArrNew.filter(Boolean);
-            let sum = ratingArr.reduce((a, b) => a + b, 0);
-            let rating = sum / ratingArr.length;
+            if (i === 6) i = 0;
+            i++;
             return (
                 <CardGrid key={master.vkUid}>
                     <Card size="l" mode="shadow">
-                        <Cell expandable
+                        <Cell
+                            style={{borderRadius: '10px 10px 10px 10px'}}
+                            expandable
                               photo="https://pp.userapi.com/c841034/v841034569/3b8c1/pt3sOw_qhfg.jpg"
                               description={
                                   master.categories.category.map(category => {
@@ -58,7 +81,7 @@ export default class MastersList extends React.Component {
                                   })
                               }
                               bottomContent={
-                                  this.setBottom(rating, ratingArr.length)
+                                  this.setBottom(master.meta)
                               }
                               before={<Avatar src={master.avatarLink} size={70}/>}
                               size="l"
@@ -66,21 +89,28 @@ export default class MastersList extends React.Component {
                         >{master.firstname} {master.lastname}
                         </Cell>
                     </Card>
+                    {/*{*/}
+                    {/*    i === 5 && this.state.promo !== null ?*/}
+                    {/*        <Card size="l" mode="shadow">*/}
+                    {/*            <PromoBanner bannerData={ this.state.promo } />*/}
+                    {/*        </Card> :*/}
+                    {/*        null*/}
+                    {/*}*/}
                 </CardGrid>
             );
-        })
-    };
+        });
+    }
 
-    setBottom = (rating, length) => {
-        if (length > 0) {
+    setBottom = (meta) => {
+        if (meta.comments > 0) {
             return (
-                <Div style={{margin: 0, padding: 0, fontSize: 12, color: "#a9a9a9"}}>
-                    Рейтинг {rating} из {length} отзывов
+                <Div style={{margin: 0, padding: 0, fontSize: 12, color: "#a9a9a9", webkitUserSelect: 'none', userSelect: 'none'}}>
+                    Рейтинг {meta.rating} из {meta.comments} отзывов
                 </Div>
             )
         } else {
             return (
-                <Div style={{margin: 0, padding: 0, fontSize: 12, color: "#a9a9a9"}}>
+                <Div style={{margin: 0, padding: 0, fontSize: 12, color: "#a9a9a9", webkitUserSelect: 'none', userSelect: 'none'}}>
                     Отзывы отсутствуют
                 </Div>
             )
@@ -88,8 +118,12 @@ export default class MastersList extends React.Component {
     };
 
     share = () => {
-        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938_199500866'})
-            .then(result => this.props.openSnack('Спасибо, что помогаете сервису в развитии.'))
+        bridge.send("VKWebAppShare", {"link": 'https://m.vk.com/app7170938'})
+            .then(result => {
+                if (result.type === 'VKWebAppShareResult'){
+                    this.props.openSnack('Спасибо, что помогаете сервису в развитии.')
+                }
+            })
     };
 
     render() {
@@ -110,7 +144,7 @@ export default class MastersList extends React.Component {
                     action={<Button onClick={() => this.share()} size="l">Поделиться</Button>}
                 >
                     В данный момент у нас нет данных о специалистах этого профиля в Вашем городе. Мы расширяем базу
-                    мастеров, и скоро - предложения появятся.
+                    мастеров, и скоро предложения появятся.
                     Поделитесь приложением с мастерами, которых Вы знаете.
                 </Placeholder>
             )
@@ -118,6 +152,7 @@ export default class MastersList extends React.Component {
             return (
                 <Group separator="hide" header={<Header mode="secondary">{this.state.title}</Header>}>
                     {this.renderMasters()}
+                    <Footer>На этом все. Мастеров всего - {this.props.mastersList.length}.</Footer>
                 </Group>
             )
         }

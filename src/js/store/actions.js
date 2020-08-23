@@ -13,7 +13,9 @@ import {
     SET_LAUNCH_PARAMS,
     GO_TO,
     GO_FORWARD,
-    CHANGE_STORY
+    CHANGE_STORY,
+    CHANGE_ACTIVE_VIEW_LK,
+    REG_SET
 } from "./reducers";
 
 export const setMaster = master => {
@@ -130,5 +132,19 @@ export const changeStory = (story) => {
     return {
         type: CHANGE_STORY,
         payload: story
+    };
+};
+
+export const changeActiveViewLk = (activeView) => {
+    return {
+        type: CHANGE_ACTIVE_VIEW_LK,
+        payload: activeView
+    };
+};
+
+export const regSetInvite = (data) => {
+    return {
+        type: REG_SET,
+        payload: data
     };
 };

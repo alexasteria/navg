@@ -25,22 +25,25 @@ class MastersComments extends React.Component {
             body: '',
             isLoad: false,
             snackbar: null,
-            stars: []
+            stars: [],
+            onModer: 0
         };
     }
     componentDidMount() {
         this.changeStars();
-        this.props.activeMaster.comments.map(comment => {
-            if (comment !== null && comment.user === this.props.user._id) {
-                this.setState({isCommended: true})
-            }
-        });
-        let count = this.props.activeMaster.comments.length;
+        // this.props.activeMaster.comments.map(comment => {
+        //     if (comment !== null && comment.user === this.props.user._id) {
+        //         this.setState({isCommended: true})
+        //     }
+        // });
+        //let count = this.props.activeMaster.comments.length;
         fetch(BACKEND.comment.onMasterId+this.props.activeMaster._id)
             .then(res=>res.json())
             .then(res=>{
-                console.log(res);
-                this.setState({commentsArr: res, countComments: count, isLoad: true});
+                if (res.ids.includes(this.props.user._id)){
+                    this.setState({isCommended: true})
+                }
+                this.setState({commentsArr: res.comments, countComments: res.comments.length, isLoad: true, onModer: res.onModer});
             })
             .catch(e=>console.log(e));
     }
@@ -63,14 +66,18 @@ class MastersComments extends React.Component {
         this.setState({stars: stars});
     };
 
+    validCommentText = (text) => {
+        return !!(this.state.body.replace(/\s+/g, ' ').replace(/(\r?\n){2,}/g, '$1').length < 101 & this.state.body.replace(/\s+/g, ' ').replace(/(\r?\n){2,}/g, '$1').length > 19);
+    };
+
     sendComment = () => {
         try {
-            if (this.state.rating === 0) throw 'Укажите оценку работы мастера';
-            if (this.state.body.replace(/ /g, "").length < 20) throw 'Короткий отзыв будет бесполезен для пользователей. Опишите ваши впечатления подробнее.';
-            if (this.state.body.replace(/ /g, "").length > 100) throw 'Длина отзыва ограничена 100 символами.';
+            if (this.state.rating === 0) throw 'Укажите оценку работы мастера.';
+            if (this.state.body.replace(/\s+/g,' ').replace(/(\r?\n){2,}/g, '$1').length < 20) throw 'Короткий отзыв будет бесполезен для пользователей. Опишите Ваши впечатления подробнее.';
+            if (this.state.body.replace(/\s+/g,' ').replace(/(\r?\n){2,}/g, '$1').length > 100) throw 'Длина отзыва ограничена 100 символами.';
             let comment = {
                 rating: Number(this.state.rating),
-                body: this.state.body,
+                body: this.state.body.replace(/(\r?\n){2,}/g, '$1'),
                 moderation: false,
                 params: this.props.params
             };
@@ -104,25 +111,32 @@ class MastersComments extends React.Component {
         })
             .then(res => res.json())
             .then(data=>{
-                let arr = this.state.commentsArr;
-                data.date = "Комментарий отправлен на проверку";
-                arr.push(data);
-                this.setState({commentsArr: arr, isCommended: true, snackbar:
+                // let arr = this.state.commentsArr;
+                // data.date = "Комментарий отправлен на проверку";
+                // arr.push(data);
+                if (data.error){
+                    console.log(data.error)
+                } else {
+                    this.setState({isCommended: true, onModer: this.state.onModer +1, snackbar:
+                            <Snackbar
+                                layout="vertical"
+                                onClose={() => this.setState({ snackbar: null })}
+                            >
+                                Комментарий отправлен на модерацию. После проверки он появится в профиле мастера.
+                            </Snackbar>});
+                }
+            })
+            .catch(e=>{
+                if (this.state.snackbar) this.setState({snackbar: null});
+                this.setState({ snackbar:
                         <Snackbar
                             layout="vertical"
-                            onClose={() => this.setState({ snackbar: null })}
+                            onClose={() => this.setState({snackbar: null })}
                         >
-                            Комментарий отправлен на модерацию. После проверки он появится в профиле мастера.
-                        </Snackbar>});
-            })
-            .catch(e=>this.setState({ snackbar:
-                    <Snackbar
-                        layout="vertical"
-                        onClose={() => this.setState({ snackbar: null })}
-                    >
-                        {e.message}
-                    </Snackbar>
-            }));
+                            {e.message}
+                        </Snackbar>
+                })
+                });
     }
     getDate(comDate) {
         if (comDate === "Комментарий отправлен на проверку") {
@@ -143,9 +157,9 @@ class MastersComments extends React.Component {
     commentList() {
         if (this.state.isLoad === false) {
             return (
-                <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                <Div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                     <Spinner size="large" style={{ marginTop: 20 }} />
-                </div>
+                </Div>
             )
         } else {
             return this.state.commentsArr.map(comment => {
@@ -173,12 +187,12 @@ class MastersComments extends React.Component {
         if (this.state.isLoad === true){
             if (this.props.activeMaster.vkUid === this.props.user.vkUid) {
                 return (
-                    <Div style={{fontSize: 12, color: 'darkgray'}}>Нельзя оставлять комментарий на самого себя</Div >
+                    <Div style={{fontSize: 12, color: 'darkgray', webkitUserSelect: 'none', userSelect: 'none'}}>Нельзя оставлять комментарий на самого себя</Div >
                 )
             }
             else if (this.state.isCommended === true) {
                 return (
-                    <Div style={{fontSize: 12, color: 'darkgray'}}>Вы уже оставляли комментарий об этом мастере</Div>
+                    <Div style={{fontSize: 12, color: 'darkgray', webkitUserSelect: 'none', userSelect: 'none'}}>Вы уже оставляли комментарий об этом мастере</Div>
                 )
             } else {
                 return (
@@ -196,19 +210,15 @@ class MastersComments extends React.Component {
                                     </Div>
                             </Cell>
                         </FormLayoutGroup>
-                        {/*<Slider*/}
-                        {/*    step={1}*/}
-                        {/*    min={1}*/}
-                        {/*    max={5}*/}
-                        {/*    value={Number(this.state.rating)}*/}
-                        {/*    onChange={rating=>this.setState({rating})}*/}
-                        {/*    top={"Моя оценка работы мастера: "+this.state.rating}*/}
-                        {/*    bottom='Перемещайте ползунок влево или вправо для изменения оценки'*/}
-                        {/*/>*/}
                         <Textarea
                             name={'body'}
+                            status={
+                                this.state.body.length > 0 ?
+                                this.validCommentText(this.state.body) === true ? 'valid' : 'error' :
+                                    null
+                            }
                             value={this.state.body}
-                            bottom={this.state.body.replace(/ /g, "").length > 20 ? '' : 'Опишите подробнее. Отзыв должен состоять от 20 до 100 символов. Сейчас '+this.state.body.replace(/ /g, "").length+' из 100.' }
+                            bottom={'Отзыв должен состоять от 20 до 100 символов. Сейчас '+this.state.body.replace(/\s+/g,' ').replace(/(\r?\n){2,}/g, '$1').length+' из 100.' }
                             top={"Добавление отзыва"}
                             placeholder="Опишите, что вам понравилось или не понравилось в работе мастера"
                             onChange={this.handleChange}
@@ -230,11 +240,15 @@ class MastersComments extends React.Component {
     };
     render(){
         return (
-                <Div>
+                <React.Fragment>
+                    {
+                        this.state.onModer !== 0 ?
+                            <Cell indicator={this.state.onModer} before={<Icon24CommentOutline/>}>Отзывов на модерации</Cell> : null
+                    }
                     {this.commentList()}
                     <Footer>{this.validate()}</Footer>
                     {this.state.snackbar}
-                </Div>
+                </React.Fragment>
         );
     }
 }

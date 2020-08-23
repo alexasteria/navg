@@ -25,12 +25,15 @@ class CityList extends React.Component {
         updateModalHeight: PropTypes.func,
     };
     componentDidMount() {
-        this.getCities()
+        this.getCities('')
+        // window.onpopstate = () => {
+        //     this.props.goBack()
+        // };
     }
 
-    getCities() {
+    getCities(filter) {
         const data = {
-            search: this.state.search.toLowerCase(),
+            search: filter.toLowerCase(),
             country_id: 1,
         };
         fetch(BACKEND.vkapi.getCities,{
@@ -59,7 +62,7 @@ class CityList extends React.Component {
 
     onChange(e) {
         this.setState({search: e.target.value});
-        this.getCities()
+        this.getCities(e.target.value)
     }
 
     render() {

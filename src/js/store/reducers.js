@@ -13,6 +13,8 @@ export const SET_LAUNCH_PARAMS = 'SET_LAUNCH_PARAMS';
 export const GO_TO = 'GO_TO';
 export const GO_FORWARD = 'GO_FORWARD';
 export const CHANGE_STORY = 'CHANGE_STORY';
+export const CHANGE_ACTIVE_VIEW_LK = 'CHANGE_ACTIVE_VIEW_LK';
+export const REG_SET = 'REG_SET';
 
 const initialState = {
     loginStatus: false,
@@ -32,11 +34,15 @@ const initialState = {
     activePanelmasters: 'mastersList',
     activePanelfindmodel: 'findmodel',
     activePanellk: 'lk',
+    //activePanelregistration: 'registration',
     newsHistory: ['news'],
     mastersHistory: ['mastersList'],
     findmodelHistory: ['findmodel'],
     lkHistory: ['lk'],
-    activeStory: 'news'
+    //registrationHistory: ['registration'],
+    activeStory: 'news',
+    activeViewLk: 'lk',
+    regSet: null
 };
 
 export const rootReducer = (state = initialState, action) => {
@@ -57,7 +63,7 @@ export const rootReducer = (state = initialState, action) => {
         case ACTION_CHANGE_FINDMODELS_SCROLL:
             return {...state, findModelsListScroll: action.payload};
         case LOGIN_USER:
-            return {...state, loginStatus: true, user: action.payload, targetCity:action.payload.location.city};
+            return {...state, loginStatus: true, user: action.payload, targetCity: action.payload.location !== undefined ? action.payload.location.city : {id: 1, title: 'Москва'}};
         case SET_MASTER:
             let changeIsMaster = state.user;
             changeIsMaster.isMaster = true;
@@ -71,15 +77,21 @@ export const rootReducer = (state = initialState, action) => {
         case SET_LAUNCH_PARAMS:
             return {...state, params: action.payload};
         case GO_TO:
-            const history = state[action.payload.story+'History'];
-            history.push(action.payload.panel);
-            return {...state, ['activePanel'+action.payload.story]: action.payload.panel, [action.payload.story+'History']: history};
+            let history = state[action.payload.story+'History'];
+            if (history[history.length-1] !== action.payload.panel) history.push(action.payload.panel);
+            if (action.payload.panel === history[0]) history = [action.payload.panel];
+            return {...state, ['activePanel'+action.payload.story]: action.payload.panel, [action.payload.story+'History']: history, activeStory: action.payload.story};
         case GO_FORWARD:
             let newhistory = state[action.payload.story+'History'];
             newhistory.pop();
-            return {...state, [action.payload.story+'History']: newhistory, ['activePanel'+action.payload.story]: newhistory[newhistory.length -1]};
+            return {...state, [action.payload.story+'History']: newhistory, ['activePanel'+action.payload.story]: newhistory[newhistory.length -1], activeStory: action.payload.story};
         case CHANGE_STORY:
-            return {...state, activeStory: action.payload}
+            return {...state, activeStory: action.payload};
+        case CHANGE_ACTIVE_VIEW_LK:
+            return {...state, activeViewLk: action.payload};
+        case REG_SET:
+            return {...state, regSet: action.payload}
+
     }
     return state;
 };

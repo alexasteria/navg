@@ -2,7 +2,37 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Для отката">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/eruda.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/elements/ads.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/favourite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/favourite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/findModelMaster.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/invite.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/invite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/partners.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/partners.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/news/moder.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/moder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/store/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/store/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/reducers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -545,7 +575,31 @@
       <workItem from="1595157797369" duration="195000" />
       <workItem from="1595158940968" duration="504000" />
       <workItem from="1595184001211" duration="417000" />
-      <workItem from="1595600629035" duration="20429000" />
+      <workItem from="1595600629035" duration="21803000" />
+      <workItem from="1595751209494" duration="35308000" />
+      <workItem from="1595792578892" duration="978000" />
+      <workItem from="1595866012555" duration="41000" />
+      <workItem from="1595866064869" duration="8367000" />
+      <workItem from="1595946392382" duration="1633000" />
+      <workItem from="1595948154789" duration="18569000" />
+      <workItem from="1596043801566" duration="3232000" />
+      <workItem from="1596137158022" duration="2513000" />
+      <workItem from="1596226863204" duration="13156000" />
+      <workItem from="1596568346015" duration="1569000" />
+      <workItem from="1596639137449" duration="10856000" />
+      <workItem from="1596726079798" duration="6865000" />
+      <workItem from="1596832057454" duration="13262000" />
+      <workItem from="1596952817248" duration="2313000" />
+      <workItem from="1597079912834" duration="16610000" />
+      <workItem from="1597170197305" duration="5996000" />
+      <workItem from="1597244328260" duration="18527000" />
+      <workItem from="1597338973977" duration="5620000" />
+      <workItem from="1597416391969" duration="16960000" />
+      <workItem from="1597768140946" duration="18553000" />
+      <workItem from="1597846925567" duration="9703000" />
+      <workItem from="1598082399924" duration="2022000" />
+      <workItem from="1598172566527" duration="4513000" />
+      <workItem from="1598214158095" duration="507000" />
     </task>
     <task id="LOCAL-00051" summary="Комментарии, баг фикс интерфейса для 5s">
       <created>1586378089329</created>
@@ -947,10 +1001,6 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="818" y="276" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594759173787" />
-    <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1587851460059">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="943" y="400" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1587851460059" />
     <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1591814694675">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -959,10 +1009,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="163" y="103" width="1358" height="833" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1595617602097" />
-    <state x="834" y="243" key="MultipleFileMergeDialog" timestamp="1589457307669">
+    <state x="760" y="279" key="FileChooserDialogImpl" timestamp="1597584518465">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="834" y="243" key="MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589457307669" />
+    <state x="760" y="279" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1597584518465" />
     <state x="794" y="232" key="RollbackChangesDialog" timestamp="1595617516880">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -971,21 +1021,32 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="254" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589581096429" />
-    <state x="667" y="137" width="607" height="804" key="find.popup" timestamp="1594759154496">
+    <state x="667" y="137" width="607" height="804" key="find.popup" timestamp="1598174873774">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="667" y="137" width="607" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1594759154496" />
+    <state x="667" y="137" width="607" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598174873774" />
     <state x="643" y="312" key="git4idea.merge.GitMergeDialog" timestamp="1595617530437">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="643" y="312" key="git4idea.merge.GitMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1595617530437" />
-    <state x="993" y="244" key="run.anything.popup" timestamp="1587741094345">
+    <state x="428" y="242" key="run.anything.popup" timestamp="1597080968593">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="993" y="244" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587741094345" />
+    <state x="428" y="242" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1597080968593" />
     <state x="775" y="236" width="672" height="678" key="search.everywhere.popup" timestamp="1590360011406">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="775" y="236" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590360011406" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/App.js</url>
+          <line>290</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
