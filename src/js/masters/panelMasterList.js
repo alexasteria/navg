@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
     Spinner,
     Avatar,
@@ -10,10 +10,10 @@ import {
     CardGrid,
     Card,
     Placeholder, Counter, HorizontalScroll
-} from "@vkontakte/vkui";
-import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline';
-import {BACKEND} from "../func/func";
-import bridge from "@vkontakte/vk-bridge";
+} from "@vkontakte/vkui"
+import Icon56UsersOutline from '@vkontakte/icons/dist/56/users_outline'
+import {BACKEND} from "../func/func"
+import bridge from "@vkontakte/vk-bridge"
 
 const subcatStyle = {
     flexShrink: 0,
@@ -21,17 +21,17 @@ const subcatStyle = {
     flexDirection: 'column',
     alignItems: 'center',
     fontSize: 10
-};
+}
 
 class MasterList extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             mastersList: null,
             title: '',
             isLoad: false,
             filter: []
-        };
+        }
     }
 
     componentDidMount() {
@@ -45,20 +45,20 @@ class MasterList extends React.Component {
         }
 
     checkSubcat = (e) => {
-        let buttonSubcat = document.getElementById(e.currentTarget.id);
+        let buttonSubcat = document.getElementById(e.currentTarget.id)
         if(buttonSubcat.style.backgroundColor==='lavender'){
-            buttonSubcat.style.backgroundColor='#fff';
-            let index = this.state.filter.indexOf(e.currentTarget.id);
-            let filter = this.state.filter;
+            buttonSubcat.style.backgroundColor='#fff'
+            let index = this.state.filter.indexOf(e.currentTarget.id)
+            let filter = this.state.filter
             if (index > -1) {
-                filter.splice(index, 1);
-            } else filter.splice(0, index);
-            this.setState({filter: filter});
+                filter.splice(index, 1)
+            } else filter.splice(0, index)
+            this.setState({filter: filter})
         } else {
-            buttonSubcat.style.backgroundColor='lavender';
-            let filter = this.state.filter;
-            filter.push(e.currentTarget.id);
-            this.setState({filter: filter});
+            buttonSubcat.style.backgroundColor='lavender'
+            let filter = this.state.filter
+            filter.push(e.currentTarget.id)
+            this.setState({filter: filter})
         }
     };
     filter() {
@@ -66,14 +66,14 @@ class MasterList extends React.Component {
             return this.state.mastersList
         } else {
             return this.state.mastersList.filter(master=> {
-                let i = 0;
+                let i = 0
                 this.state.filter.forEach(filter=>{
                     if(master.categories.subcat){
                         if(master.categories.subcat.includes(filter)) i++
                     }else{
                         return false
                     }
-                });
+                })
                 if (i>0) return true
             })
         }
@@ -83,27 +83,27 @@ class MasterList extends React.Component {
                 fetch(BACKEND.masters.category+'all/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
-                        this.setState({mastersList: mastersList, isLoad: true});
-                        this.setTitle(this.state.mastersList.length);
-                    });
+                        this.setState({mastersList: mastersList, isLoad: true})
+                        this.setTitle(this.state.mastersList.length)
+                    })
             } else {
                 fetch(BACKEND.masters.category+this.props.category._id+'/'+this.props.city.id)
                     .then(res => res.json())
                     .then(mastersList => {
-                        this.setState({mastersList: mastersList, isLoad: true});
-                        this.setTitle(this.state.mastersList.length);
-                    });
+                        this.setState({mastersList: mastersList, isLoad: true})
+                        this.setTitle(this.state.mastersList.length)
+                    })
             }
         }
     countSubcat = (id) => {
-        let count = 0;
+        let count = 0
         this.state.mastersList.map((master)=>{
             if (master.categories.subcat){
                 if(master.categories.subcat.includes(id)) {
                     count++
                 }
             }
-        });
+        })
         return count
     };
     share = () => {
@@ -112,9 +112,9 @@ class MasterList extends React.Component {
     };
     setTitle(count) {
         if (count===undefined){
-            this.setState({title: 'Мы никого не нашли :( пока не нашли...'});
+            this.setState({title: 'Мы никого не нашли :( пока не нашли...'})
         } else {
-            this.setState({title: 'Найдено мастеров: '+count});
+            this.setState({title: 'Найдено мастеров: '+count})
         }
     }
     renderMaster() {
@@ -145,14 +145,14 @@ class MasterList extends React.Component {
                             В данный момент у нас нет данных о специалистах этого профиля в Вашем городе. Мы расширяем базу мастеров, и скоро - предложения появятся.
                             Поделитесь приложением с мастерами, которых Вы знаете.
                         </Placeholder>
-                    );
+                    )
                 } else {
                     return this.filter().map(master => {
                         let ratingArr = master.comments.map(comment =>{
                             return Number(comment.rating)
-                        });
-                        let sum = ratingArr.reduce((a, b) => a + b, 0);
-                        let rating = sum/ratingArr.length;
+                        })
+                        let sum = ratingArr.reduce((a, b) => a + b, 0)
+                        let rating = sum/ratingArr.length
                         return (
                                 <CardGrid key={master.vkUid} style={{padding: 0}}>
                                     <Card size="l" mode="shadow">
@@ -173,7 +173,7 @@ class MasterList extends React.Component {
                                                 </Cell>
                                     </Card>
                                 </CardGrid>
-                        );
+                        )
                     })
                 }
             }
@@ -210,7 +210,7 @@ class MasterList extends React.Component {
                                         return (
                                             <div style={{subcatStyle}} key={subcat._id}>
                                                 <Button
-                                                    after={<Counter size='s'>{this.countSubcat(subcat._id)}</Counter>}
+                                                    after={<Counter size="s">{this.countSubcat(subcat._id)}</Counter>}
                                                     id={subcat._id}
                                                     onClick={this.checkSubcat}
                                                     style={{margin: '4px 4px 0px 0px'}}

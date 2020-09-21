@@ -1,114 +1,119 @@
-import React from 'react';
-import HeadCity from "../elements/headCity";
-import {PanelHeader, SelectMimicry, Spinner, Div, Panel, View, Placeholder} from "@vkontakte/vkui";
-import MastersList from './mastersList';
+import React from 'react'
+import HeadCity from "../elements/headCity"
+import {Div, Panel, PanelHeader, Placeholder, SelectMimicry, Spinner} from "@vkontakte/vkui"
+import MastersList from './mastersList'
 import ScrollSubcat from '../elements/scrollSubcat'
-import {BACKEND} from "../func/func";
-import Spin from '../elements/spinner'
-import {connect} from "react-redux";
-import {changeMastersList, changeTargetCategory, changeTargetCity, changeMasterslistScroll} from "../store/actions";
-import {bindActionCreators} from "redux";
-import bridge from '@vkontakte/vk-bridge';
-import Icon56WifiOutline from '@vkontakte/icons/dist/56/wifi_outline';
+import {BACKEND} from "../func/func"
+import {connect} from "react-redux"
+import {
+    changeMastersList,
+    changeMasterslistScroll,
+    changeTargetCategory,
+    changeTargetCity,
+    setFilter
+} from "../store/actions"
+import {bindActionCreators} from "redux"
+import Icon56WifiOutline from '@vkontakte/icons/dist/56/wifi_outline'
+import Icon24Filter from '@vkontakte/icons/dist/24/filter';
 
-class Masters extends React.Component{
+class Masters extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
-            isLoad:false,
+            isLoad: false,
             filter: []
-        };
+        }
     }
 
     componentDidMount() {
         if (this.props.mastersList.length === 0) {
             this.loadList()
         } else {
-            this.setState({filteredList: this.props.mastersList, isLoad: true});
+            this.setState({filteredList: this.props.mastersList, isLoad: true})
         }
     }
 
     componentWillMount() {
-        if (this.props.mastersListScroll){
-            //window.scrollTo(0, this.props.mastersListScroll)
-            bridge.send("VKWebAppScroll", {"top": this.props.mastersListScroll});
+        if (this.props.mastersListScroll) {
+            window.scrollTo(0, this.props.mastersListScroll)
         }
     }
 
     componentWillUnmount() {
-        this.props.changeMasterslistScroll(window.self.pageYOffset);
+        this.props.changeMasterslistScroll(window.self.pageYOffset)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.targetCity !== this.props.targetCity) {
-            this.setState({isLoad: false},()=>this.loadList())
+        if (prevProps.targetCity !== this.props.targetCity) {
+            this.setState({isLoad: false}, () => this.loadList())
         }
     }
 
     loadList = () => {
-        if(this.props.targetCategory === '') {
-            fetch(BACKEND.masters.category+'all/'+this.props.targetCity.id)
+        this.props.setFilter([])
+        if (this.props.targetCategory === '') {
+            fetch(BACKEND.masters.category + 'all/' + this.props.user.location.country.id + '/' + this.props.targetCity.id)
                 .then(res => res.json())
                 .then(mastersList => {
-                    this.props.changeMastersList(mastersList);
-                    this.filter();
+                    this.props.changeMastersList(mastersList)
+                    this.filter()
                 })
-                .catch(e=>this.setState({warnConnection: true}))
+                .catch(e => this.setState({warnConnection: true}))
         } else {
-            fetch(BACKEND.masters.category+this.props.targetCategory._id+'/'+this.props.targetCity.id)
+            fetch(BACKEND.masters.category + this.props.targetCategory._id + '/' + this.props.user.location.country.id + '/' + this.props.targetCity.id)
                 .then(res => res.json())
                 .then(mastersList => {
-                    this.props.changeMastersList(mastersList);
-                    this.filter();
+                    this.props.changeMastersList(mastersList)
+                    this.filter()
                 })
-                .catch(e=>this.setState({warnConnection: true}))
+                .catch(e => this.setState({warnConnection: true}))
         }
     };
 
     checkSubcat = (e) => {
-        if(this.state.filter.includes(e.currentTarget.id)){
-            let index = this.state.filter.indexOf(e.currentTarget.id);
-            let filter = this.state.filter;
+        if (this.props.filter.includes(e.currentTarget.id)) {
+            let index = this.props.filter.indexOf(e.currentTarget.id)
+            let filter = this.props.filter
             if (index > -1) {
-                filter.splice(index, 1);
-            } else filter.splice(0, index);
-            this.setState({filter: filter}, ()=> this.filter());
+                filter.splice(index, 1)
+            } else filter.splice(0, index)
+            this.setState({filter: filter}, () => this.filter())
         } else {
-            let filter = this.state.filter;
-            filter.push(e.currentTarget.id);
-            this.setState({filter: filter}, ()=> this.filter());
+            let filter = this.props.filter
+            filter.push(e.currentTarget.id)
+            this.props.setFilter(filter)
+            this.filter()
         }
     };
 
     filter() {
-        if(this.state.filter.length === 0) {
+        if (this.props.filter.length === 0) {
             this.setState({filteredList: this.props.mastersList, isLoad: true})
         } else {
-            let filteredList = this.props.mastersList.filter(master=> {
-                let i = 0;
-                this.state.filter.forEach(filter=>{
-                    if(master.categories.subcat){
-                        if(master.categories.subcat.includes(filter)) i++
-                    }else{
+            let filteredList = this.props.mastersList.filter(master => {
+                let i = 0
+                this.props.filter.forEach(filter => {
+                    if (master.categories.subcat) {
+                        if (master.categories.subcat.includes(filter)) i++
+                    } else {
                         return false
                     }
-                });
-                if (i>0) return true
-            });
-            this.setState({filteredList: filteredList,isLoad: true});
+                })
+                if (i > 0) return true
+            })
+            this.setState({filteredList: filteredList, isLoad: true})
         }
     }
 
     render() {
-        if (this.state.warnConnection){
+        if (this.state.warnConnection) {
             return (
                 <React.Fragment>
-                    <HeadCity changeCity={()=>this.props.changeCity()}/>
+                    <HeadCity changeCity={() => this.props.changeCity()}/>
                     <Placeholder
                         stretched
-                        icon={<Icon56WifiOutline />}
+                        icon={<Icon56WifiOutline/>}
                         header={'Что-то не так!'}
-                        //action={<Button size="l" onClick={()=>this.auth(this.props.launchParams)}>Повторить</Button>}
                     >
                         Проверьте интернет-соединение.
                     </Placeholder>
@@ -116,12 +121,11 @@ class Masters extends React.Component{
                 </React.Fragment>
             )
         } else {
-            const {targetCategory, user} = this.props;
+            const {targetCategory, user} = this.props
             return (
-                // <React.Fragment>
                 <Panel id="mastersList">
                     <PanelHeader>Мастера</PanelHeader>
-                    <HeadCity changeCity={()=>this.props.changeCity()}/>
+                    <HeadCity changeCity={() => this.props.changeCity()}/>
                     <Div>
                         <SelectMimicry
                             top="Выберите категорию"
@@ -136,8 +140,8 @@ class Masters extends React.Component{
                             <ScrollSubcat
                                 targetCategory={targetCategory}
                                 mastersList={this.props.mastersList}
-                                checkSubcat={(e)=>this.checkSubcat(e)}
-                                filter={this.state.filter}
+                                checkSubcat={(e) => this.checkSubcat(e)}
+                                filter={this.props.filter}
                             />
                         }
                     </Div>
@@ -150,10 +154,9 @@ class Masters extends React.Component{
                                 city={user.location.city}
                                 openPanelMaster={this.props.openPanelMaster}
                             /> :
-                            <Spinner size="large" style={{ marginTop: 20 }} />
+                            <Spinner size="large" style={{marginTop: 20}}/>
                     }
                     {this.props.snackbar}
-                    {/*</React.Fragment>*/}
                 </Panel>
             )
         }
@@ -166,17 +169,19 @@ const putStateToProps = (state) => {
         targetCategory: state.targetCategory,
         targetCity: state.targetCity,
         mastersListScroll: state.mastersListScroll,
-        user: state.user
-    };
-};
+        user: state.user,
+        filter: state.filter
+    }
+}
 
 const putActionsToProps = (dispatch) => {
     return {
         changeMastersList: bindActionCreators(changeMastersList, dispatch),
         changeTargetCategory: bindActionCreators(changeTargetCategory, dispatch),
         changeTargetCity: bindActionCreators(changeTargetCity, dispatch),
-        changeMasterslistScroll: bindActionCreators(changeMasterslistScroll, dispatch)
-    };
-};
+        changeMasterslistScroll: bindActionCreators(changeMasterslistScroll, dispatch),
+        setFilter: bindActionCreators(setFilter, dispatch)
+    }
+}
 
-export default connect(putStateToProps, putActionsToProps)(Masters);
+export default connect(putStateToProps, putActionsToProps)(Masters)

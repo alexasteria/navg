@@ -1,41 +1,72 @@
-import React from 'react';
+import React from 'react'
 import {
     Placeholder,
     Group,
     Cell,
-    Avatar, Spinner, CardGrid, Card, Button, CellButton, Banner, Counter, PanelHeader, Panel, Footer
+    Avatar,
+    Spinner,
+    CardGrid,
+    Card,
+    Button,
+    CellButton,
+    Banner,
+    Counter,
+    PanelHeader,
+    Panel,
+    Footer,
+    PromoBanner,
+    CardScroll,
+    MiniInfoCell, Gradient, Header, Title
 } from "@vkontakte/vkui"
-import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing';
-import bridge from "@vkontakte/vk-bridge";
-import {connect} from "react-redux";
-import {BACKEND} from "../func/func";
+import Icon24UserOutgoing from '@vkontakte/icons/dist/24/user_outgoing'
+import bridge from "@vkontakte/vk-bridge"
+import {connect} from "react-redux"
+import {BACKEND} from "../func/func"
+import Icon56LikeOutline from '@vkontakte/icons/dist/56/like_outline'
+import Icon56UserAddOutline from '@vkontakte/icons/dist/56/user_add_outline';
 
 class News extends React.Component {
-    constructor (props) {
-        super(props);
+    constructor(props) {
+        super(props)
         this.state = {
-            feed: [1,2,3,4,5,6,7,8,9],
+            feed: [1, 2, 3, 4, 5, 6, 7, 8, 9],
             inGroup: false,
-            isFav: 0
-        };
+            isFav: 0,
+            promo: null
+        }
     }
 
     componentDidMount() {
-        window.scrollTo(0,0);
-        if (this.props.params){
+        window.scrollTo(0, 0)
+        if (this.props.params) {
             this.setState({isFav: Number(this.props.params.vk_is_favorite)})
         }
         fetch('https://mysterious-garden-57052.herokuapp.com/info/landing')
             .then(res => res.json())
             .then(data => {
-                this.setState({countMasters: data.countMasters, countUsers: data.countUsers, countCities: data.countCities, cities: data.cities.sort()})
-            });
+                this.setState({countMasters: data.countMasters, countUsers: data.countUsers})
+            })
+        bridge.subscribe(e => {
+            if (!e.detail) {
+                return
+            }
+
+            const {type, data} = e.detail
+
+            if (type === 'VKWebAppGetAdsResult') {
+                this.setState({promo: data})
+            }
+
+        })
+        bridge.send("VKWebAppGetAds", {})
+            .then(data => console.log('ads'))
+            .catch(e => console.log(e))
     }
 
     addToFav = () => {
         bridge.send("VKWebAppAddToFavorites", {})
             .then(data => {
-                if (data.result === true){
+                if (data.result === true) {
                     this.setState({isFav: 1})
                 }
             })
@@ -43,51 +74,46 @@ class News extends React.Component {
     };
 
     favApp = () => {
-        if (this.state.isFav === 0){
+        if (this.state.isFav === 0) {
             return (
                 <Banner
+                    before={<Avatar size={96}><Icon56LikeOutline fill={'#9fc6f3'}/></Avatar>}
                     subheader="Добавьте Навигатор красоты в список избранных приложений - все мастера будут всегда под рукой"
-                    actions={<Button onClick={()=>this.addToFav()}>В избранное</Button>}
+                    actions={<Button onClick={() => this.addToFav()}>Добавить в избранное</Button>}
                 />
             )
         } else {
-            return <Footer />
+            return <Footer/>
         }
     };
 
     isMember = () => {
-        const data = {
-            user_id: this.props.user.vkUid,
-            params: this.props.params
-        };
-        fetch(BACKEND.vkapi.isMember,{
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, cors, *same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrer: 'no-referrer', // no-referrer, *client
-            body: JSON.stringify(data),
+        fetch(BACKEND.vkapi.isMember, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {'Content-Type': 'application/json',},
+            redirect: 'follow',
+            referrer: 'no-referrer',
+            body: JSON.stringify({params: this.props.params}),
         })
-            .then(res=>res.json())
-            .then(res=>{
-                if (res.ingroup === 1){
+            .then(res => res.json())
+            .then(res => {
+                if (res.ingroup === 1) {
                     return null
                 } else {
                     return (
                         <Banner
+                            before={<Avatar size={96}><Icon56UserAddOutline fill={'#9fc6f3'} /></Avatar>}
                             header="Будь в курсе новостей!"
                             subheader="Подпишись на наше сообщество ВКонтакте и следи за нововведениями"
-                            actions={<Button onClick={()=>this.joinGroup()}>Подписаться</Button>}
+                            actions={<Button onClick={() => this.joinGroup()}>Подписаться</Button>}
                         />
                     )
                 }
             })
-            .catch(e=>console.log(e));
+            .catch(e => console.log(e))
     };
 
     joinGroup = () => {
@@ -100,11 +126,11 @@ class News extends React.Component {
 
     feedList = () => {
         return (
-            this.state.feed.map(feed=>{
+            this.state.feed.map(feed => {
                 return (
                     <CardGrid>
                         <Card key={feed} size="l" mode="shadow">
-                            <div style={{ height: 96, backgroundColor: 'aliceblue' }} />
+                            <div style={{height: 96, backgroundColor: 'aliceblue'}}/>
                         </Card>
                     </CardGrid>
                 )
@@ -121,16 +147,10 @@ class News extends React.Component {
                         description={
                             this.props.master === null ? 'Пользователь' : 'Авторизованный мастер'
                         }
-                        //bottomContent={}
                         before={<Avatar src={user.avatarLink} size={50}/>}
                         size="l"
                     >{user.firstname} {user.lastname}
                     </Cell>
-                    {
-                        user.vkUid === '199500866' &&
-                        //user.vkUid === '2314852' &&
-                        <CellButton onClick={this.props.openModer}>Модерация</CellButton>
-                    }
                     {this.props.master === null &&
                     <Cell
                         style={{borderRadius: '0 0 10px 10px'}}
@@ -149,57 +169,65 @@ class News extends React.Component {
 
     nowCounter = () => {
         return (
-            <CardGrid>
-                <Card size="l" mode="shadow">
-                    <React.Fragment>
-                        <Cell>Уже с нами:</Cell>
-                        <Cell indicator={this.state.countUsers ? <Counter>{this.state.countUsers}</Counter> : <Spinner size="small"/>}>Пользователей</Cell>
-                        <Cell indicator={this.state.countMasters ? <Counter>{this.state.countMasters}</Counter> : <Spinner size="small"/>}>Мастеров</Cell>
-                        <Cell indicator={this.state.countCities ? <Counter>{this.state.countCities}</Counter> : <Spinner size="small"/>}>Городов</Cell>
-                        {/*<Cell multiline>*/}
-                        {/*    {*/}
-                        {/*        this.state.cities &&*/}
-                        {/*        this.state.cities.map((city, index)=>{*/}
-                        {/*            if (index + 1 !== this.state.cities.length){*/}
-                        {/*                return city+', '*/}
-                        {/*            } else {*/}
-                        {/*                return city*/}
-                        {/*            }*/}
-                        {/*        })*/}
-                        {/*    }*/}
-                        {/*</Cell>*/}
-                    </React.Fragment>
-                </Card>
-            </CardGrid>
+            <Group header={<Header mode="secondary">С нами уже</Header>}>
+                <CardGrid>
+                    <Card size="m">
+                        <div style={{height: 50}}>
+                            <div style={{textAlign: 'center', padding: '12%'}}>
+                                {this.state.countUsers ? <Title style={{color: "#a9a9a9"}} level="1" weight="heavy">{this.state.countUsers}</Title> : <Spinner size="small" />}
+                            </div>
+                        </div>
+                        <Footer style={{margin: 5}}>Пользователей</Footer>
+                    </Card>
+                    <Card size="m">
+                        <div style={{ height: 50, position: 'relative' }}>
+                            <div style={{textAlign: 'center', padding: '12%'}}>
+                                {this.state.countMasters ? <Title style={{color: "#a9a9a9"}} level="1" weight="heavy">{this.state.countMasters}</Title> : <Spinner size="small" />}
+                            </div>
+                        </div>
+                        <Footer style={{margin: 5}}>Мастеров</Footer>
+                    </Card>
+                </CardGrid>
+            </Group>
         )
     };
 
-    render(){
-        const {user} = this.props;
+    render() {
+        const {user} = this.props
         return (
             <Panel id="news">
                 <PanelHeader>Новости</PanelHeader>
-                    <Group>
-                        <Placeholder
-                            icon={<Avatar src="https://sun1-28.userapi.com/O4KZM7zfdhZ-zHP-LtRj_xrYiNSRdraBcCQe6Q/PLqKmK-NWTY.jpg?ava=1" size={70}/>}
-                            header="Привет!"
-                        >
-                            У нас можно найти бьюти-мастера или предложить свои услуги. База мастеров в разных городах пополняется ежедневно.
-                        </Placeholder>
-                        {this.userInfo(user)}
-                        {this.nowCounter()}
-                        {this.isMember()}
-                        {this.favApp()}
-                        {/*{this.feedList()}*/}
-                        {/*<FixedLayout*/}
-                        {/*    vertical="bottom"*/}
-                        {/*    style={{marginBottom: 5}}*/}
-                        {/*>*/}
-                        {/*    */}
-                        {/*</FixedLayout>*/}
-                    </Group>
+                <Group>
+                    <Placeholder
+                        //style={{background: 'linear-gradient(#FFF, #f5e2e2, #FFF)'}}
+                        icon={<Avatar
+                            src="https://sun1-28.userapi.com/O4KZM7zfdhZ-zHP-LtRj_xrYiNSRdraBcCQe6Q/PLqKmK-NWTY.jpg?ava=1"
+                            size={70}/>}
+                        header="Привет!"
+                    >
+                        У нас можно найти бьюти-мастера или предложить свои услуги. База мастеров в разных городах
+                        пополняется ежедневно.
+                    </Placeholder>
+                    {this.userInfo(user)}
+                    {this.nowCounter()}
+                    {this.isMember()}
+                    {this.favApp()}
+                    {/*{this.feedList()}*/}
+                    {
+                        user.vkUid === '199500866' &&
+                        <CellButton onClick={this.props.openModer}>Модерация</CellButton>
+                    }
+                    {
+                        this.state.promo !== null ?
+                            <Card size="l" mode="shadow">
+                                <PromoBanner bannerData={this.state.promo}
+                                             onClose={() => this.setState({promo: null})}/>
+                            </Card> :
+                            null
+                    }
+                </Group>
             </Panel>
-        );
+        )
     }
 }
 
@@ -208,13 +236,7 @@ const putStateToProps = (state) => {
         user: state.user,
         master: state.master,
         params: state.params
-    };
-};
+    }
+}
 
-const putActionsToProps = (dispatch) => {
-    return {
-
-    };
-};
-
-export default connect(putStateToProps, putActionsToProps)(News);
+export default connect(putStateToProps)(News)

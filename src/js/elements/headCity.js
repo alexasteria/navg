@@ -1,6 +1,6 @@
 import React from 'react';
-import {Cell} from "@vkontakte/vkui";
-import {connect} from "react-redux";
+import {Cell, MiniInfoCell, SimpleCell, Subhead} from "@vkontakte/vkui";
+import {connect} from "react-redux"
 
 function indicator(city){
     if(city) {
@@ -11,12 +11,11 @@ function indicator(city){
 
 function HeadCity(props){
     return(
-        <Cell
-            style={{fontSize: 12, padding: 0}}
+        <SimpleCell
             expandable
             onClick={props.changeCity}
-            indicator={indicator(props.targetCity)}
-        ><span style={{fontSize: 12}}>Выбранный город</span></Cell>
+            indicator={<Subhead weight="regular">{indicator(props.targetCity)}</Subhead>}
+        ><Subhead weight="regular">Выбранный город</Subhead></SimpleCell>
     )
 }
 

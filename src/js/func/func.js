@@ -3,7 +3,8 @@ const BACK_LINK = process.env.REACT_APP_BACK_LINK;
 export const BACKEND = {
     users: {
         auth: BACK_LINK+'users/auth/',
-        like: BACK_LINK+'users/like/'
+        like: BACK_LINK+'users/like/',
+        changeCity: BACK_LINK+'users/changeCity/'
     },
     message: BACK_LINK+'users/message/',
     masters: {
@@ -13,7 +14,8 @@ export const BACKEND = {
         vkuid: BACK_LINK+'masters/vkuid/',
         subscribers: BACK_LINK+'masters/subscribe/',
         onarrayid: BACK_LINK+'masters/onarrayid/',
-        connect: BACK_LINK+'masters/connect/'
+        connect: BACK_LINK+'masters/connect/',
+        history: BACK_LINK+'masters/history/'
     },
     favs: {
         new: BACK_LINK+'favs/',
@@ -35,9 +37,14 @@ export const BACKEND = {
         savePhoto: BACK_LINK+'vkapi/savePhoto/',
         savePhotoFindModels: BACK_LINK+'vkapi/savePhotoFindModels/',
         getCities: BACK_LINK+'vkapi/getCities',
+        getCountries: BACK_LINK+'vkapi/getCountries',
         isMember: BACK_LINK+'vkapi/isMember',
         getAlbum: BACK_LINK+'vkapi/getAlbum',
         delPhoto: BACK_LINK+'vkapi/delPhoto/',
+        stories: BACK_LINK+'vkapi/stories/',
+        repost: BACK_LINK+'vkapi/repost/',
+        notyStatus: BACK_LINK+'vkapi/notifyStatus/',
+        push: BACK_LINK+'vkapi/push/'
     },
     category: {
         getAll: BACK_LINK+'category/'

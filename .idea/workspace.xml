@@ -2,18 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6845a37-b768-422f-9cde-06b7f7343d4d" name="Default" comment="Для отката">
-      <change afterPath="$PROJECT_DIR$/src/eruda.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/js/elements/ads.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/elements/items/ratingStars.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/lk/history.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/categoriesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/categoriesList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/elements/cityList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/cityList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/elements/functions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/functions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/elements/headCity.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/elements/headCity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/findmodel/components/findCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/components/findCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/components/findList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/findmodel/findModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/findmodel/findModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/func/func.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/func/func.js" afterDir="false" />
@@ -23,16 +23,19 @@
       <change beforePath="$PROJECT_DIR$/src/js/lk/lk.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/lk.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/partners.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/partners.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/portfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/portfolio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/lk/rules.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/rules.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/lk/setting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/lk/setting.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/masters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/masters.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersComments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersComments.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/mastersPhoto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/masters/panelMasterList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/news/moder.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/moder.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/news/news.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/news/news.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/store/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/actions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/store/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/store/reducers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/src.rar" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,23 +103,23 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.completion" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PhpStorm 2019.3.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Алексей\Desktop\navg" />
-      <recent name="C:\Users\Алексей\Desktop\navg\src" />
-      <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
-      <recent name="C:\Users\Алексей\Desktop\navg\src\js\elements" />
-      <recent name="C:\Users\Алексей\Desktop\navg\src\img" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
       <recent name="C:\Users\Алексей\Desktop\navg\src" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\lk" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\elements" />
       <recent name="C:\Users\Алексей\Desktop\navg\src\js\news" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Алексей\Desktop\navg" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src\js\elements" />
+      <recent name="C:\Users\Алексей\Desktop\navg\src\img" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -599,7 +602,62 @@
       <workItem from="1597846925567" duration="9703000" />
       <workItem from="1598082399924" duration="2022000" />
       <workItem from="1598172566527" duration="4513000" />
-      <workItem from="1598214158095" duration="507000" />
+      <workItem from="1598214158095" duration="4204000" />
+      <workItem from="1598283055927" duration="1395000" />
+      <workItem from="1598292050634" duration="213000" />
+      <workItem from="1598474228902" duration="1400000" />
+      <workItem from="1598539445592" duration="852000" />
+      <workItem from="1598540306437" duration="246000" />
+      <workItem from="1598540560221" duration="11513000" />
+      <workItem from="1598624462484" duration="9422000" />
+      <workItem from="1598727508004" duration="13679000" />
+      <workItem from="1598745881472" duration="102000" />
+      <workItem from="1598779110164" duration="763000" />
+      <workItem from="1598780192163" duration="351000" />
+      <workItem from="1598783662903" duration="749000" />
+      <workItem from="1598806940773" duration="777000" />
+      <workItem from="1598901385419" duration="8038000" />
+      <workItem from="1598971770049" duration="1140000" />
+      <workItem from="1598980051323" duration="12000" />
+      <workItem from="1599055814937" duration="4299000" />
+      <workItem from="1599075962426" duration="4583000" />
+      <workItem from="1599233952326" duration="376000" />
+      <workItem from="1599418333835" duration="16000" />
+      <workItem from="1599421652466" duration="28000" />
+      <workItem from="1599508912425" duration="11000" />
+      <workItem from="1599509069515" duration="9000" />
+      <workItem from="1599509235501" duration="37000" />
+      <workItem from="1599671142016" duration="24000" />
+      <workItem from="1599671272032" duration="153000" />
+      <workItem from="1599673636725" duration="22000" />
+      <workItem from="1599745955953" duration="2082000" />
+      <workItem from="1599845939072" duration="666000" />
+      <workItem from="1599854826962" duration="14000" />
+      <workItem from="1599855131829" duration="57000" />
+      <workItem from="1599856268120" duration="663000" />
+      <workItem from="1599862991361" duration="1650000" />
+      <workItem from="1599921659462" duration="2927000" />
+      <workItem from="1599935590635" duration="11237000" />
+      <workItem from="1599947894061" duration="2000" />
+      <workItem from="1600009825668" duration="1592000" />
+      <workItem from="1600106047692" duration="16000" />
+      <workItem from="1600106492534" duration="18000" />
+      <workItem from="1600111480630" duration="86000" />
+      <workItem from="1600186270289" duration="397000" />
+      <workItem from="1600186675725" duration="6294000" />
+      <workItem from="1600197479931" duration="19000" />
+      <workItem from="1600197676191" duration="3000" />
+      <workItem from="1600199927441" duration="656000" />
+      <workItem from="1600203836521" duration="206000" />
+      <workItem from="1600204197239" duration="15000" />
+      <workItem from="1600206990873" duration="23000" />
+      <workItem from="1600279315953" duration="1504000" />
+      <workItem from="1600356698106" duration="8000" />
+      <workItem from="1600358993330" duration="26000" />
+      <workItem from="1600359294344" duration="26000" />
+      <workItem from="1600373384648" duration="9000" />
+      <workItem from="1600462861599" duration="355000" />
+      <workItem from="1600698703852" duration="3264000" />
     </task>
     <task id="LOCAL-00051" summary="Комментарии, баг фикс интерфейса для 5s">
       <created>1586378089329</created>
@@ -1001,6 +1059,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="818" y="276" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1594759173787" />
+    <state x="495" y="385" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1598475414249">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="495" y="385" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1598475414249" />
     <state x="142" y="115" key="CommitChangelistDialog2" timestamp="1591814694675">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -1017,14 +1079,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="794" y="232" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1595617516880" />
-    <state x="552" y="254" key="Vcs.Push.Dialog.v2" timestamp="1589581096429">
+    <state x="556" y="172" key="SettingsEditor" timestamp="1598540390610">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="254" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589581096429" />
-    <state x="667" y="137" width="607" height="804" key="find.popup" timestamp="1598174873774">
+    <state x="556" y="172" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1598540390610" />
+    <state x="667" y="137" width="607" height="804" key="find.popup" timestamp="1600111561341">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="667" y="137" width="607" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598174873774" />
+    <state x="667" y="137" width="607" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1600111561341" />
     <state x="643" y="312" key="git4idea.merge.GitMergeDialog" timestamp="1595617530437">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -1033,20 +1095,5 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="428" y="242" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1597080968593" />
-    <state x="775" y="236" width="672" height="678" key="search.everywhere.popup" timestamp="1590360011406">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="775" y="236" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590360011406" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/App.js</url>
-          <line>290</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
