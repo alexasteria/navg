@@ -8,7 +8,7 @@
     "@vkontakte/vk-bridge": "^2.2.1",
     "@vkontakte/vk-bridge-mock": "^2.0.3",
     "@vkontakte/vkui": "^3.12.6",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-jsonp": "^1.0.4",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.2",
